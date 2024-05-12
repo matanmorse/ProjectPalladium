@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,16 @@ namespace ProjectPalladium
         private int currentFrame;
         private int spriteWidth;
         private int spriteHeight;
+        private float timer = 0;
+        public int CurrentFrame
+        {
+            get => currentFrame; 
+            set
+            {
+                currentFrame = value;
+                UpdateSourceRect();
+            }
+        }
 
         public AnimatedSprite(ContentManager content, int currentFrame, int spriteWidth, int spriteHeight, string textureName)
         {
@@ -46,11 +57,30 @@ namespace ProjectPalladium
         // draw the given sprite using sourceRect
         public void Draw(SpriteBatch b, Vector2 pos, float layerDepth)
         {
-            b.Begin();
-            Console.WriteLine(this.sourceRect);
-            b.Draw(spriteTexture, pos, sourceRect, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth); ;
+            b.Begin(samplerState:SamplerState.PointClamp);
+            b.Draw(spriteTexture, pos, sourceRect, Color.White, 0f, Vector2.Zero, 8f, SpriteEffects.None, layerDepth); ;
             b.End();
+        }
 
+        public void Animate(GameTime gameTime, int startFrame, int numOfFrames, float interval)
+        {
+            if (currentFrame > startFrame + numOfFrames || currentFrame < startFrame) // if the frame of the sprite is out of the range of the animation, start animation over
+            {
+                Debug.WriteLine(currentFrame);
+                CurrentFrame = startFrame;
+            }
+
+            timer += (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (timer > interval) {
+                timer = 0;
+                CurrentFrame++;
+
+                if (currentFrame > startFrame + numOfFrames) {
+                    // loop to start of animation
+                    CurrentFrame = startFrame;
+                }
+            }
         }
     }
 }

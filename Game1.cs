@@ -24,7 +24,7 @@ namespace ProjectPalladium
         {
             base.Initialize();
             Debug.WriteLine("hi");
-            happyFace = new AnimatedSprite(content, 0, 16, 16, "happyface");
+            happyFace = new AnimatedSprite(content, 0, 16, 16, "happyfaceanimated");
         }
 
         protected override void LoadContent()
@@ -49,6 +49,7 @@ namespace ProjectPalladium
 
             //if (Keyboard.GetState().IsKeyDown(Keys.D))
             //    happyFace.pos.X += 1;
+            happyFace.Animate(gameTime, 0, 2, 1000f);
 
             base.Update(gameTime);
         }
@@ -59,8 +60,7 @@ namespace ProjectPalladium
 
             base.Draw(gameTime);
 
-            happyFace.Draw(_spriteBatch, new Vector2(0, 0), 1f);
-
+            happyFace.Draw(_spriteBatch, Vector2.Zero, 1f);
         }
     }
 }
