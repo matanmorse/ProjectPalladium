@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace ProjectPalladium
 {
@@ -22,7 +23,7 @@ namespace ProjectPalladium
         protected override void Initialize()
         {
             base.Initialize();
-
+            Debug.WriteLine("hi");
             happyFace = new AnimatedSprite(content, 0, 16, 16, "happyface");
         }
 
