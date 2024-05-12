@@ -13,12 +13,13 @@ namespace ProjectPalladium
 {
     public class AnimatedSprite
     {
+        public float scale = 4f;
         public Texture2D spriteTexture;
         public Rectangle sourceRect;
         ContentManager contentManger;
         private int currentFrame;
-        private int spriteWidth;
-        private int spriteHeight;
+        public int spriteWidth;
+        public int spriteHeight;
         private float timer = 0;
         public int CurrentFrame
         {
@@ -57,8 +58,9 @@ namespace ProjectPalladium
         // draw the given sprite using sourceRect
         public void Draw(SpriteBatch b, Vector2 pos, float layerDepth)
         {
+            
             b.Begin(samplerState:SamplerState.PointClamp);
-            b.Draw(spriteTexture, pos, sourceRect, Color.White, 0f, Vector2.Zero, 8f, SpriteEffects.None, layerDepth); ;
+            b.Draw(spriteTexture, pos, sourceRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, layerDepth); ;
             b.End();
         }
 
