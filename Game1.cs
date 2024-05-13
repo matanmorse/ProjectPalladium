@@ -20,7 +20,7 @@ namespace ProjectPalladium
         public static int screenHeight;
         public static ContentManager contentManager;
 
-        public static float scale = 4f;
+        public static float scale = 6f;
 
         private Matrix _translation;
         public Game1()
@@ -40,20 +40,20 @@ namespace ProjectPalladium
         private void CalculateTranslation()
         {
 
-            var dx = ((screenWidth / 2) - happyFace.pos.X - (happyFace.sprite.spriteWidth * Game1.scale) / 2 );
+            var dx = ((screenWidth / 2) - happyFace.pos.X - (happyFace.sprite.spriteWidth * scale) / 2 );
             
             dx = MathHelper.Clamp(
                 dx, 
                 -(_tilemap.MapTileSize.X * _tilemap.TileSize * scale) + screenWidth - (_tilemap.TileSize * scale / 2) , 
-                _tilemap.TileSize / 2 * Game1.scale);
+                _tilemap.TileSize / 2 * scale);
 
-            var dy = ((screenHeight / 2) - happyFace.pos.Y - (happyFace.sprite.spriteHeight * Game1.scale) / 2);
+            var dy = ((screenHeight / 2) - happyFace.pos.Y - (happyFace.sprite.spriteHeight * scale) / 2);
 
 
             dy = MathHelper.Clamp(
                 dy,
                 -(_tilemap.MapTileSize.Y * _tilemap.TileSize * scale) + screenHeight - (_tilemap.TileSize * scale / 2),
-                _tilemap.TileSize / 2 * Game1.scale);
+                _tilemap.TileSize / 2 * scale);
 
             _translation = Matrix.CreateTranslation(dx, dy, 0f);
         }
@@ -63,7 +63,7 @@ namespace ProjectPalladium
             base.Initialize();
             happyFace = new Player(new AnimatedSprite(0, 16, 16, "happyfaceanimated"), Vector2.Zero, "Happy Face");
 
-            _tilemap = new Tilemap("tilemap");
+            _tilemap = new Tilemap("hollow.tmx");
 
             happyFace.setBounds(_tilemap.MapTileSize, _tilemap.TileSize);
 
