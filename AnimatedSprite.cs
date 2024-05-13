@@ -13,10 +13,9 @@ namespace ProjectPalladium
 {
     public class AnimatedSprite
     {
-        public float scale = 4f;
         public Texture2D spriteTexture;
         public Rectangle sourceRect;
-        ContentManager contentManger;
+        
         private int currentFrame;
         public int spriteWidth;
         public int spriteHeight;
@@ -31,9 +30,26 @@ namespace ProjectPalladium
             }
         }
 
-        public AnimatedSprite(ContentManager content, int currentFrame, int spriteWidth, int spriteHeight, string textureName)
+
+        public AnimatedSprite(Texture2D texture, int spriteWidth, int spriteHeight, Rectangle sourceRect)
         {
-            this.contentManger = content;
+            this.spriteTexture = texture;
+            this.spriteWidth = spriteWidth;
+            this.spriteHeight = spriteHeight;
+            this.sourceRect = sourceRect;
+        }
+
+        public AnimatedSprite(Texture2D texture, int spriteWidth, int spriteHeight)
+        {
+            spriteTexture = texture;
+            this.spriteWidth = spriteWidth;
+            this.spriteHeight = spriteHeight;
+
+            UpdateSourceRect();
+        }
+        public AnimatedSprite(int currentFrame, int spriteWidth, int spriteHeight, string textureName)
+        {
+         
             this.currentFrame = currentFrame;
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
@@ -44,7 +60,7 @@ namespace ProjectPalladium
         public void LoadTexture(String textureName)
         {
             if (textureName == null) { return; }
-            spriteTexture = contentManger.Load<Texture2D>(textureName);
+            spriteTexture = Game1.contentManager.Load<Texture2D>(textureName);
             UpdateSourceRect();
         }
 
@@ -58,10 +74,7 @@ namespace ProjectPalladium
         // draw the given sprite using sourceRect
         public void Draw(SpriteBatch b, Vector2 pos, float layerDepth)
         {
-            
-            b.Begin(samplerState:SamplerState.PointClamp);
-            b.Draw(spriteTexture, pos, sourceRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, layerDepth); ;
-            b.End();
+            b.Draw(spriteTexture, pos, sourceRect, Color.White, 0f, Vector2.Zero, Game1.scale, SpriteEffects.None, layerDepth);
         }
 
         public void Animate(GameTime gameTime, int startFrame, int numOfFrames, float interval)

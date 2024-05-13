@@ -16,9 +16,12 @@ namespace ProjectPalladium
     {
         public AnimatedSprite sprite;
         public Vector2 pos;
-        private float speed = 5f;
+        private float speed = 2f * Game1.scale;
         private Vector2 velocity;
         public Vector2 Velocity { get { return velocity; } set { velocity = value; } }
+
+        private int edgex;
+        private int edgey;
 
         public string name;
         public bool moveLeft, moveRight, moveUp, moveDown;
@@ -54,10 +57,15 @@ namespace ProjectPalladium
         {
             moveRight = b;
         }
+
+        public void setBounds(Point mapSize, int tileSize)
+        {
+            edgex = (mapSize.X * tileSize * (int) Game1.scale) - (int)(sprite.spriteWidth * Game1.scale);
+            edgey = (mapSize.Y * tileSize * (int) Game1.scale) - (int)(sprite.spriteHeight * Game1.scale);
+        }
         public void movePos()
         {
-            int edgex = Game1.screenWidth - (int)(sprite.spriteWidth * sprite.scale);
-            int edgey = Game1.screenHeight - (int)(sprite.spriteHeight * sprite.scale);
+
             pos += velocity * speed;
             if (pos.X < 0) pos.X = 0;
             if (pos.X > edgex) pos.X = edgex;
