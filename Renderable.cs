@@ -27,11 +27,18 @@ namespace ProjectPalladium
             size = new Point(sourceRect.Width, sourceRect.Height);
         }
 
+        public Renderable (string textureName)
+        {
+            this.textureName = textureName;
+            LoadTexture(textureName);
+        }
+
         public void LoadTexture(String textureName)
         {
             if (textureName == null) { return; }
             _texture = Game1.contentManager.Load<Texture2D>(textureName);
             size = new Point(_texture.Width, _texture.Height);
+            sourceRect = new Rectangle(new Point (0,0) , size);
         }
 
         public void Draw(SpriteBatch b, Vector2 pos)

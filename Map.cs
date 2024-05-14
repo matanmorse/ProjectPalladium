@@ -16,10 +16,14 @@ namespace ProjectPalladium
     {
         private string filename;
         public string name;
+
         public List<Tilemap> tilemaps = new List<Tilemap>();
+        public List<Building> buildings = new List<Building>();
+
         MapSerializer map;
+
         public Point tileMapSize = new Point();
-        public int tilesize = 16;
+        public static int tilesize = 16;
 
         public Map(string filename) {
             this.filename = filename;
@@ -30,6 +34,34 @@ namespace ProjectPalladium
             {
                 tilemaps.Add(new Tilemap(layer.Data.Text, tileMapSize));
             }
+        }
+        // checks collisions with any collidable objects on the map
+        public bool CheckCollisions(Vector2 Pos)
+        {
+            bool collidesBuildings = false;
+            foreach(Building building in buildings)
+            {
+                if(building.bounds.Contains(Pos)) collidesBuildings = true;
+            }
+
+            return collidesBuildings;
+        }
+        /* Parses TMX file to create map representation */
+        public void DeserializeMap()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(MapSerializer));
+
+            using (FileStream fs = new FileStream("Content/" + filename, FileMode.Open))
+            {
+                map = (MapSerializer)serializer.Deserialize(fs);
+            }
+        }
+
+        public void Draw(SpriteBatch b)
+        {
+            
+            foreach(Tilemap tilemap in tilemaps) { tilemap.Draw(b); }
+            foreach(Building building in buildings) { building.Draw(b); }
         }
 
         [XmlRoot("map")]
@@ -59,24 +91,5 @@ namespace ProjectPalladium
             [XmlAttribute("height")]
             public int Height { get; set; }
         }
-
-
-        /* Parses TMX file to create map representation */
-        public void DeserializeMap()
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(MapSerializer));
-
-            using (FileStream fs = new FileStream("Content/" + filename, FileMode.Open))
-            {
-                map = (MapSerializer)serializer.Deserialize(fs);
-            }
-        }
-
-        public void Draw(SpriteBatch b)
-        {
-            foreach(Tilemap tilemap in tilemaps) { tilemap.Draw(b); }
-        }
-     
-
     }
 }

@@ -15,6 +15,7 @@ namespace ProjectPalladium
     {
         public Texture2D spriteTexture;
         public Rectangle sourceRect;
+        private Vector2 origin;
 
         private Animation _animation;
         public Animation Animation { get { return _animation; } set {
@@ -46,6 +47,7 @@ namespace ProjectPalladium
         {
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
+            this.origin = new Vector2(spriteWidth / 2, spriteHeight / 2);
             initSprite(registryName);
             LoadTexture(textureName);
         }
@@ -105,7 +107,7 @@ namespace ProjectPalladium
         public void Draw(SpriteBatch b, Vector2 pos, float layerDepth)
         {
             if (_animation == null) { return; }
-            b.Draw(spriteTexture, pos, _animation.getCurrentFrame(), Color.White, 0f, Vector2.Zero, Game1.scale, SpriteEffects.None, layerDepth);
+            b.Draw(spriteTexture, pos, _animation.getCurrentFrame(), Color.White, 0f, origin, Game1.scale, SpriteEffects.None, layerDepth);
         }
 
     }

@@ -14,6 +14,8 @@ namespace ProjectPalladium
 
     public class Character
     {
+        protected Map currentMap;
+
         public AnimatedSprite sprite;
         public Vector2 pos;
         private float speed = 2f * Game1.scale;
@@ -33,12 +35,13 @@ namespace ProjectPalladium
             }
         }
 
- 
-        public Character(AnimatedSprite sprite, Vector2 pos, String name) {
+
+        public Character(AnimatedSprite sprite, Vector2 pos, String name, Map startingMap) {
             this.sprite = sprite;
             this.pos = pos;
             this.name = name;
-            
+            this.currentMap = startingMap;
+
         }
 
         public virtual void Initialize()
@@ -58,8 +61,8 @@ namespace ProjectPalladium
         }
         public void setMovingUp(bool b) {
             moveUp = b;
-            
-            
+
+
         }
         public void setMovingDown(bool b)
         {
@@ -76,20 +79,30 @@ namespace ProjectPalladium
 
         public void setBounds(Point mapSize, int tileSize)
         {
-            edgex = (mapSize.X * tileSize * (int) Game1.scale) - (int)(sprite.spriteWidth * Game1.scale);
-            edgey = (mapSize.Y * tileSize * (int) Game1.scale) - (int)(sprite.spriteHeight * Game1.scale);
+            edgex = (mapSize.X * tileSize * (int)Game1.scale) - (int)((sprite.spriteWidth / 2) * Game1.scale);
+            edgey = (mapSize.Y * tileSize * (int)Game1.scale) - (int)((sprite.spriteHeight / 2) * Game1.scale);
         }
         public void movePos()
         {
 
             pos += velocity * speed;
-            if (pos.X < 0) pos.X = 0;
+            if (pos.X - (sprite.spriteWidth * Game1.scale / 2) < 0) pos.X = (sprite.spriteWidth * Game1.scale / 2);
             if (pos.X > edgex) pos.X = edgex;
-            if (pos.Y < 0) pos.Y = 0;
+            if (pos.Y - (sprite.spriteHeight * Game1.scale / 2) < 0) pos.Y = (sprite.spriteHeight * Game1.scale / 2);
             if (pos.Y > edgey) pos.Y = edgey;
+
+            if (currentMap.CheckCollisions(new Vector2(pos.X + (sprite.spriteWidth / 2 * Game1.scale), pos.Y))
+            || currentMap.CheckCollisions(new Vector2(pos.X - (sprite.spriteWidth / 2 * Game1.scale), pos.Y)))
+            {
+                while (currentMap.CheckCollisions(new Vector2(pos.X + (sprite.spriteWidth / 2 * Game1.scale), pos.Y))) {
+                    pos.X -= 1f;
+                }
+            }
+         
+
         }
 
-       
+
         public override string ToString()
         {
             return "Name: " + name;

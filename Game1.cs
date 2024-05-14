@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
+
 
 namespace ProjectPalladium
 {
@@ -13,7 +12,7 @@ namespace ProjectPalladium
 
         private Map _map;
 
-        public Player happyFace;
+        public Player player;
         private Tilemap _tilemap;
 
         public ContentManager content;
@@ -39,23 +38,32 @@ namespace ProjectPalladium
             screenHeight = _graphics.PreferredBackBufferHeight;
         }
 
+        public static Vector2 TileToGlobalPos(Vector2 pos)
+        {
+            return new Vector2(pos.X * Map.tilesize, pos.Y * Map.tilesize);
+        }
+
+        public static Vector2 GlobalToTilePos(Vector2 pos)
+        {
+            return new Vector2(pos.X / Map.tilesize, pos.Y / Map.tilesize );
+        }
         private void CalculateTranslation()
         {
 
-            var dx = ((screenWidth / 2) - happyFace.pos.X - (happyFace.sprite.spriteWidth * scale) / 2 );
+            var dx = ((screenWidth / 2) - player.pos.X - (player.sprite.spriteWidth * scale) / 2 );
             
             dx = MathHelper.Clamp(
                 dx, 
-                -(_map.tileMapSize.X * _map.tilesize * scale) + screenWidth - (_map.tilesize * scale / 2) ,
-                _map.tilesize / 2 * scale);
+                -(_map.tileMapSize.X * Map.tilesize * scale) + screenWidth - (Map.tilesize * scale / 2) ,
+                Map.tilesize / 2 * scale);
 
-            var dy = ((screenHeight / 2) - happyFace.pos.Y - (happyFace.sprite.spriteHeight * scale) / 2);
+            var dy = ((screenHeight / 2) - player.pos.Y - (player.sprite.spriteHeight * scale) / 2);
 
 
             dy = MathHelper.Clamp(
                 dy,
-                -(_map.tileMapSize.Y * _map.tilesize * scale) + screenHeight - (_map.tilesize * scale / 2),
-                _map.tilesize / 2 * scale);
+                -(_map.tileMapSize.Y * Map.tilesize * scale) + screenHeight - (Map.tilesize * scale / 2),
+                Map.tilesize / 2 * scale);
 
             _translation = Matrix.CreateTranslation(dx, dy, 0f);
         }
@@ -64,11 +72,13 @@ namespace ProjectPalladium
         {
             base.Initialize();
             _map = new Map("test1.tmx");
+            _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 20, Map.tilesize * 10 * Game1.scale)));
+            _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 10, Map.tilesize * 30 * Game1.scale)));
 
-            happyFace = new Player(new AnimatedSprite(16, 32, "playerplaceholder", "playerplaceholder"), Vector2.Zero, "Player");
-            happyFace.Initialize();
+            player = new Player(new AnimatedSprite(16, 32, "playerplaceholder", "playerplaceholder"), new Vector2(100, 100), "Player", _map);
+            player.Initialize();
 
-            happyFace.setBounds(_map.tileMapSize, 16);
+            player.setBounds(_map.tileMapSize, 16);
 
         }
 
@@ -80,7 +90,7 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
-            happyFace.Update(gameTime);
+            player.Update(gameTime);
 
             CalculateTranslation();
 
@@ -95,7 +105,7 @@ namespace ProjectPalladium
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _translation);
 
             _map.Draw(_spriteBatch);
-            happyFace.Draw(_spriteBatch);
+            player.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
