@@ -49,7 +49,7 @@ namespace ProjectPalladium
             this.Name = name;
             this.numFrames = numFrames;
             this.startFrame = startFrame;
-            this.currentFrame = startFrame % numFrames + 1;
+            this.currentFrame = 0;
             this.interval = interval;
             this.sprite = sprite;
 
@@ -62,6 +62,12 @@ namespace ProjectPalladium
             }
         }
 
+        /*  Resets the Animation back to its default parameters (i.e. the start of the animation) */
+        public void Reset()
+        {
+            currentFrame = 0;
+            timer = 0f;
+        }
         public void Update(GameTime gameTime)
         {
             timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;

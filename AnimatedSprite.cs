@@ -17,7 +17,9 @@ namespace ProjectPalladium
         public Rectangle sourceRect;
 
         private Animation _animation;
-        public Animation Animation { get { return _animation; } set { _animation = value; } }
+        public Animation Animation { get { return _animation; } set {
+                _animation = value;
+            } }
 
         private int currentFrame;
         public int spriteWidth;
@@ -49,6 +51,11 @@ namespace ProjectPalladium
         }
 
         
+        public void AnimationChangeDetected()
+        {
+            if (_animation == null) { return; }
+            _animation.Reset();
+        }
         public void initSprite(string registryName)
         {
             defaultFrame = new Rectangle(0, 0, spriteWidth, spriteHeight);

@@ -42,11 +42,19 @@ namespace ProjectPalladium
 
             if (Velocity.Y != 0 || Velocity.X != 0)
             {
-                this.sprite.Animation = this.sprite.Animations["walk"];
+                if (sprite.Animation != sprite.Animations["walk"])
+                {
+                    sprite.AnimationChangeDetected();
+                    sprite.Animation = sprite.Animations["walk"];
+                }
             }
             else
             {
-                this.sprite.Animation = this.sprite.Animations["idle"];
+                if (sprite.Animation != sprite.Animations["idle"])
+                {
+                    sprite.AnimationChangeDetected();
+                    sprite.Animation = sprite.Animations["idle"];
+                }
             }
             movePos();
         }
