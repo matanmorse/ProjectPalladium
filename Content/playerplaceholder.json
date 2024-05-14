@@ -1,12 +1,12 @@
 {
-  "name": "Roger",
+  "name": "Player",
   "animations": {
     "idle": {
-      "startframe": 0,
+      "startframe": 4,
       "numframes": 1
     },
     "walk":{
-      "startframe": 2,
+      "startframe": 0,
       "numframes" : 3
     }
   }

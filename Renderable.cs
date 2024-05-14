@@ -12,47 +12,26 @@ namespace ProjectPalladium
 {
     public class Renderable
     {
-        public Vector2 pos;
-        
-
-        private Vector2 size;
+        public Point size;
         private Texture2D _texture;
         private Rectangle sourceRect;
-        public Vector2 Size
-        {
-            get { return Size; }
-            set
-            {
-                if (value.X >= 1 && value.Y >= 1)
-                {
-                    this.size = value;
-                }
-            }
-        }
+       
 
-        public String textureName;
-        public Renderable(Vector2 pos, Vector2 size, String textureName)
-        {
-            this.pos = pos;
-            this.Size = size;
-            LoadTexture(textureName);
-        }
-        public Renderable(Texture2D texture, Vector2 pos)
-        {
-            this.pos = pos;
-            this._texture = texture;
-        }
+        public string textureName;
+       
 
         public Renderable(Texture2D texture, Rectangle sourceRect)
         {
             this._texture = texture;
             this.sourceRect = sourceRect;
+            size = new Point(sourceRect.Width, sourceRect.Height);
         }
 
         public void LoadTexture(String textureName)
         {
             if (textureName == null) { return; }
             _texture = Game1.contentManager.Load<Texture2D>(textureName);
+            size = new Point(_texture.Width, _texture.Height);
         }
 
         public void Draw(SpriteBatch b, Vector2 pos)

@@ -11,6 +11,7 @@ namespace ProjectPalladium
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private Map _map;
 
         public Player happyFace;
         private Tilemap _tilemap;
@@ -45,16 +46,16 @@ namespace ProjectPalladium
             
             dx = MathHelper.Clamp(
                 dx, 
-                -(_tilemap.MapTileSize.X * _tilemap.TileSize * scale) + screenWidth - (_tilemap.TileSize * scale / 2) , 
-                _tilemap.TileSize / 2 * scale);
+                -(_map.tileMapSize.X * _map.tilesize * scale) + screenWidth - (_map.tilesize * scale / 2) ,
+                _map.tilesize / 2 * scale);
 
             var dy = ((screenHeight / 2) - happyFace.pos.Y - (happyFace.sprite.spriteHeight * scale) / 2);
 
 
             dy = MathHelper.Clamp(
                 dy,
-                -(_tilemap.MapTileSize.Y * _tilemap.TileSize * scale) + screenHeight - (_tilemap.TileSize * scale / 2),
-                _tilemap.TileSize / 2 * scale);
+                -(_map.tileMapSize.Y * _map.tilesize * scale) + screenHeight - (_map.tilesize * scale / 2),
+                _map.tilesize / 2 * scale);
 
             _translation = Matrix.CreateTranslation(dx, dy, 0f);
         }
@@ -62,12 +63,12 @@ namespace ProjectPalladium
         protected override void Initialize()
         {
             base.Initialize();
-            _tilemap = new Tilemap("hollow.tmx");
+            _map = new Map("test1.tmx");
 
             happyFace = new Player(new AnimatedSprite(16, 32, "playerplaceholder", "playerplaceholder"), Vector2.Zero, "Player");
             happyFace.Initialize();
 
-            happyFace.setBounds(_tilemap.MapTileSize, _tilemap.TileSize);
+            happyFace.setBounds(_map.tileMapSize, 16);
 
         }
 
@@ -93,7 +94,7 @@ namespace ProjectPalladium
             base.Draw(gameTime);
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _translation);
 
-            _tilemap.Draw(_spriteBatch);
+            _map.Draw(_spriteBatch);
             happyFace.Draw(_spriteBatch);
 
             _spriteBatch.End();

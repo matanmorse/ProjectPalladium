@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 
 namespace ProjectPalladium
 {
@@ -21,58 +24,44 @@ namespace ProjectPalladium
         private int tileSize = 16;
         public int TileSize { get {  return tileSize; } }
 
-        private Point _mapTileSize = new Point(64, 32);
+        private Point _mapTileSize;
+
+        Renderable[,] layer;
 
         public Point MapTileSize {  get { return _mapTileSize; } }
 
         Texture2D tileMap;
-        public Tilemap(String fileName) {
+        public Tilemap(string tileData, Point MapTileSize) {
+            layer = new Renderable[MapTileSize.X, MapTileSize.Y];
+            _mapTileSize = MapTileSize;
             tileIndex = ExtractTiles("tilemap");
-
-            TMXParser(fileName);
+            DecodeTileData(tileData);
         }
 
-        // populate the layers based on given tmx file
-        // returns list of 2d array of sprites representing each layer
-        public void TMXParser(String fileName)
+      
+        /* Create a list of renderable objects from a string of tile ids*/
+        public List<Renderable[,]> DecodeTileData (string data)
         {
-            
-            // load the tmx file
-            fileName = "content/" + fileName;
-            tmxDoc = new XDocument();
-            tmxDoc = XDocument.Load(fileName);
+            // parse the numbers from the layer into a 1d array
+            int[] tiles = Array.ConvertAll(data.Split(','), int.Parse);
 
-            DecodeTMX();            
-        }
-
-        public List<Renderable[,]> DecodeTMX ()
-        {
-            IEnumerable<XElement> layerData = tmxDoc.Descendants("layer");
-
-            foreach (XElement elem in layerData) // for each layer
+            for (int i = 0; i < (_mapTileSize.X * _mapTileSize.Y); i++)
             {
-                String line = elem.Value.Trim();
 
-                // parse the numbers from the layer into a 1d array
-                int[] tiles = Array.ConvertAll(line.Split(','), int.Parse);
+                // convert the 1d coordinates to 2d based on map size
+                int x = i % _mapTileSize.X;
+                int y = i / _mapTileSize.X;
 
-                Renderable[,] layer = new Renderable[_mapTileSize.X, _mapTileSize.Y];
-                for (int i = 0; i < (_mapTileSize.X * _mapTileSize.Y); i++)
-                {
+                //Debug.WriteLine("tile: " + nums[i] + "at " + x + "," + y);
 
-                    // convert the 1d coordinates to 2d based on map size
-                    int x = i % _mapTileSize.X;
-                    int y = i / _mapTileSize.X;
-
-                    //Debug.WriteLine("tile: " + nums[i] + "at " + x + "," + y);
-
-                    // based on the id of the tile, set the tile data in the layer
-                    layer[x, y] = tileIndex[tiles[i]];
-                }
-                layers.Add(layer);
+                // based on the id of the tile, set the tile data in the layer
+                layer[x, y] = tileIndex[tiles[i]];
             }
+            layers.Add(layer);
             return layers;
         }
+
+        /* Create an index of tiles based on the tilemaps, corresponding to their id's */
         public List<Renderable> ExtractTiles(string fileName)
         {
             tileMap = Game1.contentManager.Load<Texture2D>(fileName);
@@ -94,25 +83,19 @@ namespace ProjectPalladium
             return tiles;
         }
 
+        /* draw tilemap */
         public void Draw(SpriteBatch b)
         {
 
-            
-            
-            foreach (Renderable[,] layer in layers)
+            for (int i = 0; i < _mapTileSize.X; i++)
             {
-                for (int i = 0; i < _mapTileSize.X; i++)
+                for (int j = 0; j < _mapTileSize.Y; j++)
                 {
-                    for (int j = 0; j < _mapTileSize.Y; j++)
-                    {
-                        Vector2 pos = new Vector2(i * tileSize * Game1.scale, j * tileSize * Game1.scale);
-                        layer[i, j].Draw(b, pos);
-                    }
+                    Vector2 pos = new Vector2(i * tileSize * Game1.scale, j * tileSize * Game1.scale);
+                    layer[i, j].Draw(b, pos);
                 }
             }
-            
-        }
 
-        
+        }
     }
 }
