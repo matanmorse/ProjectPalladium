@@ -1,0 +1,13 @@
+{
+  "name": "Roger",
+  "animations": {
+    "idle": {
+      "startframe": 0,
+      "numframes": 1
+    },
+    "walk":{
+      "startframe": 2,
+      "numframes" : 3
+    }
+  }
+}

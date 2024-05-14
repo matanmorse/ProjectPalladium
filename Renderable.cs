@@ -16,7 +16,8 @@ namespace ProjectPalladium
         
 
         private Vector2 size;
-
+        private Texture2D _texture;
+        private Rectangle sourceRect;
         public Vector2 Size
         {
             get { return Size; }
@@ -34,10 +35,30 @@ namespace ProjectPalladium
         {
             this.pos = pos;
             this.Size = size;
-            this.textureName = textureName;
+            LoadTexture(textureName);
+        }
+        public Renderable(Texture2D texture, Vector2 pos)
+        {
+            this.pos = pos;
+            this._texture = texture;
         }
 
-  
+        public Renderable(Texture2D texture, Rectangle sourceRect)
+        {
+            this._texture = texture;
+            this.sourceRect = sourceRect;
+        }
+
+        public void LoadTexture(String textureName)
+        {
+            if (textureName == null) { return; }
+            _texture = Game1.contentManager.Load<Texture2D>(textureName);
+        }
+
+        public void Draw(SpriteBatch b, Vector2 pos)
+        {
+            b.Draw(_texture, pos, sourceRect, Color.White, 0f, Vector2.Zero, Game1.scale, SpriteEffects.None, 0f);
+        }
 
 
     }

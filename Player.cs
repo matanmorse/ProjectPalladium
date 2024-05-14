@@ -43,6 +43,15 @@ namespace ProjectPalladium
             
 
             Velocity = inputDir;
+
+            if (Velocity.Y != 0 || Velocity.X != 0)
+            {
+                this.sprite.Animation = this.sprite.Animations[1];
+            }
+            else
+            {
+                this.sprite.Animation = this.sprite.Animations[0];
+            }
             movePos();
         }
     }

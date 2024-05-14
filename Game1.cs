@@ -10,7 +10,8 @@ namespace ProjectPalladium
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        
+
+
         public Player happyFace;
         private Tilemap _tilemap;
 
@@ -20,7 +21,7 @@ namespace ProjectPalladium
         public static int screenHeight;
         public static ContentManager contentManager;
 
-        public static float scale = 6f;
+        public static float scale = 4f;
 
         private Matrix _translation;
         public Game1()
@@ -61,10 +62,9 @@ namespace ProjectPalladium
         protected override void Initialize()
         {
             base.Initialize();
-            happyFace = new Player(new AnimatedSprite(0, 16, 16, "happyfaceanimated"), Vector2.Zero, "Happy Face");
-
+            happyFace = new Player(new AnimatedSprite(0, 16, 32, "playerplaceholder", "playerplaceholder"), Vector2.Zero, "Player");
+            happyFace.sprite.LoadContent();
             _tilemap = new Tilemap("hollow.tmx");
-
             happyFace.setBounds(_tilemap.MapTileSize, _tilemap.TileSize);
 
         }
@@ -72,11 +72,12 @@ namespace ProjectPalladium
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
         }
 
         protected override void Update(GameTime gameTime)
         {
-            happyFace.sprite.Animate(gameTime, 0, 2, 1000f);
+            happyFace.sprite.Update(gameTime);
             happyFace.handleMovement();
 
             CalculateTranslation();
@@ -90,8 +91,8 @@ namespace ProjectPalladium
 
             base.Draw(gameTime);
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _translation);
-
             _tilemap.Draw(_spriteBatch);
+
 
             happyFace.sprite.Draw(_spriteBatch, happyFace.pos, 1f);
 

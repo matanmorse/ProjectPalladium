@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,9 +10,11 @@ namespace ProjectPalladium
 {
     public class Tilemap
     {
-        public List<AnimatedSprite[,]> layers = new List<AnimatedSprite[,]>();
+        private XDocument tmxDoc;
 
-        public List<AnimatedSprite> tileIndex;
+        public List<Renderable[,]> layers = new List<Renderable[,]>();
+
+        public List<Renderable> tileIndex;
 
         // public AnimatedSprite[,] layer;
         
@@ -32,17 +34,20 @@ namespace ProjectPalladium
 
         // populate the layers based on given tmx file
         // returns list of 2d array of sprites representing each layer
-        public List<AnimatedSprite[,]> TMXParser(String fileName)
+        public void TMXParser(String fileName)
         {
             
             // load the tmx file
             fileName = "content/" + fileName;
-            XDocument tmxDoc = new XDocument();
+            tmxDoc = new XDocument();
             tmxDoc = XDocument.Load(fileName);
 
+            DecodeTMX();            
+        }
+
+        public List<Renderable[,]> DecodeTMX ()
+        {
             IEnumerable<XElement> layerData = tmxDoc.Descendants("layer");
-
-
 
             foreach (XElement elem in layerData) // for each layer
             {
@@ -51,8 +56,8 @@ namespace ProjectPalladium
                 // parse the numbers from the layer into a 1d array
                 int[] tiles = Array.ConvertAll(line.Split(','), int.Parse);
 
-                AnimatedSprite[,] layer = new AnimatedSprite[_mapTileSize.X, _mapTileSize.Y];
-                for (int i = 0 ; i < (_mapTileSize.X * _mapTileSize.Y); i++)
+                Renderable[,] layer = new Renderable[_mapTileSize.X, _mapTileSize.Y];
+                for (int i = 0; i < (_mapTileSize.X * _mapTileSize.Y); i++)
                 {
 
                     // convert the 1d coordinates to 2d based on map size
@@ -66,19 +71,14 @@ namespace ProjectPalladium
                 }
                 layers.Add(layer);
             }
-
-
-
-            return null;
-            
+            return layers;
         }
-
-        public List<AnimatedSprite> ExtractTiles(string fileName)
+        public List<Renderable> ExtractTiles(string fileName)
         {
             tileMap = Game1.contentManager.Load<Texture2D>(fileName);
 
-            List<AnimatedSprite> tiles = new List<AnimatedSprite>();
-            tiles.Add(new AnimatedSprite(tileMap, tileSize, tileSize, new Rectangle(0, 0, 0, 0))); // in tiled tmx, id=0 is an empty tile, so the first entry is an empty rectangle
+            List<Renderable> tiles = new List<Renderable>();
+            tiles.Add(new Renderable(tileMap, new Rectangle(0, 0, 0, 0))); // in tiled tmx, id=0 is an empty tile, so the first entry is an empty rectangle
 
             
             for (int i = 0; i < (tileMap.Width / tileSize) * (tileMap.Height / tileSize); i++)
@@ -87,22 +87,26 @@ namespace ProjectPalladium
                 Rectangle sourceRect = new Rectangle(tileSize * i % tileMap.Width, i * tileSize / tileMap.Width * tileSize,
                 tileSize, tileSize);
 
-                tiles.Add(new AnimatedSprite(tileMap, tileSize, tileSize, sourceRect));
+                tiles.Add(new Renderable(tileMap, sourceRect));
             }
+
             // foreach (Rectangle tile in tiles) Debug.Write(tile);
             return tiles;
         }
 
         public void Draw(SpriteBatch b)
         {
-            foreach (AnimatedSprite[,] layer in layers)
+
+            
+            
+            foreach (Renderable[,] layer in layers)
             {
                 for (int i = 0; i < _mapTileSize.X; i++)
                 {
                     for (int j = 0; j < _mapTileSize.Y; j++)
                     {
                         Vector2 pos = new Vector2(i * tileSize * Game1.scale, j * tileSize * Game1.scale);
-                        layer[i, j].Draw(b, pos, 0f);
+                        layer[i, j].Draw(b, pos);
                     }
                 }
             }
