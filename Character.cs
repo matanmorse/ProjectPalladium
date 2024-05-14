@@ -38,8 +38,24 @@ namespace ProjectPalladium
             this.sprite = sprite;
             this.pos = pos;
             this.name = name;
+            
         }
 
+        public virtual void Initialize()
+        {
+            // load sprite data
+            sprite.LoadContent();
+        }
+
+        public virtual void Update(GameTime gameTime)
+        {
+            sprite.Update(gameTime);
+        }
+
+        public virtual void Draw(SpriteBatch b)
+        {
+            sprite.Draw(b, pos, 1f);
+        }
         public void setMovingUp(bool b) {
             moveUp = b;
             

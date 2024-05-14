@@ -55,9 +55,9 @@ namespace ProjectPalladium
 
             this.frames = new AnimationFrame[numFrames + 1];
 
+            // populate the frames array with the source rectangles of every frame of the animation
             for (int i = 0; i <= numFrames; i++)
             {
-                Debug.WriteLine(i + startFrame);
                 frames[i] = new AnimationFrame(i + startFrame, sprite);
             }
         }
@@ -69,8 +69,6 @@ namespace ProjectPalladium
 
             if (timer > interval)
             {
-                Debug.WriteLine("tick");
-                Debug.WriteLine("Len " + frames.Length);
                 currentFrame = (currentFrame + 1) % frames.Length;
                 timer = 0f;
                 if (currentFrame > startFrame + numFrames)
@@ -83,7 +81,6 @@ namespace ProjectPalladium
 
         public Rectangle getCurrentFrame ()
         {
-            Debug.WriteLine("frame " + currentFrame + " " + frames[currentFrame].sourceRect);
             return frames[currentFrame].sourceRect;
         }
 

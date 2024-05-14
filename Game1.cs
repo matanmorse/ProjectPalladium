@@ -62,9 +62,11 @@ namespace ProjectPalladium
         protected override void Initialize()
         {
             base.Initialize();
-            happyFace = new Player(new AnimatedSprite(0, 16, 32, "playerplaceholder", "playerplaceholder"), Vector2.Zero, "Player");
-            happyFace.sprite.LoadContent();
             _tilemap = new Tilemap("hollow.tmx");
+
+            happyFace = new Player(new AnimatedSprite(16, 32, "playerplaceholder", "playerplaceholder"), Vector2.Zero, "Player");
+            happyFace.Initialize();
+
             happyFace.setBounds(_tilemap.MapTileSize, _tilemap.TileSize);
 
         }
@@ -77,8 +79,7 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
-            happyFace.sprite.Update(gameTime);
-            happyFace.handleMovement();
+            happyFace.Update(gameTime);
 
             CalculateTranslation();
 
@@ -91,10 +92,9 @@ namespace ProjectPalladium
 
             base.Draw(gameTime);
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _translation);
+
             _tilemap.Draw(_spriteBatch);
-
-
-            happyFace.sprite.Draw(_spriteBatch, happyFace.pos, 1f);
+            happyFace.Draw(_spriteBatch);
 
             _spriteBatch.End();
 

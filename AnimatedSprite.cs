@@ -24,12 +24,12 @@ namespace ProjectPalladium
         public int spriteHeight;
         private float timer = 0;
 
-        private String animationsRegistryName;
+        private string animationsRegistryName;
         
         private Rectangle defaultFrame;
 
-        private List<Animation> animations = new List<Animation>();
-        public List<Animation> Animations { get { return animations; } }
+        private Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
+        public Dictionary<string, Animation> Animations { get { return animations; } }
         public int CurrentFrame
         {
             get => currentFrame; 
@@ -40,27 +40,8 @@ namespace ProjectPalladium
         }
 
 
-        public AnimatedSprite(Texture2D texture, int spriteWidth, int spriteHeight, Rectangle sourceRect, string registryName)
+        public AnimatedSprite(int spriteWidth, int spriteHeight, string textureName, string registryName)
         {
-            this.spriteTexture = texture;
-            this.spriteWidth = spriteWidth;
-            this.spriteHeight = spriteHeight;
-            this.sourceRect = sourceRect;
-            initSprite(registryName);
-        }
-
-        public AnimatedSprite(Texture2D texture, int spriteWidth, int spriteHeight, string registryName)
-        {
-            spriteTexture = texture;
-            this.spriteWidth = spriteWidth;
-            this.spriteHeight = spriteHeight;
-            initSprite(registryName);
-
-        }
-        public AnimatedSprite(int currentFrame, int spriteWidth, int spriteHeight, string textureName, string registryName)
-        {
-         
-            this.currentFrame = currentFrame;
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
             initSprite(registryName);
@@ -76,23 +57,28 @@ namespace ProjectPalladium
 
         public void LoadContent()
         {
+            // open the animation metadata json
             string registryPath = "Content/" + animationsRegistryName + ".json";
             string json = System.IO.File.ReadAllText(registryPath);
 
             JObject data = JObject.Parse(json);
             JToken anims = data["animations"];
+
+            // for each animation, extract the needed information and create a new animation object
             foreach (JToken anim in anims.Values())
             {
                 int startFrame = (int) anim["startframe"];
                 int numFrames = (int) anim["numframes"];
                 String name = ((JProperty)anim.Parent).Name;
-                Debug.WriteLine(name);
-                Animation newAnim = new Animation( name, startFrame, numFrames, 1000f, this); ;
-                animations.Add(newAnim);
+
+                Animation newAnim = new Animation( name, startFrame, numFrames, 1000f, this);
+
+                // add the object to the dictionary of animations
+                animations.Add(name, newAnim);
+                
             }
-            // Debug.WriteLine(animations[0]);
-            _animation = animations[0];
-            // Debug.WriteLine(_animation);
+            // start on the idle animation
+            _animation = animations["idle"];
         }
 
         // Loads texture into memory

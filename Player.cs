@@ -29,30 +29,32 @@ namespace ProjectPalladium
             setMovingRight(Keyboard.GetState().IsKeyDown(Keys.D));
 
             if (moveUp) inputDir.Y -= 1;
-            
             if (moveDown) inputDir.Y += 1;
-            
             if (moveLeft) inputDir.X -= 1;
-            
             if (moveRight) inputDir.X += 1;
             
 
             if (moveUp && moveDown) inputDir.Y = Math.Sign(Velocity.Y);
             
             if (moveLeft && moveRight) inputDir.X = Math.Sign(Velocity.X);
-            
 
             Velocity = inputDir;
 
             if (Velocity.Y != 0 || Velocity.X != 0)
             {
-                this.sprite.Animation = this.sprite.Animations[1];
+                this.sprite.Animation = this.sprite.Animations["walk"];
             }
             else
             {
-                this.sprite.Animation = this.sprite.Animations[0];
+                this.sprite.Animation = this.sprite.Animations["idle"];
             }
             movePos();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            handleMovement();
         }
     }
 
