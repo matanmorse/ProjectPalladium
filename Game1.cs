@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPalladium.Content;
 
 
 namespace ProjectPalladium
@@ -9,7 +10,7 @@ namespace ProjectPalladium
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
+        public static GraphicsDevice graphicsDevice;
         private Map _map;
 
         public Player player;
@@ -21,18 +22,21 @@ namespace ProjectPalladium
         public static int screenHeight;
         public static ContentManager contentManager;
 
-        public static float scale = 4f;
+        public static float scale = 5f;
 
         private Matrix _translation;
         public Game1()
         {
+
             _graphics = new GraphicsDeviceManager(this);
+            
+
             Content.RootDirectory = "Content";
             contentManager = new ContentManager(base.Content.ServiceProvider, base.Content.RootDirectory);
             IsMouseVisible = true;
 
-            _graphics.PreferredBackBufferHeight = 1080;
-            _graphics.PreferredBackBufferWidth = 1440;
+            _graphics.PreferredBackBufferHeight = 1440;
+            _graphics.PreferredBackBufferWidth = 2560;
 
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
@@ -71,11 +75,14 @@ namespace ProjectPalladium
         protected override void Initialize()
         {
             base.Initialize();
-            _map = new Map("test1.tmx");
+            _map = new Map("hollow.tmx");
             _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 20, Map.tilesize * 10 * Game1.scale)));
-            _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 10, Map.tilesize * 30 * Game1.scale)));
 
-            player = new Player(new AnimatedSprite(16, 32, "playerplaceholder", "playerplaceholder"), new Vector2(100, 100), "Player", _map);
+            _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 5, Map.tilesize * 20 * Game1.scale)));
+
+            Vector2 playerPos = new Vector2(100, 100);
+            player = new Player(new AnimatedSprite(16, 32, "playerplaceholder", "playerplaceholder"), playerPos, "Player", _map,
+                new Rectangle((int) playerPos.X, (int) playerPos.Y, (int) ((16 * Game1.scale) ), (int) ((32 * Game1.scale))));
             player.Initialize();
 
             player.setBounds(_map.tileMapSize, 16);
@@ -85,7 +92,7 @@ namespace ProjectPalladium
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            graphicsDevice = GraphicsDevice;
         }
 
         protected override void Update(GameTime gameTime)
@@ -106,6 +113,7 @@ namespace ProjectPalladium
 
             _map.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
+
 
             _spriteBatch.End();
 

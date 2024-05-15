@@ -27,6 +27,9 @@ namespace ProjectPalladium
         public int spriteHeight;
         private float timer = 0;
 
+        public int scaledWidth;
+        public int scaledHeight;
+
         private string animationsRegistryName;
         
         private Rectangle defaultFrame;
@@ -47,6 +50,10 @@ namespace ProjectPalladium
         {
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
+
+            this.scaledWidth = (int) (spriteWidth * Game1.scale);
+            this.scaledHeight = (int)(spriteHeight * Game1.scale);
+
             this.origin = new Vector2(spriteWidth / 2, spriteHeight / 2);
             initSprite(registryName);
             LoadTexture(textureName);

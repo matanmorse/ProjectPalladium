@@ -13,7 +13,8 @@ namespace ProjectPalladium
     public class Player : Character
     {
         private Vector2 inputDir = Vector2.Zero;
-        public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap) : base(sprite, pos, name, startingMap)
+        public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) : 
+            base(sprite, pos, name, startingMap, boundingBox)
         {
         }
 

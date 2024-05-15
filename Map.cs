@@ -36,15 +36,14 @@ namespace ProjectPalladium
             }
         }
         // checks collisions with any collidable objects on the map
-        public bool CheckCollisions(Vector2 Pos)
+        // returns rectangle of intersection of first found collision
+        public Rectangle CheckCollisions(Rectangle boundingBox)
         {
-            bool collidesBuildings = false;
             foreach(Building building in buildings)
             {
-                if(building.bounds.Contains(Pos)) collidesBuildings = true;
+                if (Rectangle.Intersect(building.bounds, boundingBox) != Rectangle.Empty) return Rectangle.Intersect(building.bounds, boundingBox); 
             }
-
-            return collidesBuildings;
+            return Rectangle.Empty;
         }
         /* Parses TMX file to create map representation */
         public void DeserializeMap()
