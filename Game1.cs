@@ -77,7 +77,7 @@ namespace ProjectPalladium
             base.Initialize();
             _map = new Map("hollow.tmx");
             _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 20, Map.tilesize * 10 * Game1.scale)));
-
+            _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 20, Map.tilesize * 14 * Game1.scale)));
             _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 5, Map.tilesize * 20 * Game1.scale)));
 
             Vector2 playerPos = new Vector2(100, 100);

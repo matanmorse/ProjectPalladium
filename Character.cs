@@ -132,7 +132,7 @@ namespace ProjectPalladium
             }
             boundingBox.Location = new Point((int)(pos.X - sprite.spriteWidth / 2 * Game1.scale), (int)(pos.Y - sprite.spriteHeight / 2 * Game1.scale));
             // TODO: fix jank collisions, but in the meantime if this didn't acually fix just put it at the top right
-            if (currentMap.CheckCollisions(boundingBox) != Rectangle.Empty) { pos.X = collided.Right; pos.Y = collided.Top; }
+            if (currentMap.CheckCollisions(boundingBox) != Rectangle.Empty) { ResolveCollision(currentMap.CheckCollisions(boundingBox), Rectangle.Intersect(currentMap.CheckCollisions(boundingBox), boundingBox)); }
         }
 
         public override string ToString()
