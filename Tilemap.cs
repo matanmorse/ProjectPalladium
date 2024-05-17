@@ -55,6 +55,7 @@ namespace ProjectPalladium
                 //Debug.WriteLine("tile: " + nums[i] + "at " + x + "," + y);
 
                 // based on the id of the tile, set the tile data in the layer
+
                 layer[x, y] = tileIndex[tiles[i]];
             }
             layers.Add(layer);

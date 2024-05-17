@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace ProjectPalladium
 {
-    public class Debug
+    public class DebugParams
     {
         public static bool showColliders = false;
     }

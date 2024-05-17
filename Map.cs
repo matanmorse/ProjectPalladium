@@ -17,6 +17,7 @@ namespace ProjectPalladium
         private string filename;
         public string name;
 
+        public int scaledTileSize;
         public List<Tilemap> tilemaps = new List<Tilemap>();
         public List<Building> buildings = new List<Building>();
 
@@ -34,6 +35,8 @@ namespace ProjectPalladium
             {
                 tilemaps.Add(new Tilemap(layer.Data.Text, tileMapSize));
             }
+
+            this.scaledTileSize = (int) (tilesize * Game1.scale);
         }
         // checks collisions with any collidable objects on the map
         // returns rectangle of intersection of first found collision

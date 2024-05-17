@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPalladium.Content;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace ProjectPalladium
@@ -69,7 +68,7 @@ namespace ProjectPalladium
 
         public virtual void Draw(SpriteBatch b)
         {
-            if (Debug.showColliders) { Util.DrawRectangle(boundingBox, b); }
+            if (DebugParams.showColliders) { Util.DrawRectangle(boundingBox, b); }
             sprite.Draw(b, pos, 1f, flipped);
         }
         public void setMovingUp(bool b) {
@@ -92,8 +91,8 @@ namespace ProjectPalladium
 
         public void setBounds(Point mapSize, int tileSize)
         {
-            edgex = (mapSize.X * tileSize * (int)Game1.scale) - (int)((sprite.spriteWidth / 2) * Game1.scale);
-            edgey = (mapSize.Y * tileSize * (int)Game1.scale) - (int)((sprite.spriteHeight / 2) * Game1.scale);
+            edgex = (mapSize.X * tileSize * (int)Game1.scale) - (int)((sprite.scaledWidth / 2));
+            edgey = (mapSize.Y * tileSize * (int)Game1.scale) - (int)((sprite.scaledHeight / 2));
         }
         public void movePos()
         {

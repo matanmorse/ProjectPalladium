@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPalladium.Content;
 
 
 namespace ProjectPalladium
@@ -58,8 +57,8 @@ namespace ProjectPalladium
             
             dx = MathHelper.Clamp(
                 dx, 
-                -(_map.tileMapSize.X * Map.tilesize * scale) + screenWidth - (Map.tilesize * scale / 2) ,
-                Map.tilesize / 2 * scale);
+                -(_map.tileMapSize.X * _map.scaledTileSize) + screenWidth,
+                0);
 
             var dy = ((screenHeight / 2) - player.pos.Y - (player.sprite.spriteHeight * scale) / 2);
 
@@ -67,7 +66,7 @@ namespace ProjectPalladium
             dy = MathHelper.Clamp(
                 dy,
                 -(_map.tileMapSize.Y * Map.tilesize * scale) + screenHeight - (Map.tilesize * scale / 2),
-                Map.tilesize / 2 * scale);
+                0);
 
             _translation = Matrix.CreateTranslation(dx, dy, 0f);
         }
@@ -76,9 +75,7 @@ namespace ProjectPalladium
         {
             base.Initialize();
             _map = new Map("hollow.tmx");
-            _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 20, Map.tilesize * 10 * Game1.scale)));
-            _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 20, Map.tilesize * 14 * Game1.scale)));
-            _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 5, Map.tilesize * 20 * Game1.scale)));
+            _map.buildings.Add(new Building("wizardtower", new Vector2(10, 10)));
 
             Vector2 playerPos = new Vector2(100, 100);
             player = new Player(new AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", _map,
