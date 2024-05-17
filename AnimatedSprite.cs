@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Newtonsoft;
 using Newtonsoft.Json.Linq;
+using ProjectPalladium.Content;
 
 namespace ProjectPalladium
 {
@@ -75,26 +76,17 @@ namespace ProjectPalladium
         {
             // open the animation metadata json
             string registryPath = "Content/" + animationsRegistryName + ".json";
-            string json = System.IO.File.ReadAllText(registryPath);
+            string jsonString = System.IO.File.ReadAllText(registryPath);
 
-            JObject data = JObject.Parse(json);
-            JToken anims = data["animations"];
-
-            // for each animation, extract the needed information and create a new animation object
-            foreach (JToken anim in anims.Values())
+            AnimationDeserializer dsrlzdAnimData = JsonSerializer.Deserialize<AnimationDeserializer>(jsonString);
+            foreach(var anim in dsrlzdAnimData.animations)
             {
-                int startFrame = (int) anim["startframe"];
-                int numFrames = (int) anim["numframes"];
-                String name = ((JProperty)anim.Parent).Name;
-
-                Animation newAnim = new Animation( name, startFrame, numFrames, 1000f, this);
-
-                // add the object to the dictionary of animations
-                animations.Add(name, newAnim);
-                
+                animations.Add(anim.Key, new Animation(anim.Key, anim.Value.startFrame, anim.Value.numFrames, 1000f, this));
+                Debug.WriteLine("Key: " + anim.Key + " startFrame: " + anim.Value.startFrame + " numFrames: " + anim.Value.numFrames); 
             }
+
             // start on the idle animation
-            _animation = animations["idle"];
+            _animation = animations["idle"]
         }
 
         // Loads texture into memory

@@ -32,6 +32,8 @@ namespace ProjectPalladium
 
         public void Draw(SpriteBatch b)
         {
+            if (DebugParams.showColliders) Util.DrawRectangle(bounds, b);
+
             sprite.Draw(b, globalPos);
         }
     }
