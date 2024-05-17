@@ -16,6 +16,7 @@ namespace ProjectPalladium
         public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) : 
             base(sprite, pos, name, startingMap, boundingBox)
         {
+            currentMap.player = this;
         }
 
         public void handleMovement()
@@ -56,6 +57,7 @@ namespace ProjectPalladium
             }
             movePos();
         }
+
 
         public override void Update(GameTime gameTime)
         {

@@ -69,7 +69,7 @@ namespace ProjectPalladium
         public virtual void Draw(SpriteBatch b)
         {
             if (DebugParams.showColliders) { Util.DrawRectangle(boundingBox, b); }
-            sprite.Draw(b, pos, 1f, flipped);
+            sprite.Draw(b, pos, flipped, layerDepth:0.9f);
         }
         public void setMovingUp(bool b) {
             moveUp = b;

@@ -82,11 +82,10 @@ namespace ProjectPalladium
             foreach(var anim in dsrlzdAnimData.animations)
             {
                 animations.Add(anim.Key, new Animation(anim.Key, anim.Value.startFrame, anim.Value.numFrames, 1000f, this));
-                Debug.WriteLine("Key: " + anim.Key + " startFrame: " + anim.Value.startFrame + " numFrames: " + anim.Value.numFrames); 
             }
 
             // start on the idle animation
-            _animation = animations["idle"]
+            _animation = animations["idle"];
         }
 
         // Loads texture into memory
@@ -108,7 +107,7 @@ namespace ProjectPalladium
             if (_animation == null) { return; }
             b.Draw(spriteTexture, pos, _animation.getCurrentFrame(), Color.White, 0f, origin, Game1.scale, SpriteEffects.None, layerDepth);
         }
-        public void Draw(SpriteBatch b, Vector2 pos, float layerDepth, bool flipped)
+        public void Draw(SpriteBatch b, Vector2 pos, bool flipped, float layerDepth = 1f)
         {
             if (_animation == null) { return; }
             if (flipped)

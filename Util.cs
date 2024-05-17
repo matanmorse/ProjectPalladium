@@ -32,7 +32,7 @@ namespace ProjectPalladium
             Rectangle left = new Rectangle(rectUpperLeft, new Point(thickness, rect.Size.Y));
             Rectangle right = new Rectangle(new Point(rect.Right - thickness, rect.Top), new Point(thickness, rect.Size.Y));
 
-            b.Draw(_texture, right, color);
+            b.Draw(_texture, right, null, color);
             b.Draw(_texture, top, color);
             b.Draw(_texture, bottom, color);
             b.Draw(_texture, left, color);
@@ -45,6 +45,13 @@ namespace ProjectPalladium
         public static Vector2 LocalPosToGlobalPos(Vector2 local)
         {
             return new Vector2(local.X * tileSize * Game1.scale, local.Y * tileSize * Game1.scale);
+        }
+
+        // convert a serialized rectange to a rectangle at a specific point, with offsets
+        public static Rectangle makeRectFromPoints(ColliderDetails col, Vector2 pos)
+        {
+            return new Rectangle((int)(pos.X + (col.location[0] * Game1.scale)), (int)(pos.Y + (col.location[1] * Game1.scale)),
+                            (int)(col.size[0] * Game1.scale), (int)(col.size[1] * Game1.scale));
         }
     }
 }

@@ -93,7 +93,7 @@ namespace ProjectPalladium
                 for (int j = 0; j < _mapTileSize.Y; j++)
                 {
                     Vector2 pos = new Vector2(i * tileSize * Game1.scale, j * tileSize * Game1.scale);
-                    layer[i, j].Draw(b, pos);
+                    layer[i, j].Draw(b, pos, layer:Game1.layers.tile);
                 }
             }
 

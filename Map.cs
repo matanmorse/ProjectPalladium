@@ -23,6 +23,8 @@ namespace ProjectPalladium
 
         MapSerializer map;
 
+        public Player player;
+        
         public Point tileMapSize = new Point();
         public static int tilesize = 16;
 
@@ -48,6 +50,22 @@ namespace ProjectPalladium
             }
             return Rectangle.Empty;
         }
+
+        // if the player is behind a building, turn down opacity
+        public Building CheckBehindBuilding()
+        {
+            foreach (Building building in buildings)
+            {
+                if (Rectangle.Intersect(building.walkBehind, player.boundingBox) != Rectangle.Empty) {
+                    building.PlayerBehind = true;
+                }
+                else
+                {
+                    building.PlayerBehind = false;
+                }
+            }
+            return null;
+        }
         /* Parses TMX file to create map representation */
         public void DeserializeMap()
         {
@@ -59,6 +77,11 @@ namespace ProjectPalladium
             }
         }
 
+        public void Update(GameTime gameTime)
+        {
+            foreach (Building building in buildings) building.Update(gameTime);
+            CheckBehindBuilding();
+        }
         public void Draw(SpriteBatch b)
         {
             

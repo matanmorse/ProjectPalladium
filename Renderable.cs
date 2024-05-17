@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -14,6 +15,7 @@ namespace ProjectPalladium
     {
         public Point size;
         private Texture2D _texture;
+        public Texture2D Texture { get { return _texture; } }
         private Rectangle sourceRect;
        
 
@@ -41,9 +43,9 @@ namespace ProjectPalladium
             sourceRect = new Rectangle(new Point (0,0) , size);
         }
 
-        public void Draw(SpriteBatch b, Vector2 pos)
+        public void Draw(SpriteBatch b, Vector2 pos, float opacity = 1f, float layer = 0f)
         {
-            b.Draw(_texture, pos, sourceRect, Color.White, 0f, Vector2.Zero, Game1.scale, SpriteEffects.None, 0f);
+            b.Draw(_texture, pos, sourceRect, Color.White * opacity, 0f, Vector2.Zero, Game1.scale, SpriteEffects.None, layer) ;
         }
 
 

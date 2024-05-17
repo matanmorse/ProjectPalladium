@@ -24,6 +24,14 @@ namespace ProjectPalladium
         public static float scale = 5f;
 
         private Matrix _translation;
+
+        public static class layers
+        {
+            public const float tile = 0f;
+            public const float player = 0.9f;
+            public const float rectangles = 1f;
+            public const float buildings = 0.1f;
+        }
         public Game1()
         {
 
@@ -74,12 +82,15 @@ namespace ProjectPalladium
         protected override void Initialize()
         {
             base.Initialize();
+
             _map = new Map("hollow.tmx");
-            _map.buildings.Add(new Building("wizardtower", new Vector2(10, 10)));
+            _map.buildings.Add(new Building("wizardtower", new Vector2(10, 10), "test"));
+            // _map.buildings.Add(new Building("wizardtower", new Vector2(10, 15), "test"));
 
             Vector2 playerPos = new Vector2(100, 100);
             player = new Player(new AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", _map,
-                new Rectangle((int) playerPos.X, (int) playerPos.Y, (int) ((12 * Game1.scale) ), (int) ((26 * Game1.scale))));
+    new Rectangle((int)playerPos.X, (int)playerPos.Y, (int)((12 * Game1.scale)), (int)((26 * Game1.scale))));
+
             player.Initialize();
 
             player.setBounds(_map.tileMapSize, 16);
@@ -96,7 +107,7 @@ namespace ProjectPalladium
         {
            
             player.Update(gameTime);
-
+            _map.Update(gameTime);
             CalculateTranslation();
 
             base.Update(gameTime);
@@ -107,7 +118,7 @@ namespace ProjectPalladium
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             base.Draw(gameTime);
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _translation);
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack ,null, SamplerState.PointClamp, null,  null, null, _translation);
 
             _map.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
