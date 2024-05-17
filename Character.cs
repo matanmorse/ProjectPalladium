@@ -25,7 +25,11 @@ namespace ProjectPalladium
         public Vector2 pos;
         public float speed = 2f * Game1.scale;
         private Vector2 velocity;
-        public Vector2 Velocity { get { return velocity; } set { velocity = value; } }
+
+        public bool flipped;
+
+        public Vector2 Velocity { get { return velocity; } set { velocity = value; 
+                if (value.X != 0) flipped = velocity.X > 0 ? true : false; } }
 
         private int edgex;
         private int edgey;
@@ -65,7 +69,8 @@ namespace ProjectPalladium
 
         public virtual void Draw(SpriteBatch b)
         {
-            sprite.Draw(b, pos, 1f);
+            if (Debug.showColliders) { Util.DrawRectangle(boundingBox, b); }
+            sprite.Draw(b, pos, 1f, flipped);
         }
         public void setMovingUp(bool b) {
             moveUp = b;
@@ -94,7 +99,7 @@ namespace ProjectPalladium
         {
 
             pos += velocity * speed;
-            boundingBox.Location = new Point((int)(pos.X - sprite.spriteWidth / 2 * Game1.scale), (int)(pos.Y - sprite.spriteHeight / 2 * Game1.scale));
+            boundingBox.Location = new Point((int)(pos.X - (sprite.scaledWidth / 2) + ((sprite.scaledWidth - boundingBox.Width) / 2)), (int)(pos.Y - sprite.scaledHeight / 2) + ((sprite.scaledHeight - boundingBox.Height) / 2));
 
             if (pos.X - (sprite.spriteWidth * Game1.scale / 2) < 0) pos.X = (sprite.spriteWidth * Game1.scale / 2);
             if (pos.X > edgex) pos.X = edgex;
@@ -124,15 +129,18 @@ namespace ProjectPalladium
             bool moveToSide = distx < disty ? true : false;
             if (moveToSide)
             {
-                pos.X = pos.X < collided.Left ? collided.Left - (sprite.scaledWidth / 2)    : collided.Right + (sprite.scaledWidth / 2);
+                pos.X = pos.X < collided.Left ? collided.Left - (boundingBox.Width / 2)    : collided.Right + (boundingBox.Width / 2);
             }
             else
             {
-                pos.Y = pos.Y < collided.Top ? collided.Top - (sprite.scaledHeight / 2) : collided.Bottom + (sprite.scaledHeight / 2);
+                pos.Y = pos.Y < collided.Top ? collided.Top - (boundingBox.Height / 2) : collided.Bottom + (boundingBox.Height / 2);
             }
-            boundingBox.Location = new Point((int)(pos.X - sprite.spriteWidth / 2 * Game1.scale), (int)(pos.Y - sprite.spriteHeight / 2 * Game1.scale));
+            boundingBox.Location = new Point((int)(pos.X - (sprite.scaledWidth / 2) + ((sprite.scaledWidth - boundingBox.Width) / 2)), 
+                (int)(pos.Y - sprite.scaledHeight / 2) + ((sprite.scaledHeight - boundingBox.Height) / 2));
             // TODO: fix jank collisions, but in the meantime if this didn't acually fix just put it at the top right
-            if (currentMap.CheckCollisions(boundingBox) != Rectangle.Empty) { ResolveCollision(currentMap.CheckCollisions(boundingBox), Rectangle.Intersect(currentMap.CheckCollisions(boundingBox), boundingBox)); }
+            Rectangle stillCollides = currentMap.CheckCollisions(boundingBox);
+            if ( stillCollides != Rectangle.Empty) { ResolveCollision(stillCollides, Rectangle.Intersect(stillCollides, boundingBox));  }
+                
         }
 
         public override string ToString()

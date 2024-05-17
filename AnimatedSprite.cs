@@ -116,6 +116,18 @@ namespace ProjectPalladium
             if (_animation == null) { return; }
             b.Draw(spriteTexture, pos, _animation.getCurrentFrame(), Color.White, 0f, origin, Game1.scale, SpriteEffects.None, layerDepth);
         }
+        public void Draw(SpriteBatch b, Vector2 pos, float layerDepth, bool flipped)
+        {
+            if (_animation == null) { return; }
+            if (flipped)
+            {
+                b.Draw(spriteTexture, pos, _animation.getCurrentFrame(), Color.White, 0f, origin, Game1.scale, SpriteEffects.FlipHorizontally, layerDepth);
+            }
+            else
+            {
+                b.Draw(spriteTexture, pos, _animation.getCurrentFrame(), Color.White, 0f, origin, Game1.scale, SpriteEffects.None, layerDepth);
+            }
+        }
 
     }
 }

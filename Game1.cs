@@ -81,8 +81,8 @@ namespace ProjectPalladium
             _map.buildings.Add(new Building("testbuilding", new Vector2(Map.tilesize * Game1.scale * 5, Map.tilesize * 20 * Game1.scale)));
 
             Vector2 playerPos = new Vector2(100, 100);
-            player = new Player(new AnimatedSprite(16, 32, "playerplaceholder", "playerplaceholder"), playerPos, "Player", _map,
-                new Rectangle((int) playerPos.X, (int) playerPos.Y, (int) ((16 * Game1.scale) ), (int) ((32 * Game1.scale))));
+            player = new Player(new AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", _map,
+                new Rectangle((int) playerPos.X, (int) playerPos.Y, (int) ((12 * Game1.scale) ), (int) ((26 * Game1.scale))));
             player.Initialize();
 
             player.setBounds(_map.tileMapSize, 16);
@@ -97,6 +97,7 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
+           
             player.Update(gameTime);
 
             CalculateTranslation();
