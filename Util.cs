@@ -22,25 +22,17 @@ namespace ProjectPalladium
             _texture.SetData(new[] { Color.DeepPink });
 
             int thickness = 5;
-            Point rectUpperLeft = new Point(rect.Left, rect.Top);
-            Point rectLowerLeft = new Point(rect.Right, rect.Bottom);
+           
+            b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + thickness), new Rectangle(0,0,thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + thickness), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(_texture, new Vector2(rect.Left + rect.Size.X, rect.Top + thickness), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + rect.Size.Y), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
 
-            Vector2 origin = new Vector2(rect.X / 2, rect.Y / 2);
-
-            Rectangle top = new Rectangle(rectUpperLeft, new Point(rect.Size.X, thickness));
-            Rectangle bottom = new Rectangle(new Point(rect.Left, rect.Bottom - thickness), new Point(rect.Size.X, thickness));
-            Rectangle left = new Rectangle(rectUpperLeft, new Point(thickness, rect.Size.Y));
-            Rectangle right = new Rectangle(new Point(rect.Right - thickness, rect.Top), new Point(thickness, rect.Size.Y));
-
-            b.Draw(_texture, right, null, color);
-            b.Draw(_texture, top, color);
-            b.Draw(_texture, bottom, color);
-            b.Draw(_texture, left, color);
         }
 
         public static Vector2 GlobalPosToLocalPos(Vector2 global)
         {
-            return new Vector2(global.X / tileSize * Game1.scale, global.Y / tileSize * Game1.scale);
+            return new Vector2(global.X / (tileSize * Game1.scale), global.Y / (tileSize * Game1.scale));
         }
         public static Vector2 LocalPosToGlobalPos(Vector2 local)
         {

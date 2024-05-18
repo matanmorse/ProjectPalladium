@@ -100,9 +100,9 @@ namespace ProjectPalladium
             pos += velocity * speed;
             boundingBox.Location = new Point((int)(pos.X - (sprite.scaledWidth / 2) + ((sprite.scaledWidth - boundingBox.Width) / 2)), (int)(pos.Y - sprite.scaledHeight / 2) + ((sprite.scaledHeight - boundingBox.Height) / 2));
 
-            if (pos.X - (sprite.spriteWidth * Game1.scale / 2) < 0) pos.X = (sprite.spriteWidth * Game1.scale / 2);
+            if (pos.X - (sprite.scaledWidth / 2) < 0) pos.X = (sprite.scaledWidth / 2);
             if (pos.X > edgex) pos.X = edgex;
-            if (pos.Y - (sprite.spriteHeight * Game1.scale / 2) < 0) pos.Y = (sprite.spriteHeight * Game1.scale / 2);
+            if (pos.Y - (sprite.scaledHeight / 2) < 0) pos.Y = (sprite.scaledHeight / 2);
             if (pos.Y > edgey) pos.Y = edgey;
 
 

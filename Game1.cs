@@ -84,12 +84,10 @@ namespace ProjectPalladium
             base.Initialize();
 
             _map = new Map("hollow.tmx");
-            _map.buildings.Add(new Building("wizardtower", new Vector2(10, 10), "test"));
-            // _map.buildings.Add(new Building("wizardtower", new Vector2(10, 15), "test"));
 
             Vector2 playerPos = new Vector2(100, 100);
             player = new Player(new AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", _map,
-    new Rectangle((int)playerPos.X, (int)playerPos.Y, (int)((12 * Game1.scale)), (int)((26 * Game1.scale))));
+    new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (12 * Game1.scale), (int)(30 * Game1.scale)));
 
             player.Initialize();
 

@@ -43,22 +43,20 @@ namespace ProjectPalladium
                 {
                     layer = 0.1f;
                 }
-                Debug.WriteLine(layer);
                 playerBehind = value; 
             }
         }
-        public Building(string textureName, Vector2 pos, string jsonString) 
+
+        /* The name of the building (as defined by the "name" property of the .tmx file) is also the name of the json data file and the texture. */
+        public Building(string name, Vector2 pos) 
         {
 
 
-            this.sprite = new Renderable(textureName);
+            this.sprite = new Renderable(name);
             this.localPos = pos;
 
             this.globalPos = Util.LocalPosToGlobalPos(pos);
-            DeserializeJsonData(jsonString);
-
-            // this.bounds = new Rectangle(new Point((int) globalPos.X, (int) globalPos.Y), new Point((int)(sprite.size.X * Game1.scale), (int) (sprite.size.Y * Game1.scale)));
-
+            DeserializeJsonData(name);
 
         }
 
@@ -82,13 +80,16 @@ namespace ProjectPalladium
 
         public void Update(GameTime gameTime)
         {
+            // Debug.WriteLine("building updating@ " + globalPos);
             if (playerBehind) opacity = MathHelper.Clamp(opacity -= (float) (opacityDecayFactor * gameTime.ElapsedGameTime.TotalSeconds), 0.5f, 1f);
             else opacity = MathHelper.Clamp(opacity += (float)(opacityDecayFactor * gameTime.ElapsedGameTime.TotalSeconds), 0.5f, 1f);
         }
         public void Draw(SpriteBatch b)
         {
-            if (DebugParams.showColliders) Util.DrawRectangle(bounds, b); Util.DrawRectangle(walkBehind, b);
-            
+            if (DebugParams.showColliders)
+            {
+                Util.DrawRectangle(bounds, b); Util.DrawRectangle(walkBehind, b);
+            }
             sprite.Draw(b, globalPos, opacity:opacity, layer:layer);
         }
 

@@ -75,6 +75,20 @@ namespace ProjectPalladium
             {
                 map = (MapSerializer)serializer.Deserialize(fs);
             }
+
+
+            ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
+
+            // for each object in the building layer, add it to the list of buildings
+            foreach (TiledObject building in buildingLayer.objects)
+            {
+                Property[] pList = building.properties.properties; // don't even ask why i have to do this
+                string name = pList.First(prop => prop.name.ToLower() == "name").value;
+                
+                Vector2 pos = new Vector2(building.x / tilesize, building.y / tilesize);
+                Debug.WriteLine(pos);
+                buildings.Add(new Building(name, pos));
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -94,6 +108,18 @@ namespace ProjectPalladium
         {
             [XmlElement("layer")]
             public Layer[] Layers { get; set; }
+
+            [XmlElement("objectgroup")]
+            public ObjectLayer[] ObjectLayers { get; set; }
+        }
+
+        public class ObjectLayer
+        {
+            [XmlAttribute("name")]
+            public string name;
+
+            [XmlElement("object")]
+            public TiledObject[] objects { get; set; }
         }
 
         public class Data
@@ -115,6 +141,42 @@ namespace ProjectPalladium
 
             [XmlAttribute("height")]
             public int Height { get; set; }
+        }
+
+        public class TiledObject
+        {
+            [XmlAttribute("id")]
+            public int id { get; set; }
+
+            [XmlAttribute("x")]
+            public int x { get; set; }
+
+            [XmlAttribute("y")]
+            public int y { get; set; }
+
+            [XmlAttribute("height")]
+            public int height { get; set; }
+
+            [XmlAttribute("width")]
+            public int width { get; set; }
+
+            [XmlElement("properties")]
+            public PropertyList properties { get; set; }
+        }
+
+        public class PropertyList
+        {
+            [XmlElement("property")]
+            public Property[] properties { get; set; }
+        }
+        public class Property
+        {
+            [XmlAttribute("name")]
+            public string name { get; set; }
+
+            [XmlAttribute("value")]
+            public string value { get; set; }
+
         }
     }
 }
