@@ -13,13 +13,11 @@ namespace ProjectPalladium
 {
     public class Tilemap
     {
-        private XDocument tmxDoc;
 
         public List<Renderable[,]> layers = new List<Renderable[,]>();
 
         public List<Renderable> tileIndex;
 
-        // public AnimatedSprite[,] layer;
         
         private int tileSize = 16;
         public int TileSize { get {  return tileSize; } }
@@ -94,6 +92,7 @@ namespace ProjectPalladium
                 {
                     Vector2 pos = new Vector2(i * tileSize * Game1.scale, j * tileSize * Game1.scale);
                     layer[i, j].Draw(b, pos, layer:Game1.layers.tile);
+                    if (DebugParams.showColliders && i == 1 && j == 1) Util.DrawRectangle(new Rectangle((int)pos.X, (int)pos.Y, (int)(tileSize * Game1.scale), (int)( tileSize * Game1.scale)), b);
                 }
             }
 

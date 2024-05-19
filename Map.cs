@@ -76,7 +76,7 @@ namespace ProjectPalladium
                 map = (MapSerializer)serializer.Deserialize(fs);
             }
 
-
+            
             ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
 
             // for each object in the building layer, add it to the list of buildings

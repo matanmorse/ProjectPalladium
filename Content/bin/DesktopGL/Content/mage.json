@@ -1,0 +1,17 @@
+{
+  "name": "Mage",
+  "animations": {
+    "idle": {
+      "startframe": 0,
+      "numframes": 1
+    },
+    "walk": {
+      "startframe": 1,
+      "numframes": 1
+    },
+    "blah": {
+      "blahblah": 3,
+      "blablablah" :  4
+    }
+  }
+}

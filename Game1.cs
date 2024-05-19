@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 
 namespace ProjectPalladium
@@ -103,11 +104,11 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
-           
+            if (Keyboard.GetState().IsKeyDown(Keys.Z)) { DebugParams.showColliders = DebugParams.showColliders ? false : true; }
             player.Update(gameTime);
             _map.Update(gameTime);
             CalculateTranslation();
-
+            
             base.Update(gameTime);
         }
 

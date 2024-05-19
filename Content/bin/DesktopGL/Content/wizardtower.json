@@ -1,0 +1,13 @@
+﻿{
+  "name": "Wizard Tower",
+  "colliders": {
+    "move": {
+      "size": [ 44, 32 ],
+      "location": [ 10, 86 ]
+    },
+    "behind": {
+      "size": [ 44, 96 ],
+      "location": [ 10, 0 ]
+    }
+  }
+}
