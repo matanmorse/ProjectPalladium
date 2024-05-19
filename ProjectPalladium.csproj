@@ -16,8 +16,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Characters\" />
-    <Folder Include="Player\" />
     <Folder Include="Content\bin\DesktopGL\Content\NewFolder\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
