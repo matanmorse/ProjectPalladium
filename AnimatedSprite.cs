@@ -6,8 +6,6 @@ using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
-using Newtonsoft;
-using Newtonsoft.Json.Linq;
 using ProjectPalladium.Content;
 
 namespace ProjectPalladium
