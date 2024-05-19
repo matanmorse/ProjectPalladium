@@ -12,7 +12,7 @@ namespace ProjectPalladium.Utils
 {
     public class DebugParams
     {
-        public static bool showColliders = false;
+        public static bool showColliders = true;
     }
 
 }
