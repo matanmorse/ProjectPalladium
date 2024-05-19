@@ -38,7 +38,7 @@ namespace ProjectPalladium
 
             foreach (Layer layer in map.Layers)
             {
-                tilemaps.Add(new Tilemap(layer.Data.Text, tileMapSize));
+                tilemaps.Add(new Tilemap(layer.Data.Text, tileMapSize, false));
             }
 
             scaledTileSize = (int)(tilesize * Game1.scale);

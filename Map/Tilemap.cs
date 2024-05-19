@@ -14,6 +14,10 @@ namespace ProjectPalladium.TileMap
 {
     public class Tilemap
     {
+        // is this layer for colliders or not
+        public bool collideLayer;
+
+        public List<Rectangle> colliders;
 
         public List<Renderable[,]> layers = new List<Renderable[,]>();
 
@@ -30,17 +34,18 @@ namespace ProjectPalladium.TileMap
         public Point MapTileSize { get { return _mapTileSize; } }
 
         Texture2D tileMap;
-        public Tilemap(string tileData, Point MapTileSize)
+        public Tilemap(string tileData, Point MapTileSize, bool collideLayer)
         {
             layer = new Renderable[MapTileSize.X, MapTileSize.Y];
             _mapTileSize = MapTileSize;
             tileIndex = ExtractTiles("tilemap");
             DecodeTileData(tileData);
+            this.collideLayer = collideLayer;
         }
 
 
         /* Create a list of renderable objects from a string of tile ids*/
-        public List<Renderable[,]> DecodeTileData(string data)
+        public void DecodeTileData(string data)
         {
             // parse the numbers from the layer into a 1d array
             int[] tiles = Array.ConvertAll(data.Split(','), int.Parse);
@@ -58,8 +63,6 @@ namespace ProjectPalladium.TileMap
 
                 layer[x, y] = tileIndex[tiles[i]];
             }
-            layers.Add(layer);
-            return layers;
         }
 
         /* Create an index of tiles based on the tilemaps, corresponding to their id's */
@@ -78,6 +81,7 @@ namespace ProjectPalladium.TileMap
                 tileSize, tileSize);
 
                 tiles.Add(new Renderable(tileMap, sourceRect));
+                
             }
 
             // foreach (Rectangle tile in tiles) Debug.Write(tile);
@@ -94,7 +98,6 @@ namespace ProjectPalladium.TileMap
                 {
                     Vector2 pos = new Vector2(i * tileSize * Game1.scale, j * tileSize * Game1.scale);
                     layer[i, j].Draw(b, pos, layer: Game1.layers.tile);
-                    if (DebugParams.showColliders && i == 1 && j == 1) Util.DrawRectangle(new Rectangle((int)pos.X, (int)pos.Y, (int)(tileSize * Game1.scale), (int)(tileSize * Game1.scale)), b);
                 }
             }
 
