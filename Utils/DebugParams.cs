@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 
-namespace ProjectPalladium
+namespace ProjectPalladium.Utils
 {
     public class DebugParams
     {

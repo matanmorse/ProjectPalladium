@@ -9,8 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using ProjectPalladium.Buildings;
 
-namespace ProjectPalladium
+namespace ProjectPalladium.Utils
 {
     public class Util
     {
@@ -22,8 +23,8 @@ namespace ProjectPalladium
             _texture.SetData(new[] { Color.DeepPink });
 
             int thickness = 5;
-           
-            b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + thickness), new Rectangle(0,0,thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+
+            b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + thickness), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
             b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + thickness), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
             b.Draw(_texture, new Vector2(rect.Left + rect.Size.X, rect.Top + thickness), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
             b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + rect.Size.Y), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
@@ -42,7 +43,7 @@ namespace ProjectPalladium
         // convert a serialized rectange to a rectangle at a specific point, with offsets
         public static Rectangle makeRectFromPoints(ColliderDetails col, Vector2 pos)
         {
-            return new Rectangle((int)(pos.X + (col.location[0] * Game1.scale)), (int)(pos.Y + (col.location[1] * Game1.scale)),
+            return new Rectangle((int)(pos.X + col.location[0] * Game1.scale), (int)(pos.Y + col.location[1] * Game1.scale),
                             (int)(col.size[0] * Game1.scale), (int)(col.size[1] * Game1.scale));
         }
     }

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectPalladium
+namespace ProjectPalladium.Buildings
 {
     public class BuildingDeserializer
     {
-        public string name {  get; set; }
+        public string name { get; set; }
         public Dictionary<string, ColliderDetails> colliders { get; set; }
     }
 

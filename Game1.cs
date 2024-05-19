@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ProjectPalladium.TileMap;
+using ProjectPalladium.Utils;
 
 
 namespace ProjectPalladium
@@ -87,7 +89,7 @@ namespace ProjectPalladium
             _map = new Map("hollow.tmx");
 
             Vector2 playerPos = new Vector2(100, 100);
-            player = new Player(new AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", _map,
+            player = new Player(new Animation.AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", _map,
     new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (12 * Game1.scale), (int)(30 * Game1.scale)));
 
             player.Initialize();

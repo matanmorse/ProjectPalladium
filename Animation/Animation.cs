@@ -12,11 +12,11 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace ProjectPalladium
+namespace ProjectPalladium.Animation
 {
     public class Animation
     {
-        
+
         private string _name;
         public string Name { get { return _name; } set { _name = value; } }
 
@@ -45,15 +45,16 @@ namespace ProjectPalladium
             }
 
         }
-        public Animation(string name, int startFrame, int numFrames, float interval, AnimatedSprite sprite) {
-            this.Name = name;
+        public Animation(string name, int startFrame, int numFrames, float interval, AnimatedSprite sprite)
+        {
+            Name = name;
             this.numFrames = numFrames;
             this.startFrame = startFrame;
-            this.currentFrame = 0;
+            currentFrame = 0;
             this.interval = interval;
             this.sprite = sprite;
 
-            this.frames = new AnimationFrame[numFrames + 1];
+            frames = new AnimationFrame[numFrames + 1];
 
             // populate the frames array with the source rectangles of every frame of the animation
             for (int i = 0; i <= numFrames; i++)
@@ -85,7 +86,7 @@ namespace ProjectPalladium
             }
         }
 
-        public Rectangle getCurrentFrame ()
+        public Rectangle getCurrentFrame()
         {
             return frames[currentFrame].sourceRect;
         }

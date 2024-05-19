@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPalladium.Animation;
+using ProjectPalladium.Utils;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace ProjectPalladium
@@ -27,29 +29,38 @@ namespace ProjectPalladium
 
         public bool flipped;
 
-        public Vector2 Velocity { get { return velocity; } set { velocity = value; 
-                if (value.X != 0) flipped = velocity.X > 0 ? true : false; } }
+        public Vector2 Velocity
+        {
+            get { return velocity; }
+            set
+            {
+                velocity = value;
+                if (value.X != 0) flipped = velocity.X > 0 ? true : false;
+            }
+        }
 
         private int edgex;
         private int edgey;
 
         public string name;
         public bool moveLeft, moveRight, moveUp, moveDown;
-        public float Speed {
+        public float Speed
+        {
             get { return speed; }
-            set {
+            set
+            {
                 if (speed < 1) speed = 1;
                 speed = value;
             }
         }
 
 
-        public Character(AnimatedSprite sprite, Vector2 pos, String name, Map startingMap, Rectangle boundingBox)
+        public Character(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox)
         {
             this.sprite = sprite;
             this.pos = pos;
             this.name = name;
-            this.currentMap = startingMap;
+            currentMap = startingMap;
             this.boundingBox = boundingBox;
         }
 
@@ -61,17 +72,18 @@ namespace ProjectPalladium
 
         public virtual void Update(GameTime gameTime)
         {
-            
+
             sprite.Update(gameTime);
-            
+
         }
 
         public virtual void Draw(SpriteBatch b)
         {
             if (DebugParams.showColliders) { Util.DrawRectangle(boundingBox, b); }
-            sprite.Draw(b, pos, flipped, layerDepth:0.9f);
+            sprite.Draw(b, pos, flipped, layerDepth: 0.9f);
         }
-        public void setMovingUp(bool b) {
+        public void setMovingUp(bool b)
+        {
             moveUp = b;
 
 
@@ -91,18 +103,18 @@ namespace ProjectPalladium
 
         public void setBounds(Point mapSize, int tileSize)
         {
-            edgex = (mapSize.X * tileSize * (int)Game1.scale) - (int)((sprite.scaledWidth / 2));
-            edgey = (mapSize.Y * tileSize * (int)Game1.scale) - (int)((sprite.scaledHeight / 2));
+            edgex = mapSize.X * tileSize * (int)Game1.scale - sprite.scaledWidth / 2;
+            edgey = mapSize.Y * tileSize * (int)Game1.scale - sprite.scaledHeight / 2;
         }
         public void movePos()
         {
 
             pos += velocity * speed;
-            boundingBox.Location = new Point((int)(pos.X - (sprite.scaledWidth / 2) + ((sprite.scaledWidth - boundingBox.Width) / 2)), (int)(pos.Y - sprite.scaledHeight / 2) + ((sprite.scaledHeight - boundingBox.Height) / 2));
+            boundingBox.Location = new Point((int)(pos.X - sprite.scaledWidth / 2 + (sprite.scaledWidth - boundingBox.Width) / 2), (int)(pos.Y - sprite.scaledHeight / 2) + (sprite.scaledHeight - boundingBox.Height) / 2);
 
-            if (pos.X - (sprite.scaledWidth / 2) < 0) pos.X = (sprite.scaledWidth / 2);
+            if (pos.X - sprite.scaledWidth / 2 < 0) pos.X = sprite.scaledWidth / 2;
             if (pos.X > edgex) pos.X = edgex;
-            if (pos.Y - (sprite.scaledHeight / 2) < 0) pos.Y = (sprite.scaledHeight / 2);
+            if (pos.Y - sprite.scaledHeight / 2 < 0) pos.Y = sprite.scaledHeight / 2;
             if (pos.Y > edgey) pos.Y = edgey;
 
 
@@ -112,10 +124,10 @@ namespace ProjectPalladium
             if (collided != Rectangle.Empty)
             {
                 velocity = Vector2.Zero;
-                
+
                 ResolveCollision(collided, Rectangle.Intersect(boundingBox, collided));
             }
-            
+
         }
 
         public void ResolveCollision(Rectangle collided, Rectangle interSection)
@@ -128,18 +140,18 @@ namespace ProjectPalladium
             bool moveToSide = distx < disty ? true : false;
             if (moveToSide)
             {
-                pos.X = pos.X < collided.Left ? collided.Left - (boundingBox.Width / 2)    : collided.Right + (boundingBox.Width / 2);
+                pos.X = pos.X < collided.Left ? collided.Left - boundingBox.Width / 2 : collided.Right + boundingBox.Width / 2;
             }
             else
             {
-                pos.Y = pos.Y < collided.Top ? collided.Top - (boundingBox.Height / 2) : collided.Bottom + (boundingBox.Height / 2);
+                pos.Y = pos.Y < collided.Top ? collided.Top - boundingBox.Height / 2 : collided.Bottom + boundingBox.Height / 2;
             }
-            boundingBox.Location = new Point((int)(pos.X - (sprite.scaledWidth / 2) + ((sprite.scaledWidth - boundingBox.Width) / 2)), 
-                (int)(pos.Y - sprite.scaledHeight / 2) + ((sprite.scaledHeight - boundingBox.Height) / 2));
+            boundingBox.Location = new Point((int)(pos.X - sprite.scaledWidth / 2 + (sprite.scaledWidth - boundingBox.Width) / 2),
+                (int)(pos.Y - sprite.scaledHeight / 2) + (sprite.scaledHeight - boundingBox.Height) / 2);
             // TODO: fix jank collisions, but in the meantime if this didn't acually fix just put it at the top right
             Rectangle stillCollides = currentMap.CheckCollisions(boundingBox);
-            if ( stillCollides != Rectangle.Empty) { ResolveCollision(stillCollides, Rectangle.Intersect(stillCollides, boundingBox));  }
-                
+            if (stillCollides != Rectangle.Empty) { ResolveCollision(stillCollides, Rectangle.Intersect(stillCollides, boundingBox)); }
+
         }
 
         public override string ToString()

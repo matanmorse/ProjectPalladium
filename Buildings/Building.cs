@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPalladium;
 using System.Text.Json;
 using System.Diagnostics;
+using ProjectPalladium.Utils;
 
-namespace ProjectPalladium
+namespace ProjectPalladium.Buildings
 {
 
     public class Building
@@ -34,7 +34,8 @@ namespace ProjectPalladium
             {
                 return playerBehind;
             }
-            set {
+            set
+            {
                 if (value)
                 {
                     layer = 1f;
@@ -43,19 +44,19 @@ namespace ProjectPalladium
                 {
                     layer = 0.1f;
                 }
-                playerBehind = value; 
+                playerBehind = value;
             }
         }
 
         /* The name of the building (as defined by the "name" property of the .tmx file) is also the name of the json data file and the texture. */
-        public Building(string name, Vector2 pos) 
+        public Building(string name, Vector2 pos)
         {
 
 
-            this.sprite = new Renderable(name);
-            this.localPos = pos;
+            sprite = new Renderable(name);
+            localPos = pos;
 
-            this.globalPos = Util.LocalPosToGlobalPos(pos);
+            globalPos = Util.LocalPosToGlobalPos(pos);
             DeserializeJsonData(name);
 
         }
@@ -64,7 +65,7 @@ namespace ProjectPalladium
         {
             string registryPath = "Content/" + jsonPath + ".json";
             string jsonString = System.IO.File.ReadAllText(registryPath);
-            
+
             BuildingDeserializer info = JsonSerializer.Deserialize<BuildingDeserializer>(jsonString);
 
             foreach (var collider in info.colliders)
@@ -81,7 +82,7 @@ namespace ProjectPalladium
         public void Update(GameTime gameTime)
         {
             // Debug.WriteLine("building updating@ " + globalPos);
-            if (playerBehind) opacity = MathHelper.Clamp(opacity -= (float) (opacityDecayFactor * gameTime.ElapsedGameTime.TotalSeconds), 0.5f, 1f);
+            if (playerBehind) opacity = MathHelper.Clamp(opacity -= (float)(opacityDecayFactor * gameTime.ElapsedGameTime.TotalSeconds), 0.5f, 1f);
             else opacity = MathHelper.Clamp(opacity += (float)(opacityDecayFactor * gameTime.ElapsedGameTime.TotalSeconds), 0.5f, 1f);
         }
         public void Draw(SpriteBatch b)
@@ -90,9 +91,9 @@ namespace ProjectPalladium
             {
                 Util.DrawRectangle(bounds, b); Util.DrawRectangle(walkBehind, b);
             }
-            sprite.Draw(b, globalPos, opacity:opacity, layer:layer);
+            sprite.Draw(b, globalPos, opacity: opacity, layer: layer);
         }
 
-        
+
     }
 }

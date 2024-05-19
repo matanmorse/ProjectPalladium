@@ -6,9 +6,8 @@ using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
-using ProjectPalladium.Content;
 
-namespace ProjectPalladium
+namespace ProjectPalladium.Animation
 {
     public class AnimatedSprite
     {
@@ -17,9 +16,14 @@ namespace ProjectPalladium
         private Vector2 origin;
 
         private Animation _animation;
-        public Animation Animation { get { return _animation; } set {
+        public Animation Animation
+        {
+            get { return _animation; }
+            set
+            {
                 _animation = value;
-            } }
+            }
+        }
 
         private int currentFrame;
         public int spriteWidth;
@@ -30,14 +34,14 @@ namespace ProjectPalladium
         public int scaledHeight;
 
         private string animationsRegistryName;
-        
+
         private Rectangle defaultFrame;
 
         private Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
         public Dictionary<string, Animation> Animations { get { return animations; } }
         public int CurrentFrame
         {
-            get => currentFrame; 
+            get => currentFrame;
             set
             {
                 currentFrame = value;
@@ -50,15 +54,15 @@ namespace ProjectPalladium
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
 
-            this.scaledWidth = (int) (spriteWidth * Game1.scale);
-            this.scaledHeight = (int)(spriteHeight * Game1.scale);
+            scaledWidth = (int)(spriteWidth * Game1.scale);
+            scaledHeight = (int)(spriteHeight * Game1.scale);
 
-            this.origin = new Vector2(spriteWidth / 2, spriteHeight / 2);
+            origin = new Vector2(spriteWidth / 2, spriteHeight / 2);
             initSprite(registryName);
             LoadTexture(textureName);
         }
 
-        
+
         public void AnimationChangeDetected()
         {
             if (_animation == null) { return; }
@@ -74,10 +78,10 @@ namespace ProjectPalladium
         {
             // open the animation metadata json
             string registryPath = "Content/" + animationsRegistryName + ".json";
-            string jsonString = System.IO.File.ReadAllText(registryPath);
+            string jsonString = File.ReadAllText(registryPath);
 
             AnimationDeserializer dsrlzdAnimData = JsonSerializer.Deserialize<AnimationDeserializer>(jsonString);
-            foreach(var anim in dsrlzdAnimData.animations)
+            foreach (var anim in dsrlzdAnimData.animations)
             {
                 animations.Add(anim.Key, new Animation(anim.Key, anim.Value.startFrame, anim.Value.numFrames, 1000f, this));
             }
@@ -87,7 +91,7 @@ namespace ProjectPalladium
         }
 
         // Loads texture into memory
-        public void LoadTexture(String textureName)
+        public void LoadTexture(string textureName)
         {
             if (textureName == null) { return; }
             spriteTexture = Game1.contentManager.Load<Texture2D>(textureName);

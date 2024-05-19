@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPalladium.Buildings;
+using ProjectPalladium.TileMap;
 
 namespace ProjectPalladium
 {
@@ -24,11 +26,12 @@ namespace ProjectPalladium
         MapSerializer map;
 
         public Player player;
-        
+
         public Point tileMapSize = new Point();
         public static int tilesize = 16;
 
-        public Map(string filename) {
+        public Map(string filename)
+        {
             this.filename = filename;
             DeserializeMap();
             tileMapSize = new Point(map.Layers[0].Width, map.Layers[0].Height);
@@ -38,15 +41,15 @@ namespace ProjectPalladium
                 tilemaps.Add(new Tilemap(layer.Data.Text, tileMapSize));
             }
 
-            this.scaledTileSize = (int) (tilesize * Game1.scale);
+            scaledTileSize = (int)(tilesize * Game1.scale);
         }
         // checks collisions with any collidable objects on the map
         // returns rectangle of intersection of first found collision
         public Rectangle CheckCollisions(Rectangle boundingBox)
         {
-            foreach(Building building in buildings)
+            foreach (Building building in buildings)
             {
-                if (Rectangle.Intersect(building.bounds, boundingBox) != Rectangle.Empty) return Rectangle.Intersect(building.bounds, boundingBox); 
+                if (Rectangle.Intersect(building.bounds, boundingBox) != Rectangle.Empty) return Rectangle.Intersect(building.bounds, boundingBox);
             }
             return Rectangle.Empty;
         }
@@ -56,7 +59,8 @@ namespace ProjectPalladium
         {
             foreach (Building building in buildings)
             {
-                if (Rectangle.Intersect(building.walkBehind, player.boundingBox) != Rectangle.Empty) {
+                if (Rectangle.Intersect(building.walkBehind, player.boundingBox) != Rectangle.Empty)
+                {
                     building.PlayerBehind = true;
                 }
                 else
@@ -76,7 +80,7 @@ namespace ProjectPalladium
                 map = (MapSerializer)serializer.Deserialize(fs);
             }
 
-            
+
             ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
 
             // for each object in the building layer, add it to the list of buildings
@@ -84,7 +88,7 @@ namespace ProjectPalladium
             {
                 Property[] pList = building.properties.properties; // don't even ask why i have to do this
                 string name = pList.First(prop => prop.name.ToLower() == "name").value;
-                
+
                 Vector2 pos = new Vector2(building.x / tilesize, building.y / tilesize);
                 Debug.WriteLine(pos);
                 buildings.Add(new Building(name, pos));
@@ -98,9 +102,9 @@ namespace ProjectPalladium
         }
         public void Draw(SpriteBatch b)
         {
-            
-            foreach(Tilemap tilemap in tilemaps) { tilemap.Draw(b); }
-            foreach(Building building in buildings) { building.Draw(b); }
+
+            foreach (Tilemap tilemap in tilemaps) { tilemap.Draw(b); }
+            foreach (Building building in buildings) { building.Draw(b); }
         }
 
         [XmlRoot("map")]
