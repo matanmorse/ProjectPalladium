@@ -2,8 +2,9 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using ProjectPalladium.TileMap;
 using ProjectPalladium.Utils;
+using System;
+using System.Diagnostics;
 
 
 namespace ProjectPalladium
@@ -13,10 +14,13 @@ namespace ProjectPalladium
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         public static GraphicsDevice graphicsDevice;
+        private Canvas _canvas;
+
+        private Point NativeResolution = new Point(512, 288);
+
         private Map _map;
 
         public Player player;
-        private Tilemap _tilemap;
 
         public ContentManager content;
 
@@ -24,7 +28,7 @@ namespace ProjectPalladium
         public static int screenHeight;
         public static ContentManager contentManager;
 
-        public static float scale = 5f;
+        public static float scale = 1f;
 
         private Matrix _translation;
 
@@ -40,26 +44,40 @@ namespace ProjectPalladium
 
             _graphics = new GraphicsDeviceManager(this);
             
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += OnResize;
 
             Content.RootDirectory = "Content";
             contentManager = new ContentManager(base.Content.ServiceProvider, base.Content.RootDirectory);
             IsMouseVisible = true;
 
-            _graphics.PreferredBackBufferHeight = 1440;
-            _graphics.PreferredBackBufferWidth = 2560;
+            // start with native resolution
+            _graphics.PreferredBackBufferHeight = 288;
+            _graphics.PreferredBackBufferWidth = 512;
 
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
+
         }
 
-        public static Vector2 TileToGlobalPos(Vector2 pos)
+        // update the prefferedBackBuffer variables when the window is changed
+        private void OnResize(object sender, EventArgs e)
         {
-            return new Vector2(pos.X * Map.tilesize, pos.Y * Map.tilesize);
+            _graphics.PreferredBackBufferWidth = _graphics.GraphicsDevice.Viewport.Width;
+            _graphics.PreferredBackBufferHeight = _graphics.GraphicsDevice.Viewport.Height;
+            Debug.WriteLine(_graphics.PreferredBackBufferWidth);
+
+            _graphics.ApplyChanges();
+            _canvas.SetDestinationRectangle();
         }
 
-        public static Vector2 GlobalToTilePos(Vector2 pos)
+        private void SetFullScreen()
         {
-            return new Vector2(pos.X / Map.tilesize, pos.Y / Map.tilesize );
+            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            Window.IsBorderless = true;
+            _graphics.ApplyChanges();
+            _canvas.SetDestinationRectangle();
         }
         private void CalculateTranslation()
         {
@@ -86,29 +104,40 @@ namespace ProjectPalladium
         {
             base.Initialize();
 
+            // by default we start in bordered fullscreen
+            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            _graphics.ApplyChanges();
+            _canvas.SetDestinationRectangle();
+
+            // load map
             _map = new Map("hollow.tmx");
 
+            // init player object
             Vector2 playerPos = new Vector2(100, 100);
             player = new Player(new Animation.AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", _map,
-    new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (12 * Game1.scale), (int)(30 * Game1.scale)));
-
+            new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (12 * Game1.scale), (int)(30 * Game1.scale)));
             player.Initialize();
-
             player.setBounds(_map.tileMapSize, 16);
-
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             graphicsDevice = GraphicsDevice;
+            _canvas = new Canvas(GraphicsDevice, screenWidth, screenHeight);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Z)) { DebugParams.showColliders = DebugParams.showColliders ? false : true; }
+            if (Keyboard.GetState().IsKeyDown(Keys.Z)) { DebugParams.showColliders = true; }
+            if (Keyboard.GetState().IsKeyDown(Keys.X)) { DebugParams.showColliders = false; }
+            if (Keyboard.GetState().IsKeyDown(Keys.F6)) { SetFullScreen(); }
+            if (Keyboard.GetState().IsKeyDown(Keys.F7)) { Window.IsBorderless = false; }
+
             player.Update(gameTime);
             _map.Update(gameTime);
+
             CalculateTranslation();
             
             base.Update(gameTime);
@@ -118,7 +147,7 @@ namespace ProjectPalladium
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            base.Draw(gameTime);
+            _canvas.Activate(); // start drawing to the canvas
             _spriteBatch.Begin(SpriteSortMode.FrontToBack ,null, SamplerState.PointClamp, null,  null, null, _translation);
 
             _map.Draw(_spriteBatch);
@@ -126,6 +155,7 @@ namespace ProjectPalladium
 
 
             _spriteBatch.End();
+            _canvas.Draw(_spriteBatch);
 
         }
     }

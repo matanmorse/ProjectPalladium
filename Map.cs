@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -47,8 +43,6 @@ namespace ProjectPalladium
                 {
                     isCollideLayer = layer.properties.properties.First(prop => prop.name == "iscollider").value == "true" ? true : false;
                 }
-
-                Debug.WriteLine(isCollideLayer);
                 Tilemap tmap = new Tilemap(layer.Data.Text, tileMapSize, isCollideLayer);
 
                 tilemaps.Add(tmap);
@@ -102,7 +96,6 @@ namespace ProjectPalladium
                 map = (MapSerializer)serializer.Deserialize(fs);
             }
 
-
             ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
 
             // for each object in the building layer, add it to the list of buildings
@@ -114,9 +107,6 @@ namespace ProjectPalladium
                 Vector2 pos = new Vector2(building.x / tilesize, building.y / tilesize);
                 buildings.Add(new Building(name, pos));
             }
-
-          
-
         }
 
         public void Update(GameTime gameTime)
@@ -124,6 +114,7 @@ namespace ProjectPalladium
             foreach (Building building in buildings) building.Update(gameTime);
             CheckBehindBuilding();
         }
+
         public void Draw(SpriteBatch b)
         {
            float layer = 0.01f; 
