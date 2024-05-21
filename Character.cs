@@ -85,8 +85,6 @@ namespace ProjectPalladium
         public void setMovingUp(bool b)
         {
             moveUp = b;
-
-
         }
         public void setMovingDown(bool b)
         {

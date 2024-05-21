@@ -22,6 +22,7 @@ namespace ProjectPalladium
         public int scaledTileSize;
         public List<Tilemap> tilemaps = new List<Tilemap>();
         public List<Building> buildings = new List<Building>();
+        public List<Building> triggers = new List<Building>();
 
         MapSerializer map;
 
@@ -55,20 +56,12 @@ namespace ProjectPalladium
         }
 
         // if the player is behind a building, turn down opacity
-        public Building CheckBehindBuilding()
+        public void CheckBehindBuilding()
         {
             foreach (Building building in buildings)
             {
-                if (Rectangle.Intersect(building.walkBehind, player.boundingBox) != Rectangle.Empty)
-                {
-                    building.PlayerBehind = true;
-                }
-                else
-                {
-                    building.PlayerBehind = false;
-                }
+                building.PlayerBehind = Rectangle.Intersect(building.walkBehind, player.boundingBox) != Rectangle.Empty;
             }
-            return null;
         }
         /* Parses TMX file to create map representation */
         public void DeserializeMap()
@@ -80,8 +73,34 @@ namespace ProjectPalladium
                 map = (MapSerializer)serializer.Deserialize(fs);
             }
 
+            DeserializeBuildings();
+        }
 
+        private void DeserializeBuildings()
+        {
             ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
+
+            // TODO: Added 5/21/24, fix later, when no objects in building, error
+            if (buildingLayer.objects == null || buildingLayer.objects.Count() == 0) { return; }
+
+            // for each object in the building layer, add it to the list of buildings
+            foreach (TiledObject building in buildingLayer.objects)
+            {
+                Property[] pList = building.properties.properties; // don't even ask why i have to do this
+                string name = pList.First(prop => prop.name.ToLower() == "name").value;
+
+                Vector2 pos = new Vector2(building.x / tilesize, building.y / tilesize);
+                Debug.WriteLine(pos);
+                buildings.Add(new Building(name, pos));
+            }
+        }
+
+        private void DeserializeTriggers()
+        {
+            ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
+
+            // TODO: Added 5/21/24, fix later, when no objects in building, error
+            if (buildingLayer.objects == null || buildingLayer.objects.Count() == 0) { return; }
 
             // for each object in the building layer, add it to the list of buildings
             foreach (TiledObject building in buildingLayer.objects)

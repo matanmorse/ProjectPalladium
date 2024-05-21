@@ -66,12 +66,12 @@
 </data>
  </layer>
  <objectgroup id="4" name="Buildings">
-  <object id="10" x="480" y="128" width="64" height="128">
+  <object id="10" x="64" y="96" width="64" height="128">
    <properties>
     <property name="name" value="wizardtower"/>
    </properties>
   </object>
-  <object id="12" x="256" y="288" width="64" height="128">
+  <object id="12" x="160" y="96" width="64" height="128">
    <properties>
     <property name="name" value="wizardtower"/>
    </properties>

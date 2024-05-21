@@ -49,6 +49,18 @@
 /processorParam:TextureFormat=Color
 /build:playerplaceholder.png
 
+#begin TestSheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TestSheet.png;tilemap2.png
+
 #begin wizardtower.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -60,18 +72,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:wizardtower.png
-
-#begin World of Solaria New Style DEMO.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World of Solaria New Style DEMO.png;tilemap.png
 
 #begin World of Solaria New Style DEMO.png
 /importer:TextureImporter

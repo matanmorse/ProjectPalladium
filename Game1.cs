@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ProjectPalladium.TileMap;
 using ProjectPalladium.Utils;
+using Tutorial;
 
 
 namespace ProjectPalladium
@@ -13,9 +14,9 @@ namespace ProjectPalladium
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         public static GraphicsDevice graphicsDevice;
-        private Map _map;
+        public Map _map { get; set; }
 
-        public Player player;
+        public Player player { get; set; }
         private Tilemap _tilemap;
 
         public ContentManager content;
@@ -45,11 +46,13 @@ namespace ProjectPalladium
             contentManager = new ContentManager(base.Content.ServiceProvider, base.Content.RootDirectory);
             IsMouseVisible = true;
 
-            _graphics.PreferredBackBufferHeight = 1440;
-            _graphics.PreferredBackBufferWidth = 2560;
+            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = 1920;
 
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
+
+            SceneManager.Initialize(this);
         }
 
         public static Vector2 TileToGlobalPos(Vector2 pos)
@@ -87,7 +90,7 @@ namespace ProjectPalladium
             base.Initialize();
 
             _map = new Map("hollow.tmx");
-
+            
             Vector2 playerPos = new Vector2(100, 100);
             player = new Player(new Animation.AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", _map,
     new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (12 * Game1.scale), (int)(30 * Game1.scale)));
@@ -95,6 +98,10 @@ namespace ProjectPalladium
             player.Initialize();
 
             player.setBounds(_map.tileMapSize, 16);
+            
+            Scene test = new Scene(_map, player, new() { spawnLocation = new Vector2(0,0)});
+            SceneManager.LoadScene(test);
+
 
         }
 
@@ -106,11 +113,24 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
+            Input.GetState(); // records the previous state and updates the current state
             if (Keyboard.GetState().IsKeyDown(Keys.Z)) { DebugParams.showColliders = DebugParams.showColliders ? false : true; }
             player.Update(gameTime);
             _map.Update(gameTime);
             CalculateTranslation();
-            
+
+            //Debug code for changing scenes
+            //if (Input.GetKeyDown(Keys.P))
+            //{
+            //    Scene test2 = new Scene(new Map("test1.tmx"), player, new() { spawnLocation=new Vector2(400, 400)});
+            //    SceneManager.LoadScene(test2);
+            //}
+            //if (Input.GetKeyDown(Keys.L))
+            //{
+            //    Scene test3 = new Scene(new Map("test2.tmx"), player, new() { spawnLocation = new Vector2(400, 800) });
+            //    SceneManager.LoadScene(test3);
+            //}
+
             base.Update(gameTime);
         }
 
