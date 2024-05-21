@@ -19,7 +19,6 @@ namespace ProjectPalladium
         public List<Tilemap> collidingTilemaps = new List<Tilemap>();
 
         public List<Building> buildings = new List<Building>();
-        public List<Building> triggers = new List<Building>();
 
         MapSerializer map;
 
@@ -48,8 +47,8 @@ namespace ProjectPalladium
                 tilemaps.Add(tmap);
                 if (tmap.isCollideLayer) collidingTilemaps.Add(tmap);
             }
-
-            tilemaps[2].isCollideLayer = true;
+            //Womp womp
+            //tilemaps[2].isCollideLayer = true;
             scaledTileSize = (int)(tilesize * Game1.scale);
         }
         // checks collisions with any collidable objects on the map
@@ -91,6 +90,8 @@ namespace ProjectPalladium
 
             ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
 
+            //Checks if there is a building layer
+            if (buildingLayer == null || buildingLayer.objects == null) { return; }
             // for each object in the building layer, add it to the list of buildings
             foreach (TiledObject building in buildingLayer.objects)
             {

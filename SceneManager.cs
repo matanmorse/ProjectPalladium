@@ -1,26 +1,34 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace ProjectPalladium
 {
     internal class SceneManager
     {
-        private static Game1 game;
-        public static void Initialize(Game1 game1)
-        {
-            game = game1;
-        }
+        private static Scene curScene;
         public static void LoadScene(Scene scene)
         {
-            if (game == null) { throw new Exception("No Game in SceneManager"); }
-            if (scene == null) { throw new Exception("Scene is null"); }
-
-            game.player = scene.Player;
-            game.player.pos = scene.metadata.spawnLocation;
-            game.map = scene.Map;
+            curScene = scene ?? throw new Exception("Scene is null");
+            curScene.Player.pos = curScene.metadata.spawnLocation;
+        }
+        public static void Update(GameTime gameTime)
+        {
+            if (curScene == null) { return; }
+            curScene.Map.Update(gameTime);
+            curScene.Player.Update(gameTime);
+        }
+        public static void Draw(SpriteBatch _spriteBatch)
+        {
+            if (curScene == null) { return; }
+            curScene.Map.Draw(_spriteBatch);
+            curScene.Player.Draw(_spriteBatch);
         }
     }
 }
