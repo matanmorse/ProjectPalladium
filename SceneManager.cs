@@ -20,7 +20,7 @@ namespace ProjectPalladium
 
             game.player = scene.Player;
             game.player.pos = scene.metadata.spawnLocation;
-            game._map = scene.Map;
+            game.map = scene.Map;
         }
     }
 }

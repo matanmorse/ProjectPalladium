@@ -10,15 +10,20 @@ using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using ProjectPalladium.Utils;
 
-namespace ProjectPalladium.TileMap
+namespace ProjectPalladium
 {
     public class Tilemap
     {
+        // is this layer for colliders or not
+        public bool isCollideLayer;
+
+        public List<Rectangle> colliders = new List<Rectangle>();
 
         public List<Renderable[,]> layers = new List<Renderable[,]>();
 
         public List<Renderable> tileIndex;
 
+        private bool showColliders;
 
         private int tileSize = 16;
         public int TileSize { get { return tileSize; } }
@@ -30,21 +35,21 @@ namespace ProjectPalladium.TileMap
         public Point MapTileSize { get { return _mapTileSize; } }
 
         Texture2D tileMap;
-        public Tilemap(string tileData, Point MapTileSize)
+        public Tilemap(string tileData, Point MapTileSize, bool collideLayer)
         {
             layer = new Renderable[MapTileSize.X, MapTileSize.Y];
             _mapTileSize = MapTileSize;
+            isCollideLayer = collideLayer;
             tileIndex = ExtractTiles("tilemap");
             DecodeTileData(tileData);
         }
 
 
         /* Create a list of renderable objects from a string of tile ids*/
-        public List<Renderable[,]> DecodeTileData(string data)
+        public void DecodeTileData(string data)
         {
             // parse the numbers from the layer into a 1d array
             int[] tiles = Array.ConvertAll(data.Split(','), int.Parse);
-
             for (int i = 0; i < _mapTileSize.X * _mapTileSize.Y; i++)
             {
 
@@ -57,9 +62,14 @@ namespace ProjectPalladium.TileMap
                 // based on the id of the tile, set the tile data in the layer
 
                 layer[x, y] = tileIndex[tiles[i]];
+
+                // if this layer contains colliders, add collider rects over all tiles in this layer
+                if (isCollideLayer && tiles[i] != 0)
+                {
+                    Vector2 pos = new Vector2(x * tileSize * Game1.scale, y * tileSize * Game1.scale);
+                    colliders.Add(new Rectangle((int)pos.X, (int)pos.Y, (int)(tileSize * Game1.scale), (int)(tileSize * Game1.scale)));
+                }
             }
-            layers.Add(layer);
-            return layers;
         }
 
         /* Create an index of tiles based on the tilemaps, corresponding to their id's */
@@ -78,23 +88,33 @@ namespace ProjectPalladium.TileMap
                 tileSize, tileSize);
 
                 tiles.Add(new Renderable(tileMap, sourceRect));
-            }
 
+            }
             // foreach (Rectangle tile in tiles) Debug.Write(tile);
             return tiles;
         }
 
-        /* draw tilemap */
-        public void Draw(SpriteBatch b)
+        public Rectangle checkCollisions(Rectangle boundingBox)
         {
+            foreach (Rectangle collider in colliders)
+            {
+                if (Rectangle.Intersect(collider, boundingBox) != Rectangle.Empty) return Rectangle.Intersect(collider, boundingBox);
+            }
+            return Rectangle.Empty;
+        }
+
+        /* draw tilemap */
+        public void Draw(SpriteBatch b, float layerDepth = Game1.layers.tile)
+        {
+            showColliders = DebugParams.showColliders;
+            if (showColliders) { foreach (Rectangle r in colliders) { Util.DrawRectangle(r, b); } }
 
             for (int i = 0; i < _mapTileSize.X; i++)
             {
                 for (int j = 0; j < _mapTileSize.Y; j++)
                 {
                     Vector2 pos = new Vector2(i * tileSize * Game1.scale, j * tileSize * Game1.scale);
-                    layer[i, j].Draw(b, pos, layer: Game1.layers.tile);
-                    if (DebugParams.showColliders && i == 1 && j == 1) Util.DrawRectangle(new Rectangle((int)pos.X, (int)pos.Y, (int)(tileSize * Game1.scale), (int)(tileSize * Game1.scale)), b);
+                    layer[i, j].Draw(b, pos, layer: layerDepth);
                 }
             }
 

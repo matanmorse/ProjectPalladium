@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Buildings;
-using ProjectPalladium.TileMap;
 
 namespace ProjectPalladium
 {
@@ -21,6 +16,8 @@ namespace ProjectPalladium
 
         public int scaledTileSize;
         public List<Tilemap> tilemaps = new List<Tilemap>();
+        public List<Tilemap> collidingTilemaps = new List<Tilemap>();
+
         public List<Building> buildings = new List<Building>();
         public List<Building> triggers = new List<Building>();
 
@@ -37,11 +34,22 @@ namespace ProjectPalladium
             DeserializeMap();
             tileMapSize = new Point(map.Layers[0].Width, map.Layers[0].Height);
 
+            // populate the layers list
             foreach (Layer layer in map.Layers)
             {
-                tilemaps.Add(new Tilemap(layer.Data.Text, tileMapSize));
+                // check if the layer has a property called "iscollider" and its value
+                bool isCollideLayer = false;
+                if (layer.properties != null)
+                {
+                    isCollideLayer = layer.properties.properties.First(prop => prop.name == "iscollider").value == "true" ? true : false;
+                }
+                Tilemap tmap = new Tilemap(layer.Data.Text, tileMapSize, isCollideLayer);
+
+                tilemaps.Add(tmap);
+                if (tmap.isCollideLayer) collidingTilemaps.Add(tmap);
             }
 
+            tilemaps[2].isCollideLayer = true;
             scaledTileSize = (int)(tilesize * Game1.scale);
         }
         // checks collisions with any collidable objects on the map
@@ -52,6 +60,13 @@ namespace ProjectPalladium
             {
                 if (Rectangle.Intersect(building.bounds, boundingBox) != Rectangle.Empty) return Rectangle.Intersect(building.bounds, boundingBox);
             }
+
+            // check tilemaps for collision
+            foreach (Tilemap tilemap in collidingTilemaps)
+            {
+                if (tilemap.checkCollisions(boundingBox) != Rectangle.Empty) return tilemap.checkCollisions(boundingBox);
+            }
+
             return Rectangle.Empty;
         }
 
@@ -73,15 +88,8 @@ namespace ProjectPalladium
                 map = (MapSerializer)serializer.Deserialize(fs);
             }
 
-            DeserializeBuildings();
-        }
 
-        private void DeserializeBuildings()
-        {
             ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
-
-            // TODO: Added 5/21/24, fix later, when no objects in building, error
-            if (buildingLayer.objects == null || buildingLayer.objects.Count() == 0) { return; }
 
             // for each object in the building layer, add it to the list of buildings
             foreach (TiledObject building in buildingLayer.objects)
@@ -90,26 +98,6 @@ namespace ProjectPalladium
                 string name = pList.First(prop => prop.name.ToLower() == "name").value;
 
                 Vector2 pos = new Vector2(building.x / tilesize, building.y / tilesize);
-                Debug.WriteLine(pos);
-                buildings.Add(new Building(name, pos));
-            }
-        }
-
-        private void DeserializeTriggers()
-        {
-            ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
-
-            // TODO: Added 5/21/24, fix later, when no objects in building, error
-            if (buildingLayer.objects == null || buildingLayer.objects.Count() == 0) { return; }
-
-            // for each object in the building layer, add it to the list of buildings
-            foreach (TiledObject building in buildingLayer.objects)
-            {
-                Property[] pList = building.properties.properties; // don't even ask why i have to do this
-                string name = pList.First(prop => prop.name.ToLower() == "name").value;
-
-                Vector2 pos = new Vector2(building.x / tilesize, building.y / tilesize);
-                Debug.WriteLine(pos);
                 buildings.Add(new Building(name, pos));
             }
         }
@@ -119,11 +107,12 @@ namespace ProjectPalladium
             foreach (Building building in buildings) building.Update(gameTime);
             CheckBehindBuilding();
         }
+
         public void Draw(SpriteBatch b)
         {
-
-            foreach (Tilemap tilemap in tilemaps) { tilemap.Draw(b); }
-            foreach (Building building in buildings) { building.Draw(b); }
+           float layer = 0.01f; 
+           foreach (Tilemap tilemap in tilemaps) { tilemap.Draw(b, layer+=0.01f); }
+           foreach (Building building in buildings) { building.Draw(b); }
         }
 
         [XmlRoot("map")]
@@ -152,6 +141,8 @@ namespace ProjectPalladium
 
             [XmlText]
             public string Text { get; set; }
+
+
         }
 
         public class Layer
@@ -164,6 +155,14 @@ namespace ProjectPalladium
 
             [XmlAttribute("height")]
             public int Height { get; set; }
+
+
+            [XmlElement("properties")]
+            public PropertyList properties { get; set; }
+
+            [XmlAttribute("name")]
+            public string Name { get; set; }
+
         }
 
         public class TiledObject

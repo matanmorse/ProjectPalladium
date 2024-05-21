@@ -1,14 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna;
-
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using System.Diagnostics;
 using ProjectPalladium.Buildings;
 
 namespace ProjectPalladium.Utils
@@ -22,7 +13,7 @@ namespace ProjectPalladium.Utils
             Texture2D _texture = new Texture2D(b.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             _texture.SetData(new[] { Color.DeepPink });
 
-            int thickness = 5;
+            int thickness = 1;
 
             b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + thickness), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
             b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + thickness), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;

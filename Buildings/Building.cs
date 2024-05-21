@@ -68,10 +68,7 @@ namespace ProjectPalladium.Buildings
 
             BuildingDeserializer info = JsonSerializer.Deserialize<BuildingDeserializer>(jsonString);
 
-            foreach (var collider in info.colliders)
-            {
-                Debug.WriteLine(collider.Key);
-            }
+         
             ColliderDetails bounds = info.colliders["move"];
             ColliderDetails walkBehind = info.colliders["behind"];
             this.bounds = Util.makeRectFromPoints(bounds, globalPos);

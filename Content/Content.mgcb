@@ -37,6 +37,18 @@
 /processorParam:TextureFormat=Color
 /build:happyfaceanimated.png
 
+#begin mageanims.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:mageanims.png
+
 #begin playerplaceholder.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -49,7 +61,7 @@
 /processorParam:TextureFormat=Color
 /build:playerplaceholder.png
 
-#begin TestSheet.png
+#begin toolbar.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -59,7 +71,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:TestSheet.png;tilemap2.png
+/build:toolbar.png
 
 #begin wizardtower.png
 /importer:TextureImporter
