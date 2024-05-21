@@ -10,6 +10,7 @@ namespace ProjectPalladium.Utils
         public Texture2D Texture { get { return _texture; } }
         private Rectangle sourceRect;
 
+        private Vector2 zero = Vector2.Zero;
 
         public string textureName;
 
@@ -38,6 +39,12 @@ namespace ProjectPalladium.Utils
         public void Draw(SpriteBatch b, Vector2 pos, float opacity = 1f, float layer = 0f)
         {
             b.Draw(_texture, pos, sourceRect, Color.White * opacity, 0f, Vector2.Zero, Game1.scale, SpriteEffects.None, layer);
+        }
+
+        // draw renderable with custom origin
+        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, float layer = 0f, float opacity = 1f)
+        {
+            b.Draw(_texture, pos, sourceRect, Color.White * opacity, 0f, origin, Game1.scale, SpriteEffects.None, layer);
         }
 
 

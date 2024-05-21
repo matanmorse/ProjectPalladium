@@ -7,7 +7,8 @@ namespace ProjectPalladium
 {
     public class Canvas
     {
-        private readonly RenderTarget2D _renderTarget;
+        private RenderTarget2D _renderTarget;
+        public RenderTarget2D RenderTarget { get { return _renderTarget; }  set { _renderTarget = value; } }
         private readonly GraphicsDevice _graphicsDevice;
         private Rectangle _destinationRectangle;
 
@@ -16,6 +17,7 @@ namespace ProjectPalladium
             _graphicsDevice = graphicsDevice;
             _renderTarget = new RenderTarget2D(graphicsDevice, width, height);
             SetDestinationRectangle();
+            
         }
 
         // calculate the appropriate destination rectangle for the rendertarget

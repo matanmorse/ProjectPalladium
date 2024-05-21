@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ProjectPalladium.UI;
 using ProjectPalladium.Utils;
 using System;
 using System.Diagnostics;
@@ -16,7 +17,7 @@ namespace ProjectPalladium
         public static GraphicsDevice graphicsDevice;
         private Canvas _canvas;
 
-        private Point NativeResolution = new Point(512, 288);
+        public static Point NativeResolution = new Point(512, 288);
 
         private Map _map;
 
@@ -32,16 +33,18 @@ namespace ProjectPalladium
 
         private Matrix _translation;
 
+        private UIManager _uiManager;
+
         public static class layers
         {
             public const float tile = 0f;
             public const float player = 0.9f;
             public const float rectangles = 1f;
+            public const float UI = 1f;
             public const float buildings = 0.1f;
         }
         public Game1()
         {
-
             _graphics = new GraphicsDeviceManager(this);
             
             Window.AllowUserResizing = true;
@@ -52,12 +55,11 @@ namespace ProjectPalladium
             IsMouseVisible = true;
 
             // start with native resolution
-            _graphics.PreferredBackBufferHeight = 288;
-            _graphics.PreferredBackBufferWidth = 512;
+            _graphics.PreferredBackBufferHeight = NativeResolution.Y;
+            _graphics.PreferredBackBufferWidth = NativeResolution.X;
 
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
-
         }
 
         // update the prefferedBackBuffer variables when the window is changed
@@ -65,7 +67,6 @@ namespace ProjectPalladium
         {
             _graphics.PreferredBackBufferWidth = _graphics.GraphicsDevice.Viewport.Width;
             _graphics.PreferredBackBufferHeight = _graphics.GraphicsDevice.Viewport.Height;
-            Debug.WriteLine(_graphics.PreferredBackBufferWidth);
 
             _graphics.ApplyChanges();
             _canvas.SetDestinationRectangle();
@@ -75,6 +76,7 @@ namespace ProjectPalladium
         {
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+
             Window.IsBorderless = true;
             _graphics.ApplyChanges();
             _canvas.SetDestinationRectangle();
@@ -82,7 +84,7 @@ namespace ProjectPalladium
         private void CalculateTranslation()
         {
 
-            var dx = ((screenWidth / 2) - player.pos.X - (player.sprite.spriteWidth * scale) / 2 );
+            var dx = ((screenWidth / 2) - player.pos.X );
             
             dx = MathHelper.Clamp(
                 dx, 
@@ -119,6 +121,11 @@ namespace ProjectPalladium
             new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (12 * Game1.scale), (int)(30 * Game1.scale)));
             player.Initialize();
             player.setBounds(_map.tileMapSize, 16);
+
+            // init UI
+            
+            _uiManager = new UIManager(new UIElement("root",null, 0, 0, null, isRoot: true, isBox:true));
+            
         }
 
         protected override void LoadContent()
@@ -137,6 +144,7 @@ namespace ProjectPalladium
 
             player.Update(gameTime);
             _map.Update(gameTime);
+            _uiManager.Update();
 
             CalculateTranslation();
             
@@ -152,9 +160,13 @@ namespace ProjectPalladium
 
             _map.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
-
-
             _spriteBatch.End();
+            
+            // draw UI elements (always fixed on screen)
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
+            _uiManager.Draw(_spriteBatch);
+            _spriteBatch.End();
+
             _canvas.Draw(_spriteBatch);
 
         }
