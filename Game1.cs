@@ -23,7 +23,7 @@ namespace ProjectPalladium
         public Map map;
 
         public Player player;
-        private Tilemap _tilemap;
+        //private Tilemap _tilemap;
 
         public ContentManager content;
 
@@ -62,8 +62,6 @@ namespace ProjectPalladium
 
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
-
-            SceneManager.Initialize(this);
         }
 
         // update the prefferedBackBuffer variables when the window is changed
@@ -117,7 +115,7 @@ namespace ProjectPalladium
             _canvas.SetDestinationRectangle();
 
             // load map
-            map = new Map("hollow.tmx");
+            map = new Map("test1.tmx");
 
             // init player object
             Vector2 playerPos = new Vector2(100, 100);
@@ -126,6 +124,9 @@ namespace ProjectPalladium
             player.Initialize();
             player.setBounds(map.tileMapSize, 16);
 
+            //Send it to SceneManager
+            Scene mainScene = new Scene(map, player, new() { spawnLocation = new Vector2(400, 400) });
+            SceneManager.LoadScene(mainScene);
             // init UI
             
             _uiManager = new UIManager(new UIElement("root",null, 0, 0, null, isRoot: true, isBox:true));
@@ -141,28 +142,30 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Z)) { DebugParams.showColliders = true; }
-            if (Keyboard.GetState().IsKeyDown(Keys.X)) { DebugParams.showColliders = false; }
-            if (Keyboard.GetState().IsKeyDown(Keys.F6)) { SetFullScreen(); }
-            if (Keyboard.GetState().IsKeyDown(Keys.F7)) { Window.IsBorderless = false; }
+            //Allows for GetKeyDown functionality; if you remove, it will break
+            Input.Update();
 
-            player.Update(gameTime);
-            map.Update(gameTime);
+            if (Input.GetKeyDown(Keys.Z)) { DebugParams.showColliders = true; }
+            if (Input.GetKeyDown(Keys.X)) { DebugParams.showColliders = false; }
+            if (Input.GetKeyDown(Keys.F6)) { SetFullScreen(); }
+            if (Input.GetKeyDown(Keys.F7)) { Window.IsBorderless = false; }
+
+            SceneManager.Update(gameTime);
             _uiManager.Update();
 
             CalculateTranslation();
 
             //Debug code for changing scenes
-            //if (Input.GetKeyDown(Keys.P))
-            //{
-            //    Scene test2 = new Scene(new Map("test1.tmx"), player, new() { spawnLocation=new Vector2(400, 400)});
-            //    SceneManager.LoadScene(test2);
-            //}
-            //if (Input.GetKeyDown(Keys.L))
-            //{
-            //    Scene test3 = new Scene(new Map("test2.tmx"), player, new() { spawnLocation = new Vector2(400, 800) });
-            //    SceneManager.LoadScene(test3);
-            //}
+            if (Input.GetKeyDown(Keys.P))
+            {
+                Scene test2 = new Scene(new Map("test1.tmx"), player, new() { spawnLocation = new Vector2(200, 400) });
+                SceneManager.LoadScene(test2);
+            }
+            if (Input.GetKeyDown(Keys.L))
+            {
+                Scene test3 = new Scene(new Map("test2.tmx"), player, new() { spawnLocation = new Vector2(100, 50) });
+                SceneManager.LoadScene(test3);
+            }
 
             base.Update(gameTime);
         }
@@ -174,8 +177,7 @@ namespace ProjectPalladium
             _canvas.Activate(); // start drawing to the canvas
             _spriteBatch.Begin(SpriteSortMode.FrontToBack ,null, SamplerState.PointClamp, null,  null, null, _translation);
 
-            map.Draw(_spriteBatch);
-            player.Draw(_spriteBatch);
+            SceneManager.Draw(_spriteBatch);
             _spriteBatch.End();
             
             // draw UI elements (always fixed on screen)

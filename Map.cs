@@ -19,7 +19,6 @@ namespace ProjectPalladium
         public List<Tilemap> collidingTilemaps = new List<Tilemap>();
 
         public List<Building> buildings = new List<Building>();
-        public List<Building> triggers = new List<Building>();
 
         MapSerializer map;
 
@@ -91,6 +90,8 @@ namespace ProjectPalladium
             ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
             if (buildingLayer.objects == null) return;
 
+            //Checks if there is a building layer
+            if (buildingLayer == null || buildingLayer.objects == null) { return; }
             // for each object in the building layer, add it to the list of buildings
             foreach (TiledObject building in buildingLayer.objects)
             {

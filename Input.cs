@@ -9,7 +9,7 @@ namespace Tutorial
     {
         private static KeyboardState currentState;
         private static KeyboardState previousState;
-        public static KeyboardState GetState()
+        public static KeyboardState Update()
         {
             previousState = currentState;
             currentState = Keyboard.GetState();
@@ -34,7 +34,6 @@ namespace Tutorial
             return Keyboard.GetState().IsKeyDown(k);
         }
         
-        //
         public static bool GetKeyDown(Keys k)
         {
             return currentState.IsKeyDown(k) && !previousState.IsKeyDown(k);
