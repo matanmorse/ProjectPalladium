@@ -49,7 +49,6 @@ namespace ProjectPalladium
                 if (tmap.isCollideLayer) collidingTilemaps.Add(tmap);
             }
 
-            tilemaps[2].isCollideLayer = true;
             scaledTileSize = (int)(tilesize * Game1.scale);
         }
         // checks collisions with any collidable objects on the map
@@ -90,6 +89,7 @@ namespace ProjectPalladium
 
 
             ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
+            if (buildingLayer.objects == null) return;
 
             // for each object in the building layer, add it to the list of buildings
             foreach (TiledObject building in buildingLayer.objects)
