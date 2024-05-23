@@ -40,7 +40,7 @@ namespace ProjectPalladium
             layer = new Renderable[MapTileSize.X, MapTileSize.Y];
             _mapTileSize = MapTileSize;
             isCollideLayer = collideLayer;
-            tileIndex = ExtractTiles("tilemap2");
+            tileIndex = ExtractTiles("tilemap");
             DecodeTileData(tileData);
         }
 

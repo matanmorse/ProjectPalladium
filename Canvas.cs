@@ -23,19 +23,22 @@ namespace ProjectPalladium
         // calculate the appropriate destination rectangle for the rendertarget
         public void SetDestinationRectangle()
         {
-            var screenSize = _graphicsDevice.PresentationParameters.Bounds;
+            var screensize = Game1.graphicsDevice.PresentationParameters.Bounds;
 
             // get the scale as the ratio of the screen size to the native size
-            float scaleX = (float)screenSize.Width / _renderTarget.Width;
-            float scaleY = (float)screenSize.Height / _renderTarget.Height;
+            float scaleX = (float) screensize.Width / _renderTarget.Width;
+            float scaleY = (float)screensize.Height / _renderTarget.Height;
+
+
             float scale = Math.Min(scaleX, scaleY);
+            Game1.targetScale = scale;
 
             int newWidth = (int)(_renderTarget.Width * scale);
             int newHeight = (int)(_renderTarget.Height * scale);
 
            
-            int posX = (screenSize.Width - newWidth) / 2;
-            int posY = (screenSize.Height - newHeight) / 2;
+            int posX = (screensize.Width - newWidth) / 2;
+            int posY = (screensize.Height - newHeight) / 2;
 
             _destinationRectangle = new Rectangle (posX, posY, newWidth, newHeight);
         }

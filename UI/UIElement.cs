@@ -16,19 +16,22 @@ namespace ProjectPalladium.UI
             def,
             center,
         }
-
+        
         private Renderable sprite;
-        private Vector2 localPos;
+        public Renderable Sprite { get { return sprite; } set { } }
+        protected Point localPos;
         // the global position centered at top-right
-        public Vector2 globalPos;
+        public Point globalPos;
         // this is the origin position of the element where it is drawn. May or may not be the same as the global pos depending on origin type.
-        public Vector2 drawPos;
+        public Point drawPos;
 
         private OriginType originType;
         public string name;
 
         public UIElement parent;
         public List<UIElement> children = new List<UIElement>();
+
+        private float scale;
 
         public bool showing = true;
 
@@ -37,17 +40,19 @@ namespace ProjectPalladium.UI
         private bool isRoot;
         private bool isBox;
 
-        public UIElement(string name, string textureName, int localX, int localY, UIElement parent, OriginType originType=OriginType.def, bool isRoot = false, bool isBox=false)
+        protected Button button;
+        public UIElement(string name, string textureName, int localX, int localY, UIElement parent, OriginType originType=OriginType.def, float scale=1f, bool isRoot = false, bool isBox=false)
         {
+            this.scale = scale;
             this.isRoot = isRoot;
             this.name = name;
-
-            if (isRoot) { this.localPos = Vector2.Zero; }
+            
+            if (isRoot) { this.localPos = Point.Zero; }
 
             this.isBox = isBox;
             this.parent = parent;
             this.sprite = new Renderable(textureName);
-            this.localPos = new Vector2(localX, localY);
+            this.localPos = new Point(localX, localY);
             this.originType = originType;
             UpdateGlobalPos();
 
@@ -55,28 +60,20 @@ namespace ProjectPalladium.UI
 
         public void UpdateGlobalPos()
         {
-            Debug.WriteLine("name " + name);
             if (isRoot)
             {
                 globalPos = localPos;
                 return;
             }
-            Debug.WriteLine(parent.globalPos);
             globalPos = parent.globalPos + localPos;
-            if (originType == OriginType.center)
-            {
-                drawPos = globalPos - new Vector2(sprite.Texture.Width / 2, sprite.Texture.Height / 2);
-            }
-            else
-            {
-                drawPos = globalPos;
-            }
+            drawPos = globalPos;
+           
         }
 
         public void Update()
         {
             if (!showing) return;
-
+            if (button != null) { button.Update(); }
             if (needsUpdating)
             {
                 UpdateGlobalPos();
@@ -85,21 +82,30 @@ namespace ProjectPalladium.UI
             foreach (UIElement child in children) { child.Update(); }
         }
 
-        public void Draw(SpriteBatch b) {
+        public virtual void Draw(SpriteBatch b) {
+
             if (!(isRoot || !showing || isBox))
             {
-                sprite.Draw(b, drawPos, layer: Game1.layers.UI);
+                if (originType == OriginType.center)
+                {
+                    sprite.Draw(b, new Vector2(drawPos.X, drawPos.Y) - new Vector2(Sprite.size.X / 2, Sprite.size.Y / 2), layer: Game1.layers.UI);
+                }
+                else
+                {
+                    sprite.Draw(b, new Vector2(drawPos.X, drawPos.Y), layer: Game1.layers.UI);
+                }
             }
 
             if (children.Count != 0) foreach (UIElement child in children) { child.Draw(b); }
 
         }
 
+       
         public void AddChild(string name, string textureName, int localX, int localY, OriginType originType = OriginType.def)
         {
             children.Add(new UIElement(name, textureName, localX, localY, this, originType));
         }
-
+        public void AddChild(UIElement child) { children.Add(child); }
         public UIElement GetChild(string name)
         {
             return children.First(x => x.name == name);
@@ -109,6 +115,10 @@ namespace ProjectPalladium.UI
             return children.Where(x => x.name == name);
         }
 
+        public void AddButton(Button.OnEnter onEnter, Button.OnLeave onLeave, Button.OnClick onClick, Point size)
+        {
+            button = new Button(onEnter, onClick, onLeave, globalPos - new Point(1, 1), size) ;
+        }
      
     }
 }

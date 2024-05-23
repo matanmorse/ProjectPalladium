@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using ProjectPalladium.Buildings;
+using System.Diagnostics;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace ProjectPalladium.Utils
 {
@@ -36,6 +38,30 @@ namespace ProjectPalladium.Utils
         {
             return new Rectangle((int)(pos.X + col.location[0] * Game1.scale), (int)(pos.Y + col.location[1] * Game1.scale),
                             (int)(col.size[0] * Game1.scale), (int)(col.size[1] * Game1.scale));
+        }
+
+        // gets the mouse position in terms of native resolution
+        public static Point GetNativeMousePos(Point globalPos)
+        {
+            Debug.WriteLine(globalPos);
+            //if (Game1.isFullscreen)
+            //{
+            //    globalPos += Game1.hackyOffset;
+            //}
+
+
+            float offsetX = (Game1.graphicsDevice.PresentationParameters.Bounds.Width - Game1.NativeResolution.X * Game1.targetScale) / 2.0f;
+            float offsetY = (Game1.graphicsDevice.PresentationParameters.Bounds.Height - Game1.NativeResolution.Y * Game1.targetScale) / 2.0f;
+
+            float nativeMouseX = (globalPos.X - offsetX) / Game1.targetScale;
+            float nativeMouseY = (globalPos.Y - offsetY) / Game1.targetScale;
+
+            nativeMouseX = MathHelper.Clamp(nativeMouseX, 0, Game1.NativeResolution.X);
+            nativeMouseY = MathHelper.Clamp(nativeMouseY, 0, Game1.NativeResolution.Y);
+
+            Debug.WriteLine(nativeMouseX + " " + nativeMouseY);
+            // subtract 1 b/c of rounding error
+            return new Point((int)nativeMouseX - 1, (int)nativeMouseY - 1);
         }
     }
 }

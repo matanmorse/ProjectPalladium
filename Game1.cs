@@ -13,7 +13,12 @@ namespace ProjectPalladium
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
+
+        private static GraphicsDeviceManager _graphics;
+        public static GraphicsDeviceManager graphics { get { return _graphics; } }
+
+        public static bool isFullscreen;
+
         private SpriteBatch _spriteBatch;
         public static GraphicsDevice graphicsDevice;
         private Canvas _canvas;
@@ -29,6 +34,10 @@ namespace ProjectPalladium
 
         public static int screenWidth;
         public static int screenHeight;
+        public static float targetScale;
+
+        public static Point hackyOffset;
+
         public static ContentManager contentManager;
 
         public static float scale = 1f;
@@ -42,13 +51,13 @@ namespace ProjectPalladium
             public const float tile = 0f;
             public const float player = 0.9f;
             public const float rectangles = 1f;
-            public const float UI = 1f;
+            public const float UI = 0.95f;
             public const float buildings = 0.1f;
         }
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
-            
+
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
 
@@ -62,26 +71,21 @@ namespace ProjectPalladium
 
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
+
         }
 
-        // update the prefferedBackBuffer variables when the window is changed
+        //update the prefferedBackBuffer variables when the window is changed
         private void OnResize(object sender, EventArgs e)
         {
-            _graphics.PreferredBackBufferWidth = _graphics.GraphicsDevice.Viewport.Width;
-            _graphics.PreferredBackBufferHeight = _graphics.GraphicsDevice.Viewport.Height;
-
-            _graphics.ApplyChanges();
+            isFullscreen = false;
             _canvas.SetDestinationRectangle();
         }
 
-        private void SetFullScreen()
-        {
-            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
 
-            Window.IsBorderless = true;
-            _graphics.ApplyChanges();
-            _canvas.SetDestinationRectangle();
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+            Input.Update();
         }
         private void CalculateTranslation()
         {
@@ -107,15 +111,19 @@ namespace ProjectPalladium
         protected override void Initialize()
         {
             base.Initialize();
-
+            graphics.HardwareModeSwitch = false;
+           
             // by default we start in bordered fullscreen
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+
             _graphics.ApplyChanges();
             _canvas.SetDestinationRectangle();
 
+            
+
             // load map
-            map = new Map("test1.tmx");
+            map = new Map("hollow.tmx");
 
             // init player object
             Vector2 playerPos = new Vector2(100, 100);
@@ -127,8 +135,8 @@ namespace ProjectPalladium
             //Send it to SceneManager
             Scene mainScene = new Scene(map, player, new() { spawnLocation = new Vector2(400, 400) });
             SceneManager.LoadScene(mainScene);
+
             // init UI
-            
             _uiManager = new UIManager(new UIElement("root",null, 0, 0, null, isRoot: true, isBox:true));
             
         }
@@ -142,13 +150,13 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
+            //Debug.WriteLine(Input.mousePos);
             //Allows for GetKeyDown functionality; if you remove, it will break
             Input.Update();
 
             if (Input.GetKeyDown(Keys.Z)) { DebugParams.showColliders = true; }
             if (Input.GetKeyDown(Keys.X)) { DebugParams.showColliders = false; }
-            if (Input.GetKeyDown(Keys.F6)) { SetFullScreen(); }
-            if (Input.GetKeyDown(Keys.F7)) { Window.IsBorderless = false; }
+            if (Input.GetKeyDown(Keys.F6)) { graphics.ToggleFullScreen(); _canvas.SetDestinationRectangle(); }
 
             SceneManager.Update(gameTime);
             _uiManager.Update();
