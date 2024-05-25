@@ -1,23 +1,27 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 
 /* Render items are first drawn here before being the canvas is drawn to the screen */
 namespace ProjectPalladium
 {
     public class Canvas
     {
+        Matrix scaleMatrix;
         private RenderTarget2D _renderTarget;
+        public string name;
         public RenderTarget2D RenderTarget { get { return _renderTarget; }  set { _renderTarget = value; } }
         private readonly GraphicsDevice _graphicsDevice;
         private Rectangle _destinationRectangle;
+        public float scale = 1f;
 
-        public Canvas(GraphicsDevice graphicsDevice, int width, int height)
+        public Canvas(GraphicsDevice graphicsDevice, int width, int height, string name)
         {
             _graphicsDevice = graphicsDevice;
             _renderTarget = new RenderTarget2D(graphicsDevice, width, height);
             SetDestinationRectangle();
-            
+            this.name = name;
         }
 
         // calculate the appropriate destination rectangle for the rendertarget
@@ -29,9 +33,13 @@ namespace ProjectPalladium
             float scaleX = (float) screensize.Width / _renderTarget.Width;
             float scaleY = (float)screensize.Height / _renderTarget.Height;
 
-
+          
             float scale = Math.Min(scaleX, scaleY);
-            Game1.targetScale = scale;
+            // if this is the ui canvas we need the scale for mouse transforms
+            if (name == "ui")
+            {
+                Game1.targetScale = scale;
+            }
 
             int newWidth = (int)(_renderTarget.Width * scale);
             int newHeight = (int)(_renderTarget.Height * scale);
@@ -46,15 +54,14 @@ namespace ProjectPalladium
         public void Activate()
         {
             _graphicsDevice.SetRenderTarget(_renderTarget);
-            _graphicsDevice.Clear(Color.DarkBlue);
+            _graphicsDevice.Clear(Color.Transparent); // Clear with a transparent color
         }
 
         // draw whole canvas to precalculated rectangle
         public void Draw(SpriteBatch b)
         {
-            _graphicsDevice.SetRenderTarget(null);
-            _graphicsDevice.Clear(Color.Black);
-            b.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp, null, null, null, null);
+            if (name == "ui") { scaleMatrix = Matrix.CreateScale(2f); }
+            b.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
             b.Draw(_renderTarget, _destinationRectangle, Color.White);
             b.End();
         }

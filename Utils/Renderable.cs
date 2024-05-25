@@ -31,15 +31,16 @@ namespace ProjectPalladium.Utils
 
         public void LoadTexture(string textureName)
         {
-            if (textureName == null) { return; }
+            if (textureName == null || textureName == "") { return; }
             _texture = Game1.contentManager.Load<Texture2D>(textureName);
             size = new Point(_texture.Width, _texture.Height);
             sourceRect = new Rectangle(new Point(0, 0), size);
         }
 
-        public void Draw(SpriteBatch b, Vector2 pos, float opacity = 1f, float layer = 0f)
+        public void Draw(SpriteBatch b, Vector2 pos, float opacity = 1f, float layer = 0f, float scale = 1f)
         {
-            b.Draw(_texture, pos, sourceRect, Color.White * opacity, 0f, Vector2.Zero, Game1.scale, SpriteEffects.None, layer);
+            if (Texture == null) return;
+            b.Draw(_texture, pos, sourceRect, Color.White * opacity, 0f, Vector2.Zero, scale, SpriteEffects.None, layer);
         }
 
         // draw renderable with custom origin

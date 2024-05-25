@@ -13,7 +13,6 @@ namespace ProjectPalladium
 {
     public class Game1 : Game
     {
-
         private static GraphicsDeviceManager _graphics;
         public static GraphicsDeviceManager graphics { get { return _graphics; } }
 
@@ -22,12 +21,17 @@ namespace ProjectPalladium
         private SpriteBatch _spriteBatch;
         public static GraphicsDevice graphicsDevice;
         private Canvas _canvas;
+        private Canvas _uiCanvas;
+
+        public static Inventory inventory;
 
         public static Point NativeResolution = new Point(512, 288);
+        public static Point UINativeResolution = new Point(1360, 768);
 
+        
         public Map map;
 
-        public Player player;
+        public static Player player;
         //private Tilemap _tilemap;
 
         public ContentManager content;
@@ -40,11 +44,12 @@ namespace ProjectPalladium
 
         public static ContentManager contentManager;
 
-        public static float scale = 1f;
+        public const float scale = 1f;
 
         private Matrix _translation;
 
-        private UIManager _uiManager;
+        private static UIManager _uiManager;
+        public static UIManager UIManager { get { return _uiManager; } }
 
         public static class layers
         {
@@ -77,8 +82,8 @@ namespace ProjectPalladium
         //update the prefferedBackBuffer variables when the window is changed
         private void OnResize(object sender, EventArgs e)
         {
-            isFullscreen = false;
             _canvas.SetDestinationRectangle();
+            _uiCanvas.SetDestinationRectangle();
         }
 
 
@@ -108,9 +113,11 @@ namespace ProjectPalladium
             _translation = Matrix.CreateTranslation(dx, dy, 0f);
         }
 
+
         protected override void Initialize()
         {
             base.Initialize();
+
             graphics.HardwareModeSwitch = false;
            
             // by default we start in bordered fullscreen
@@ -119,8 +126,10 @@ namespace ProjectPalladium
 
             _graphics.ApplyChanges();
             _canvas.SetDestinationRectangle();
+            _uiCanvas.SetDestinationRectangle();
 
-            
+            // init UI
+            _uiManager = new UIManager(new UIElement("root", null, 0, 0, null, isRoot: true, isBox: true));
 
             // load map
             map = new Map("hollow.tmx");
@@ -136,16 +145,15 @@ namespace ProjectPalladium
             Scene mainScene = new Scene(map, player, new() { spawnLocation = new Vector2(400, 400) });
             SceneManager.LoadScene(mainScene);
 
-            // init UI
-            _uiManager = new UIManager(new UIElement("root",null, 0, 0, null, isRoot: true, isBox:true));
-            
+            inventory = UIManager.inventoryUI.Inventory;
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             graphicsDevice = GraphicsDevice;
-            _canvas = new Canvas(GraphicsDevice, screenWidth, screenHeight);
+            _canvas = new Canvas(GraphicsDevice, screenWidth, screenHeight, "gameworld");
+            _uiCanvas = new Canvas(graphicsDevice, UINativeResolution.X, UINativeResolution.Y,"ui");
         }
 
         protected override void Update(GameTime gameTime)
@@ -156,7 +164,8 @@ namespace ProjectPalladium
 
             if (Input.GetKeyDown(Keys.Z)) { DebugParams.showColliders = true; }
             if (Input.GetKeyDown(Keys.X)) { DebugParams.showColliders = false; }
-            if (Input.GetKeyDown(Keys.F6)) { graphics.ToggleFullScreen(); _canvas.SetDestinationRectangle(); }
+            if (Input.GetKeyDown(Keys.F6)) { 
+                graphics.ToggleFullScreen(); _canvas.SetDestinationRectangle(); _uiCanvas.SetDestinationRectangle();}
 
             SceneManager.Update(gameTime);
             _uiManager.Update();
@@ -180,20 +189,27 @@ namespace ProjectPalladium
 
         protected override void Draw(GameTime gameTime)
         {
+            // Clear the back buffer with the background color
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _canvas.Activate(); // start drawing to the canvas
-            _spriteBatch.Begin(SpriteSortMode.FrontToBack ,null, SamplerState.PointClamp, null,  null, null, _translation);
-
+            // Render the game world to the _canvas
+            _canvas.Activate();
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp, null, null, null, _translation);
             SceneManager.Draw(_spriteBatch);
             _spriteBatch.End();
-            
-            // draw UI elements (always fixed on screen)
+
+            // Render the UI elements to the _uiCanvas
+            _uiCanvas.Activate();
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
             _uiManager.Draw(_spriteBatch);
             _spriteBatch.End();
 
+            // Switch back to the default render target (the back buffer)
+            GraphicsDevice.SetRenderTarget(null);
+
+            // Draw the UI canvas to the back buffer
             _canvas.Draw(_spriteBatch);
+            _uiCanvas.Draw(_spriteBatch);
 
         }
     }

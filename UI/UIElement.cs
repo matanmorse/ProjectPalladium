@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 namespace ProjectPalladium.UI
 {
     public class UIElement
@@ -16,7 +17,8 @@ namespace ProjectPalladium.UI
             def,
             center,
         }
-        
+
+        public float scale;
         private Renderable sprite;
         public Renderable Sprite { get { return sprite; } set { } }
         protected Point localPos;
@@ -31,7 +33,6 @@ namespace ProjectPalladium.UI
         public UIElement parent;
         public List<UIElement> children = new List<UIElement>();
 
-        private float scale;
 
         public bool showing = true;
 
@@ -40,9 +41,10 @@ namespace ProjectPalladium.UI
         private bool isRoot;
         private bool isBox;
 
-        protected Button button;
+        public Button button;
         public UIElement(string name, string textureName, int localX, int localY, UIElement parent, OriginType originType=OriginType.def, float scale=1f, bool isRoot = false, bool isBox=false)
         {
+            if (scale == 1f) scale = UIManager.defaultUIScale;
             this.scale = scale;
             this.isRoot = isRoot;
             this.name = name;
@@ -58,6 +60,7 @@ namespace ProjectPalladium.UI
 
         }
 
+    
         public void UpdateGlobalPos()
         {
             if (isRoot)
@@ -67,10 +70,10 @@ namespace ProjectPalladium.UI
             }
             globalPos = parent.globalPos + localPos;
             drawPos = globalPos;
-           
+            
         }
 
-        public void Update()
+        public virtual void Update()
         {
             if (!showing) return;
             if (button != null) { button.Update(); }
@@ -82,17 +85,31 @@ namespace ProjectPalladium.UI
             foreach (UIElement child in children) { child.Update(); }
         }
 
-        public virtual void Draw(SpriteBatch b) {
+        public Vector2 ScaleVector(Vector2 vtr)
+        {
+            return Vector2.Transform(vtr, Matrix.CreateScale(scale));
+        }
 
-            if (!(isRoot || !showing || isBox))
+        public Point ScalePoint(Point pt)
+        {
+            return new Point((int) (pt.X * scale), (int) (pt.Y * scale));
+        }
+
+        public Rectangle ScaleRect(Rectangle r)
+        {
+            return new Rectangle((int)(r.X * scale), (int)(r.Y * scale), (int)(r.Width * scale), (int)(r.Height * scale));
+        }
+        public virtual void Draw(SpriteBatch b) {
+            if (!showing) return; // if not shoaeing, don't draw this or the children
+            if (!(isRoot || isBox))
             {
                 if (originType == OriginType.center)
                 {
-                    sprite.Draw(b, new Vector2(drawPos.X, drawPos.Y) - new Vector2(Sprite.size.X / 2, Sprite.size.Y / 2), layer: Game1.layers.UI);
+                    sprite.Draw(b, new Vector2(drawPos.X, drawPos.Y) - ScaleVector(new Vector2(Sprite.size.X / 2, Sprite.size.Y / 2)), layer: Game1.layers.UI, scale:scale);
                 }
                 else
                 {
-                    sprite.Draw(b, new Vector2(drawPos.X, drawPos.Y), layer: Game1.layers.UI);
+                    sprite.Draw(b, new Vector2(drawPos.X, drawPos.Y), layer: Game1.layers.UI, scale:scale);
                 }
             }
 
@@ -100,10 +117,11 @@ namespace ProjectPalladium.UI
 
         }
 
-       
-        public void AddChild(string name, string textureName, int localX, int localY, OriginType originType = OriginType.def)
+
+        public void AddChild(string name, string textureName, int localX, int localY, OriginType originType = OriginType.def, float scale = 1f)
         {
-            children.Add(new UIElement(name, textureName, localX, localY, this, originType));
+            if (scale == 1f) scale = UIManager.defaultUIScale;
+            children.Add(new UIElement(name, textureName, localX, localY, this, originType, scale));
         }
         public void AddChild(UIElement child) { children.Add(child); }
         public UIElement GetChild(string name)
@@ -117,7 +135,12 @@ namespace ProjectPalladium.UI
 
         public void AddButton(Button.OnEnter onEnter, Button.OnLeave onLeave, Button.OnClick onClick, Point size)
         {
-            button = new Button(onEnter, onClick, onLeave, globalPos - new Point(1, 1), size) ;
+            button = new Button(onEnter, onClick, onLeave, globalPos - new Point(1, 1), size, this) ;
+        }
+
+        public virtual void ToggleShowing ()
+        {
+            showing = !showing;
         }
      
     }

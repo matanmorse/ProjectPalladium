@@ -43,25 +43,22 @@ namespace ProjectPalladium.Utils
         // gets the mouse position in terms of native resolution
         public static Point GetNativeMousePos(Point globalPos)
         {
-            Debug.WriteLine(globalPos);
-            //if (Game1.isFullscreen)
-            //{
-            //    globalPos += Game1.hackyOffset;
-            //}
-
-
-            float offsetX = (Game1.graphicsDevice.PresentationParameters.Bounds.Width - Game1.NativeResolution.X * Game1.targetScale) / 2.0f;
-            float offsetY = (Game1.graphicsDevice.PresentationParameters.Bounds.Height - Game1.NativeResolution.Y * Game1.targetScale) / 2.0f;
+            float offsetX = (Game1.graphicsDevice.PresentationParameters.Bounds.Width - Game1.UINativeResolution.X * Game1.targetScale) / 2.0f;
+            float offsetY = (Game1.graphicsDevice.PresentationParameters.Bounds.Height - Game1.UINativeResolution.Y * Game1.targetScale) / 2.0f;
 
             float nativeMouseX = (globalPos.X - offsetX) / Game1.targetScale;
             float nativeMouseY = (globalPos.Y - offsetY) / Game1.targetScale;
 
-            nativeMouseX = MathHelper.Clamp(nativeMouseX, 0, Game1.NativeResolution.X);
-            nativeMouseY = MathHelper.Clamp(nativeMouseY, 0, Game1.NativeResolution.Y);
+            nativeMouseX = MathHelper.Clamp(nativeMouseX, 0, Game1.UINativeResolution.X);
+            nativeMouseY = MathHelper.Clamp(nativeMouseY, 0, Game1.UINativeResolution.Y);
 
-            Debug.WriteLine(nativeMouseX + " " + nativeMouseY);
             // subtract 1 b/c of rounding error
             return new Point((int)nativeMouseX - 1, (int)nativeMouseY - 1);
+        }
+
+        public static Point OneToTwoDimensionalIndex(int index, int columns)
+        {
+            return new Point(index % columns, index / columns);
         }
     }
 }

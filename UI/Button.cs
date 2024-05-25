@@ -22,28 +22,40 @@ namespace ProjectPalladium.UI
 
         public bool mouseOver = false;
         public bool clickState = false;
-        public Button(OnEnter onEnter, OnClick onClick, OnLeave onLeave, Point pos, Point size)
+
+        private UIElement owner;
+        public Button(OnEnter onEnter, OnClick onClick, OnLeave onLeave, Point pos, Point size, UIElement owner)
         {
-            this.bounds = new Rectangle(pos, size);
             this.onClick = onClick;
             this.onEnter = onEnter;
             this.onLeave = onLeave;
+            this.owner = owner;
+            this.bounds = new Rectangle(pos, owner.ScalePoint(size));
+            
         }
 
         public void Update()
         {
-            
             CheckEnter();
             CheckLeave();
-            CheckClick();
+            if (CheckClick()) onClick();
+            CheckHover();
+        }
+
+        public bool CheckHover()
+        {
+            if (bounds.Contains(Input.mousePos) && mouseOver == false)
+            {
+                mouseOver = true;
+                return true;
+            }
+            return false;
         }
 
         public bool CheckEnter()
         {
             if (bounds.Contains(Input.mousePos) && !bounds.Contains(Input.previousMousePos))
             {
-                Debug.WriteLine(Input.mousePos);
-                Debug.WriteLine(bounds);
                 mouseOver = true;
                 return true;
             }

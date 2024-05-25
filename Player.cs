@@ -2,16 +2,23 @@
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using ProjectPalladium.Animation;
+using ProjectPalladium.Items;
+using Tutorial;
+using System.Diagnostics;
 
 namespace ProjectPalladium
 {
     public class Player : Character
     {
+        private UIManager uiManager;
         private Vector2 inputDir = Vector2.Zero;
+        public Inventory inventory;
         public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) :
             base(sprite, pos, name, startingMap, boundingBox)
         {
             currentMap.player = this;
+            uiManager = Game1.UIManager;
+            inventory = uiManager.inventoryUI.Inventory;
         }
 
         public void handleMovement()
@@ -53,11 +60,30 @@ namespace ProjectPalladium
             movePos();
         }
 
+        public void doInputCheck()
+        {
+            if (Input.GetKeyDown(Keys.E))
+            {
+                uiManager.inventoryUI.ToggleShowing();
+            }
+
+
+            // debug code for adding and removing items
+            if (Input.GetKeyDown(Keys.O))
+            {
+                inventory.AddItem(Item.Items["ectoplasmic gem"], 10);
+            }
+            if (Input.GetKeyDown(Keys.I))
+            {
+                inventory.RemoveItem(Item.Items["ectoplasmic gem"], 9);
+            }
+        }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
             handleMovement();
+            doInputCheck();
         }
     }
 
