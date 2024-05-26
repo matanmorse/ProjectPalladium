@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Utils;
 using ProjectPalladium.Items;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 namespace ProjectPalladium.UI
 {
 
@@ -20,18 +21,16 @@ namespace ProjectPalladium.UI
         public int index;
         private readonly Point TOOLBAR_TOP_LEFT;
         private Item item;
+        public Item Item { get { return this.item; } set {
 
+                this.item = value; this.name = this.item.name;
+                this.Sprite = new Renderable(item.textureName); 
+            } }
         private Rectangle bounds = new Rectangle();
         private TextRenderer itemCount;
 
         public event Action<ItemSlot> OnSlotClicked;
-        public Item Item {
-            get { return item; }
-            set
-            {
-                this.item = value;
-            } 
-        }
+       
 
         public void onClick()
         {
@@ -77,10 +76,7 @@ namespace ProjectPalladium.UI
             
             if (item.quantity > 0) { itemCount.Draw(b, item.quantity.ToString()); }
             
-            if (button != null && item != Item.none) if (button.mouseOver || button.clickState) { Util.DrawRectangle(button.bounds, b); }
+            if (button != null && item != Item.none) if (button.mouseOver || (button.clickState && parent is Toolbar)) { Util.DrawRectangle(button.bounds, b); }
         }
-
-
-
     }
 }

@@ -44,9 +44,9 @@ namespace ProjectPalladium.Utils
         }
 
         // draw renderable with custom origin
-        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, float layer = 0f, float opacity = 1f)
+        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, float layer = 0f, float opacity = 1f, float scale = 1f)
         {
-            b.Draw(_texture, pos, sourceRect, Color.White * opacity, 0f, origin, Game1.scale, SpriteEffects.None, layer);
+            b.Draw(_texture, pos, sourceRect, Color.White * opacity, 0f, origin, scale, SpriteEffects.None, layer);
         }
 
 

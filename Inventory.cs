@@ -18,7 +18,7 @@ namespace ProjectPalladium
             {
                 inventory.Add(Item.none);
             }
-            // inventory[3] = Item.Items["ectoplasmic gem"].Clone();
+            inventory[3] = Item.GetItemFromRegistry("wand");
 
         }
         public int Size()
@@ -63,9 +63,21 @@ namespace ProjectPalladium
             return true;
         }
 
+        // force add an item, very dangerous b/c no checking.
+        public void AddItemAtIndex(int index, Item item)
+        {
+            inventory[index] = item;
+            ui.UpdateInventory();
+        }
+        // force remove an item, very dangerous b/c no checking.
+        public void RemoveItemAtIndex(int index, Item item)
+        {
+            inventory[index] = Item.none;
+            ui.UpdateInventory();
+        }
+
         public int FindItem(Item item, int index = 0)
         {
-            // Debug.WriteLine(index);
             return inventory.FindIndex(index, new Predicate<Item>(i =>
             {
                 return i.name == item.name;
@@ -82,7 +94,6 @@ namespace ProjectPalladium
             do
             {
                 totalItems += inventory[index].quantity;
-                Debug.WriteLine(totalItems);
                 index = FindItem(item, index + 1);
             }
 
@@ -118,12 +129,19 @@ namespace ProjectPalladium
             else return inventory[index];
         }
 
-        public void SwapItems(int index1, int index2)
+        public void SwapItems(int index2)
         {
-            Item tmp = inventory[index1];
-            inventory[index1] = inventory[index2];
-            inventory[index2] = tmp;
+            Item tmp = inventory[index2].Clone();
+            inventory[index2] = ui.ghostItem.item;
+
+            ui.CreateGhostItem(tmp);
+
             ui.UpdateInventory();
+
+            Debug.WriteLine("not ghost inv " + inventory[index2]);
+            Debug.WriteLine("not ghost ui " + ((ItemSlot)(ui.children[index2])).Item);
+            Debug.WriteLine("\n");
+
         }
     }
 }

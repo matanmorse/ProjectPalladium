@@ -20,7 +20,7 @@ namespace ProjectPalladium.UI
 
         public float scale;
         private Renderable sprite;
-        public Renderable Sprite { get { return sprite; } set { } }
+        public Renderable Sprite { get { return sprite; } set { this.sprite = value; } }
         protected Point localPos;
         // the global position centered at top-right
         public Point globalPos;

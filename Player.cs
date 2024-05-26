@@ -71,11 +71,11 @@ namespace ProjectPalladium
             // debug code for adding and removing items
             if (Input.GetKeyDown(Keys.O))
             {
-                inventory.AddItem(Item.Items["ectoplasmic gem"], 10);
+                inventory.AddItem(Item.GetItemFromRegistry("ectoplasmic gem"), 10);
             }
             if (Input.GetKeyDown(Keys.I))
             {
-                inventory.RemoveItem(Item.Items["ectoplasmic gem"], 9);
+                inventory.RemoveItem(Item.GetItemFromRegistry("ectoplasmic gem"), 9);
             }
         }
 

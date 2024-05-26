@@ -10,6 +10,7 @@ using ProjectPalladium.Items;
 using Tutorial;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Graphics;
 namespace ProjectPalladium.UI
 {
     public class InventoryUI : UIElement
@@ -26,6 +27,9 @@ namespace ProjectPalladium.UI
         private bool updateItems;
 
         private List<UIElement> tmpItems;
+
+        public GhostItem ghostItem;
+
         public InventoryUI(string name, string textureName, int localX, int localY, UIElement parent,
             OriginType originType = OriginType.def, float scale = 1f, bool isRoot = false, bool isBox = false)
             : base(name, textureName, localX, localY, parent, originType, scale, isRoot, isBox)
@@ -49,21 +53,62 @@ namespace ProjectPalladium.UI
 
         private void SlotClicked(ItemSlot slot)
         {
+            Item itemInSlot = inv.GetAtIndex(slot.index);
+            if (ghostItem == null && slot.Item == Item.none) return;
 
-            if (swap1 == -1 && slot.Item == Item.none) return;
-            if (swap1 == -1) { swap1 = slot.index; return; }
-            if (swap1 == slot.index) { swap1 = -1; return; }
-            else { SwapItems(slot.index); }
+        
+            // in this case, create a ghost item that follows the player's mouse
+            if (ghostItem == null) { 
+
+                CreateGhostItem(slot.Item.Clone());
+                ghostItem.originalIndex = slot.index;
+
+                inv.RemoveItemAtIndex(slot.index, ghostItem.item);
+                return;
+            }
+            
+            else {  // we need to do some kind of swapping or combining
+                if (itemInSlot == ghostItem.item && itemInSlot.quantity < itemInSlot.stackSize && ghostItem.item.quantity < ghostItem.item.stackSize)
+                {
+                    inv.AddItem(ghostItem.item, ghostItem.item.quantity);
+                    DestroyGhostItem();
+                }
+                else if (inv.GetAtIndex(slot.index) == Item.none)
+                {
+                    inv.AddItemAtIndex(slot.index, ghostItem.item);
+                    DestroyGhostItem();
+                }
+                else
+                {
+                    SwapItems(slot.index);
+                    
+                }
+               
+            }
+        }
+
+        public void CreateGhostItem(Item item)
+        {
+            this.ghostItem = new GhostItem(item, scale);
+        }
+
+        public void DestroyGhostItem()
+        {
+            this.ghostItem = null;
         }
 
         private void SwapItems(int index2)
         {
             tmpItems = new List<UIElement>(children); // make copy of list of children
             updateItems = true;
-            
-            ((ItemSlot)children[swap1]).Reset();
-            ((ItemSlot)children[index2]).Reset();
-            inv.SwapItems(swap1, index2);
+
+          
+            inv.SwapItems(index2);
+            // voodoo magic 
+            for (int i = 0; i < INV_SIZE; i++)
+            {
+                ((ItemSlot)children[i]).Reset();
+            }
 
             swap1 = -1;
         }
@@ -85,32 +130,40 @@ namespace ProjectPalladium.UI
         public override void Update()
         {
             base.Update();
+            if (ghostItem != null) { ghostItem.Update(); }
             if (updateItems) children = tmpItems; updateItems = false;
         }
        
-        public bool ReplaceItemSlot(Item item, int index, List<UIElement> tmpList)
-        {
-            updateItems = true;
-            Point pos = Util.OneToTwoDimensionalIndex(index, NUM_COLUMNS);
-            ItemSlot newItem = new ItemSlot(item.name, item, 0, 0, this, Util.OneToTwoDimensionalIndex(index, NUM_COLUMNS), scale:scale);
-            newItem.OnSlotClicked += SlotClicked;
-            tmpList[index] = newItem;
-            return true;
-        }
+
 
         public void UpdateInventory()
         {
             tmpItems = new List<UIElement>(children); // make copy of list of children
             toolbar.UpdateToolbar();
-           
+            Debug.WriteLine("UPDATEINVENTORY\n");
+
             for (int i = 0; i < INV_SIZE; i++)
             {
                 // if the item in inventory is empty, get the none item
                 Item itemInInv = inv.GetAtIndex(i) == null ? Item.none : inv.GetAtIndex(i);
-                if (((ItemSlot)children[i]).Item != itemInInv) { ReplaceItemSlot(itemInInv, i, tmpItems); }
+                Item itemInItemSlot = ((ItemSlot)(children[i])).Item;
+
+                // if the item in the inventory does not EXACTLY match the item in the UI, replace it
+                if ( !(itemInInv == itemInItemSlot && itemInInv.quantity == itemInItemSlot.quantity && i == ((ItemSlot)children[i]).index))
+                {
+                    ((ItemSlot)(tmpItems[i])).Item = itemInInv; updateItems = true;
+                }
+
             }
 
+            
         }
-        
+
+        public override void Draw(SpriteBatch b)
+        {
+            base.Draw(b);
+            if (ghostItem != null) { ghostItem.Draw(b); }
+        }
+
     }
 }

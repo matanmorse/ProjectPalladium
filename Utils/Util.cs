@@ -15,12 +15,12 @@ namespace ProjectPalladium.Utils
             Texture2D _texture = new Texture2D(b.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             _texture.SetData(new[] { Color.DeepPink });
 
-            int thickness = 1;
+            int thickness = 2;
 
-            b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + thickness), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
-            b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + thickness), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
-            b.Draw(_texture, new Vector2(rect.Left + rect.Size.X, rect.Top + thickness), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
-            b.Draw(_texture, new Vector2(rect.Left + thickness, rect.Top + rect.Size.Y), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(_texture, new Vector2(rect.Left, rect.Top ), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            b.Draw(_texture, new Vector2(rect.Left , rect.Top ), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(_texture, new Vector2(rect.Left + rect.Size.X, rect.Top ), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(_texture, new Vector2(rect.Left , rect.Top + rect.Size.Y -1), new Rectangle(0, 0, rect.Size.X + thickness, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
 
         }
 
@@ -59,6 +59,16 @@ namespace ProjectPalladium.Utils
         public static Point OneToTwoDimensionalIndex(int index, int columns)
         {
             return new Point(index % columns, index / columns);
+        }
+
+        public static Vector2 PointToVector2(Point pt)
+        {
+            return new Vector2(pt.X, pt.Y);
+        }
+
+        public static Vector2 GetCenterOrigin(Renderable text)
+        {
+            return new Vector2(text.size.X / 2, text.size.Y / 2);
         }
     }
 }

@@ -32,10 +32,14 @@ namespace ProjectPalladium
 
             inventoryUI.toolbar = toolbar;
             inventoryUI.showing = false;
+
             rootElement.AddChild(inventoryUI);
             rootElement.AddChild(toolbar);
+
             rootElement.AddChild("mana bar", "manabar", 10, Game1.UINativeResolution.Y - 150);
             rootElement.AddChild(new UIElement("spellbook", "spellbook", Game1.UINativeResolution.X -100, Game1.UINativeResolution.Y -100, rootElement));
+
+            
         }
 
         public void Update()
