@@ -17,10 +17,15 @@ namespace ProjectPalladium
         // is this layer for colliders or not
         public bool isCollideLayer;
 
+        public bool isTillLayer;
+
+        public string name;
+
         public List<Rectangle> colliders = new List<Rectangle>();
 
         public List<Renderable[,]> layers = new List<Renderable[,]>();
 
+        
         public List<Renderable> tileIndex;
 
         private bool showColliders;
@@ -30,16 +35,20 @@ namespace ProjectPalladium
 
         private Point _mapTileSize;
 
-        Renderable[,] layer;
+        private Renderable[,] layer;
+
+        public Renderable[,] Layer { get { return layer; } }
 
         public Point MapTileSize { get { return _mapTileSize; } }
 
         Texture2D tileMap;
-        public Tilemap(string tileData, Point MapTileSize, bool collideLayer)
+        public Tilemap(string tileData, Point MapTileSize, string name, bool collideLayer=false, bool isTillLayer=false)
         {
             layer = new Renderable[MapTileSize.X, MapTileSize.Y];
+            this.name = name;
             _mapTileSize = MapTileSize;
             isCollideLayer = collideLayer;
+            this.isTillLayer = isTillLayer;
             tileIndex = ExtractTiles("tilemap");
             DecodeTileData(tileData);
         }
@@ -78,7 +87,7 @@ namespace ProjectPalladium
             tileMap = Game1.contentManager.Load<Texture2D>(fileName);
 
             List<Renderable> tiles = new List<Renderable>();
-            tiles.Add(new Renderable(tileMap, new Rectangle(0, 0, 0, 0))); // in tiled tmx, id=0 is an empty tile, so the first entry is an empty rectangle
+            tiles.Add(Renderable.empty); // in tiled tmx, id=0 is an empty tile, so the first entry is an empty rectangle
 
 
             for (int i = 0; i < tileMap.Width / tileSize * (tileMap.Height / tileSize); i++)
@@ -101,6 +110,11 @@ namespace ProjectPalladium
                 if (Rectangle.Intersect(collider, boundingBox) != Rectangle.Empty) return Rectangle.Intersect(collider, boundingBox);
             }
             return Rectangle.Empty;
+        }
+
+        public void SetTileData(Point location, Renderable tile)
+        {
+            layer[location.X, location.Y] = tile;
         }
 
         /* draw tilemap */

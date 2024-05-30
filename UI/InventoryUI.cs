@@ -140,7 +140,6 @@ namespace ProjectPalladium.UI
         {
             tmpItems = new List<UIElement>(children); // make copy of list of children
             toolbar.UpdateToolbar();
-            Debug.WriteLine("UPDATEINVENTORY\n");
 
             for (int i = 0; i < INV_SIZE; i++)
             {

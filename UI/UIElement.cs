@@ -22,6 +22,12 @@ namespace ProjectPalladium.UI
         private Renderable sprite;
         public Renderable Sprite { get { return sprite; } set { this.sprite = value; } }
         protected Point localPos;
+        public Point LocalPos
+        {
+            get { return localPos; }
+            set { localPos = value; UpdateGlobalPos(); }
+        }
+
         // the global position centered at top-right
         public Point globalPos;
         // this is the origin position of the element where it is drawn. May or may not be the same as the global pos depending on origin type.
@@ -40,9 +46,10 @@ namespace ProjectPalladium.UI
         public bool needsUpdating = false;
         private bool isRoot;
         private bool isBox;
+        public float rotation;
 
         public Button button;
-        public UIElement(string name, string textureName, int localX, int localY, UIElement parent, OriginType originType=OriginType.def, float scale=1f, bool isRoot = false, bool isBox=false)
+        public UIElement(string name, string textureName, int localX, int localY, UIElement parent, OriginType originType = OriginType.def, float scale = 1f, bool isRoot = false, bool isBox = false, float rotation = 0f)
         {
             if (scale == 1f) scale = UIManager.defaultUIScale;
             this.scale = scale;
@@ -53,7 +60,7 @@ namespace ProjectPalladium.UI
 
             this.isBox = isBox;
             this.parent = parent;
-            this.sprite = new Renderable(textureName);
+            this.sprite = new Renderable(textureName, rotation:rotation);
             this.localPos = new Point(localX, localY);
             this.originType = originType;
             UpdateGlobalPos();
@@ -105,7 +112,8 @@ namespace ProjectPalladium.UI
             {
                 if (originType == OriginType.center)
                 {
-                    sprite.Draw(b, new Vector2(drawPos.X, drawPos.Y) - ScaleVector(new Vector2(Sprite.size.X / 2, Sprite.size.Y / 2)), layer: Game1.layers.UI, scale:scale);
+                    sprite.Draw(b, Util.PointToVector2(globalPos), layer: Game1.layers.UI, scale: scale,
+                        origin: new Vector2(Sprite.size.X / 2, sprite.size.Y / 2));
                 }
                 else
                 {
@@ -118,12 +126,12 @@ namespace ProjectPalladium.UI
         }
 
 
-        public void AddChild(string name, string textureName, int localX, int localY, OriginType originType = OriginType.def, float scale = 1f)
+        public virtual void AddChild(string name, string textureName, int localX, int localY, OriginType originType = OriginType.def, float scale = 1f)
         {
             if (scale == 1f) scale = UIManager.defaultUIScale;
             children.Add(new UIElement(name, textureName, localX, localY, this, originType, scale));
         }
-        public void AddChild(UIElement child) { children.Add(child); }
+        public virtual void AddChild(UIElement child) { children.Add(child); }
         public UIElement GetChild(string name)
         {
             return children.First(x => x.name == name);

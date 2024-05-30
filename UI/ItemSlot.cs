@@ -31,7 +31,6 @@ namespace ProjectPalladium.UI
 
         public event Action<ItemSlot> OnSlotClicked;
        
-
         public void onClick()
         {
             if (OnSlotClicked == null) return;
@@ -74,7 +73,7 @@ namespace ProjectPalladium.UI
         {
             base.Draw(b);
             
-            if (item.quantity > 0) { itemCount.Draw(b, item.quantity.ToString()); }
+            if (item.quantity > 1) { itemCount.Draw(b, item.quantity.ToString()); }
             
             if (button != null && item != Item.none) if (button.mouseOver || (button.clickState && parent is Toolbar)) { Util.DrawRectangle(button.bounds, b); }
         }

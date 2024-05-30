@@ -18,6 +18,7 @@
   <ItemGroup>
     <Folder Include="Content\bin\DesktopGL\Content\NewFolder\" />
     <Folder Include="Map\" />
+    <Folder Include="UI\NewFolder\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

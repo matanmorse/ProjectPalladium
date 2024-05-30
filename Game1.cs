@@ -6,6 +6,7 @@ using ProjectPalladium.UI;
 using ProjectPalladium.Utils;
 using System;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using Tutorial;
 
 
@@ -51,6 +52,7 @@ namespace ProjectPalladium
         private static UIManager _uiManager;
         public static UIManager UIManager { get { return _uiManager; } }
 
+       
         public static class layers
         {
             public const float tile = 0f;
@@ -130,7 +132,7 @@ namespace ProjectPalladium
 
             // init UI
             _uiManager = new UIManager(new UIElement("root", null, 0, 0, null, isRoot: true, isBox: true));
-
+            _uiManager.Initialize();
             // load map
             map = new Map("hollow.tmx");
 
@@ -140,6 +142,8 @@ namespace ProjectPalladium
             new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (12 * Game1.scale), (int)(30 * Game1.scale)));
             player.Initialize();
             player.setBounds(map.tileMapSize, 16);
+
+            _uiManager.SetPlayer(player);
 
             //Send it to SceneManager
             Scene mainScene = new Scene(map, player, new() { spawnLocation = new Vector2(400, 400) });

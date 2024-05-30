@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -18,6 +19,8 @@ namespace ProjectPalladium
         public List<Tilemap> tilemaps = new List<Tilemap>();
         public List<Tilemap> collidingTilemaps = new List<Tilemap>();
 
+        public Tilemap tillLayer;
+
         public List<Building> buildings = new List<Building>();
 
         MapSerializer map;
@@ -36,16 +39,22 @@ namespace ProjectPalladium
             // populate the layers list
             foreach (Layer layer in map.Layers)
             {
-                // check if the layer has a property called "iscollider" and its value
+                // check if the layer has appropriate properties  and its value
                 bool isCollideLayer = false;
+                bool isTillLayer = false;
                 if (layer.properties != null)
                 {
-                    isCollideLayer = layer.properties.properties.First(prop => prop.name == "iscollider").value == "true" ? true : false;
+                    Property isCollider = layer.properties.properties.FirstOrDefault(prop => prop.name == "iscollider", null);
+                    Property isTill = layer.properties.properties.FirstOrDefault(prop => prop.name == "isTillLayer", null);
+                    isCollideLayer = isCollider == null || isCollider.value == "false" ? false : true;
+                    isTillLayer = isTill == null || isTill.value == "false" ? false : true;
                 }
-                Tilemap tmap = new Tilemap(layer.Data.Text, tileMapSize, isCollideLayer);
+                
 
+                Tilemap tmap = new Tilemap(layer.Data.Text, tileMapSize, layer.Name, isCollideLayer, isTillLayer);
                 tilemaps.Add(tmap);
                 if (tmap.isCollideLayer) collidingTilemaps.Add(tmap);
+                if (tmap.isTillLayer) this.tillLayer = tmap;
             }
 
             scaledTileSize = (int)(tilesize * Game1.scale);

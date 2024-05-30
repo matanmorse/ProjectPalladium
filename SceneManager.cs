@@ -13,6 +13,7 @@ namespace ProjectPalladium
     internal class SceneManager
     {
         private static Scene curScene;
+        public static Scene CurScene { get { return curScene; } }
         public static void LoadScene(Scene scene)
         {
             curScene = scene ?? throw new Exception("Scene is null");

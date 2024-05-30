@@ -74,7 +74,7 @@ namespace ProjectPalladium.UI
 
         public bool CheckClick()
         {
-            if (mouseOver && Input.GetLeftMouseDown())
+            if (mouseOver && Input.GetLeftMouseClicked())
             {
                 clickState = clickState ? false : true;
                 return true;

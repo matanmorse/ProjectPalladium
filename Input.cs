@@ -14,7 +14,7 @@ namespace Tutorial
         private static KeyboardState currentState;
         private static KeyboardState previousState;
 
-        private static MouseState currentMouseState;
+        public static MouseState currentMouseState;
         private static MouseState previousMouseState;
 
         public static KeyboardState Update()
@@ -58,9 +58,16 @@ namespace Tutorial
             previousMousePos = mousePos;
             return currentMouseState.Position;
         }
-        public static bool GetLeftMouseDown()
+        public static bool GetLeftMouseClicked()
         {
             return currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed;
         }
+
+        public static bool GetLeftMouseDown()
+        {
+            return currentMouseState.LeftButton == ButtonState.Pressed;
+        }
+
+        
     }
 }

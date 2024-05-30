@@ -70,5 +70,11 @@ namespace ProjectPalladium.Utils
         {
             return new Vector2(text.size.X / 2, text.size.Y / 2);
         }
+
+        public static Point GetTileFromPos(Vector2 pos)
+        {
+            int tileSize = SceneManager.CurScene.Map.tilemaps[0].TileSize;
+            return new Point((int) pos.X / tileSize, (int) pos.Y / tileSize);
+        }
     }
 }

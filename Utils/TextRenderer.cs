@@ -22,7 +22,7 @@ namespace ProjectPalladium.Utils
 
         public void Draw(SpriteBatch b, string text)
         {
-            
+            if (text == null) return;
             Vector2 size = font.MeasureString(text);
             b.DrawString(font, text, pos, Color.Black, 0f, size, 1f, SpriteEffects.None, 1f);
         }

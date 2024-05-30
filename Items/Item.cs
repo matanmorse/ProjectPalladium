@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
+using ProjectPalladium.Tools;
 
 namespace ProjectPalladium.Items
 {
@@ -35,7 +36,7 @@ namespace ProjectPalladium.Items
         }
         private static Dictionary<String, Item> Items = new Dictionary<String, Item>()
         {
-            { "wand", new Item(0, "wand", "wand", 1, "a wand", 1) },
+            { "wand", new Wand(0, "wand", "wand", "a wand") },
             { "ectoplasmic gem", new Item(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", 99)}
         };
 
@@ -55,6 +56,11 @@ namespace ProjectPalladium.Items
         }
         public override int GetHashCode() { return 0; }
 
+        public bool IsSameItemStack (Item other)
+        {
+            return (other.id == id && other.quantity == quantity);
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is Item)
@@ -65,15 +71,22 @@ namespace ProjectPalladium.Items
         }
         public static bool operator ==(Item i1, Item i2)
         {
+            if ((object)i1 == null && (object)i2 == null) return true;
+
             if ((object) i1 == null || (object) i2 == null) return false;
             return (i1.id == i2.id);
         }
 
         public static bool operator != (Item i1, Item i2)
         {
-            if ((object)i1 == null || (object)i2 == null) return false;
-            return (i1.id != i2.id);
+            
+            if ((object)i1 == null && (object)i2 == null) return false;
+            if ((object)i1 == null ^ (object)i2 == null) return true;
+           
+            return !(i1.Equals(i2));
         }
+
+        public virtual void Update() {}
     };
  
 

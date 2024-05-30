@@ -42,7 +42,7 @@ namespace ProjectPalladium.UI
         public void Draw(SpriteBatch b)
         {
             sprite.Draw(b, pos, opacity: alpha, origin:Util.GetCenterOrigin(sprite), scale:scale);
-            if (item.quantity > 0) { itemCount.Draw(b, item.quantity.ToString()); }
+            if (item.quantity > 1) { itemCount.Draw(b, item.quantity.ToString()); }
         }
 
     }

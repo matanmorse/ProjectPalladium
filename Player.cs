@@ -5,7 +5,7 @@ using ProjectPalladium.Animation;
 using ProjectPalladium.Items;
 using Tutorial;
 using System.Diagnostics;
-
+using ProjectPalladium.Utils;
 namespace ProjectPalladium
 {
     public class Player : Character
@@ -13,6 +13,15 @@ namespace ProjectPalladium
         private UIManager uiManager;
         private Vector2 inputDir = Vector2.Zero;
         public Inventory inventory;
+        private Item _activeItem;
+        public Item ActiveItem { get { return _activeItem; } 
+            
+            set {
+                _activeItem = value;
+                Debug.WriteLine("changed item to " + value);
+            }
+        }
+
         public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) :
             base(sprite, pos, name, startingMap, boundingBox)
         {
@@ -84,6 +93,11 @@ namespace ProjectPalladium
             base.Update(gameTime);
             handleMovement();
             doInputCheck();
+
+            if (_activeItem != null && _activeItem != Item.none)
+            {                
+                _activeItem.Update();
+            }
         }
     }
 

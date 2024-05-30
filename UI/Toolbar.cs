@@ -23,9 +23,18 @@ namespace ProjectPalladium.UI
             {
                 Item item = Item.none;
                 Point pos = Util.OneToTwoDimensionalIndex(i, toolBarSize);
-                children.Add(new ItemSlot("", item, 0, 0, this, pos, scale:scale));
+                ItemSlot slot = new ItemSlot("", item, 0, 0, this, pos, scale: scale);
+                slot.OnSlotClicked += SlotClicked;
+                children.Add(slot);
             }
         }
+
+        private void SlotClicked(ItemSlot slot)
+        {
+            if (slot.button.clickState) { Game1.player.ActiveItem = slot.Item; }
+            else { Game1.player.ActiveItem = Item.none; }
+        }
+
 
         public bool ReplaceItemSlot(Item item, int index)
         {
@@ -40,7 +49,9 @@ namespace ProjectPalladium.UI
             {
                 // if the item in inventory is empty, get the none item
                 Item itemInInv = inv.GetAtIndex(i) == null ? Item.none : inv.GetAtIndex(i);
-                if (((ItemSlot)children[i]).Item != itemInInv) { ReplaceItemSlot(itemInInv, i); }
+                ItemSlot curSlot = (ItemSlot)children[i];
+
+                if (!(curSlot.Item.IsSameItemStack(itemInInv) && curSlot.index == i)) { ((ItemSlot)children[i]).Item = itemInInv; }
             }
             
         }
