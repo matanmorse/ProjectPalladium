@@ -128,6 +128,10 @@ namespace ProjectPalladium
                 for (int j = 0; j < _mapTileSize.Y; j++)
                 {
                     Vector2 pos = new Vector2(i * tileSize * Game1.scale, j * tileSize * Game1.scale);
+
+                    // debug, draws tiles around player
+                    //if (Util.IsTileWithinOneTileOfPlayer(new Point(i, j))) Util.DrawRectangle(new Rectangle(pos.ToPoint(), new Point(16,16)), b);
+
                     layer[i, j].Draw(b, pos, layer: layerDepth);
                 }
             }

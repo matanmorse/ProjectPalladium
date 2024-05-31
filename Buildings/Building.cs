@@ -13,46 +13,14 @@ using ProjectPalladium.Utils;
 namespace ProjectPalladium.Buildings
 {
 
-    public class Building
+    public class Building : GameObject
     {
-        private Renderable sprite;
 
         private float opacityDecayFactor = 1f;
-        private float opacity = 1f;
-        private float layer = Game1.layers.buildings;
-        public Rectangle bounds;
-        public Rectangle walkBehind;
-
-        private Vector2 globalPos;
-
-        private Vector2 localPos;
-
-        private bool playerBehind;
-        public bool PlayerBehind
-        {
-            get
-            {
-                return playerBehind;
-            }
-            set
-            {
-                if (value)
-                {
-                    layer = 1f;
-                }
-                else
-                {
-                    layer = 0.1f;
-                }
-                playerBehind = value;
-            }
-        }
 
         /* The name of the building (as defined by the "name" property of the .tmx file) is also the name of the json data file and the texture. */
-        public Building(string name, Vector2 pos)
+        public Building(string name, Vector2 pos) : base(name, pos)
         {
-
-
             sprite = new Renderable(name);
             localPos = pos;
 
@@ -63,32 +31,21 @@ namespace ProjectPalladium.Buildings
 
         private void DeserializeJsonData(string jsonPath)
         {
-            string registryPath = "Content/" + jsonPath + ".json";
-            string jsonString = System.IO.File.ReadAllText(registryPath);
-
+            string jsonString = GetJsonString(jsonPath);
             BuildingDeserializer info = JsonSerializer.Deserialize<BuildingDeserializer>(jsonString);
 
-         
             ColliderDetails bounds = info.colliders["move"];
             ColliderDetails walkBehind = info.colliders["behind"];
+
             this.bounds = Util.makeRectFromPoints(bounds, globalPos);
             this.walkBehind = Util.makeRectFromPoints(walkBehind, globalPos);
-
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             // Debug.WriteLine("building updating@ " + globalPos);
             if (playerBehind) opacity = MathHelper.Clamp(opacity -= (float)(opacityDecayFactor * gameTime.ElapsedGameTime.TotalSeconds), 0.5f, 1f);
             else opacity = MathHelper.Clamp(opacity += (float)(opacityDecayFactor * gameTime.ElapsedGameTime.TotalSeconds), 0.5f, 1f);
-        }
-        public void Draw(SpriteBatch b)
-        {
-            if (DebugParams.showColliders)
-            {
-                Util.DrawRectangle(bounds, b); Util.DrawRectangle(walkBehind, b);
-            }
-            sprite.Draw(b, globalPos, opacity: opacity, layer: layer);
         }
 
 

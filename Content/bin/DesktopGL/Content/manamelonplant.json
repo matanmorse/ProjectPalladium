@@ -1,0 +1,12 @@
+﻿{
+  "name": "Mana Melon",
+  "colliders": {
+    "behind": {
+      "size": [ 14, 8 ],
+      "location": [ 2, 12 ]
+    }
+  },
+  "width": 16,
+  "height": 32,
+  "growthstages": 4
+}

@@ -37,7 +37,8 @@ namespace ProjectPalladium.Items
         private static Dictionary<String, Item> Items = new Dictionary<String, Item>()
         {
             { "wand", new Wand(0, "wand", "wand", "a wand") },
-            { "ectoplasmic gem", new Item(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", 99)}
+            { "ectoplasmic gem", new Item(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", 99)},
+            { "mana melon seed", new Seed(2, "Mana Melon Seed", "manamelonseed", 1, "some mana melon seeds", 99, "manamelonplant") }
         };
 
         public static Item GetItemFromRegistry(string name)
@@ -87,6 +88,8 @@ namespace ProjectPalladium.Items
         }
 
         public virtual void Update() {}
+
+        public virtual void Use() {}
     };
  
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Tutorial;
+using ProjectPalladium;
 namespace ProjectPalladium.UI
 {
     public class Button
@@ -44,7 +44,7 @@ namespace ProjectPalladium.UI
 
         public bool CheckHover()
         {
-            if (bounds.Contains(Input.mousePos) && mouseOver == false)
+            if (bounds.Contains(Input.nativeMousePos) && mouseOver == false)
             {
                 mouseOver = true;
                 return true;
@@ -54,7 +54,7 @@ namespace ProjectPalladium.UI
 
         public bool CheckEnter()
         {
-            if (bounds.Contains(Input.mousePos) && !bounds.Contains(Input.previousMousePos))
+            if (bounds.Contains(Input.nativeMousePos) && !bounds.Contains(Input.previousNativeMousePos))
             {
                 mouseOver = true;
                 return true;
@@ -64,7 +64,7 @@ namespace ProjectPalladium.UI
         
         public bool CheckLeave()
         {  
-            if (!bounds.Contains(Input.mousePos) && bounds.Contains(Input.previousMousePos))
+            if (!bounds.Contains(Input.nativeMousePos) && bounds.Contains(Input.previousNativeMousePos))
             {
                 mouseOver = false;
                 return true;

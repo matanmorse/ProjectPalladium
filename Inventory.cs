@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 using ProjectPalladium.Items;
 using ProjectPalladium.UI;
@@ -19,6 +20,8 @@ namespace ProjectPalladium
                 inventory.Add(Item.none);
             }
             inventory[3] = Item.GetItemFromRegistry("wand");
+            inventory[4] = Item.GetItemFromRegistry("mana melon seed");
+            inventory[4].quantity = 5;
 
         }
         public int Size()
@@ -76,14 +79,44 @@ namespace ProjectPalladium
             ui.UpdateInventory();
         }
 
+        public void RemoveItemAtIndex(int index, int quantity)
+        {
+            if (inventory[index].quantity <= quantity)
+            {
+                if (Game1.player.ActiveItem.IsSameItemStack(inventory[index]))
+                {
+                    Game1.player.ActiveItem = Item.none;
+                }
+                inventory[index] = Item.none;
+            }
+            else
+            {
+                inventory[index].quantity -= quantity;
+            }
+
+            ui.UpdateInventory();
+        }
+
         public int FindItem(Item item, int index = 0)
         {
+            if (item == null)
+            {
+                return -1;
+            }
             return inventory.FindIndex(index, new Predicate<Item>(i =>
             {
                 return i.name == item.name;
             }));
         }
 
+        public int FindExactItemStack(Item item)
+        {
+            return inventory.FindIndex(new Predicate<Item>(i =>
+            {
+                return i.IsSameItemStack(item);
+            }));
+
+        }
         public bool RemoveItem(Item item, int amount)
         {
             int index = FindItem(item);
@@ -137,11 +170,6 @@ namespace ProjectPalladium
             ui.CreateGhostItem(tmp);
 
             ui.UpdateInventory();
-
-            Debug.WriteLine("not ghost inv " + inventory[index2]);
-            Debug.WriteLine("not ghost ui " + ((ItemSlot)(ui.children[index2])).Item);
-            Debug.WriteLine("\n");
-
         }
     }
 }

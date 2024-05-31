@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Tutorial;
+using ProjectPalladium;
 
 namespace ProjectPalladium.UI
 {
@@ -80,7 +80,7 @@ namespace ProjectPalladium.UI
             if (showing && !wand.casting) { Reset(); }
 
             if (wand.casting && !showing) {
-                this.LocalPos = Input.mousePos; }
+                this.LocalPos = Input.nativeMousePos; }
 
             showing = wand.casting;
             if (wand.casting) {

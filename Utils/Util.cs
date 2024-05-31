@@ -43,11 +43,11 @@ namespace ProjectPalladium.Utils
         // gets the mouse position in terms of native resolution
         public static Point GetNativeMousePos(Point globalPos)
         {
-            float offsetX = (Game1.graphicsDevice.PresentationParameters.Bounds.Width - Game1.UINativeResolution.X * Game1.targetScale) / 2.0f;
-            float offsetY = (Game1.graphicsDevice.PresentationParameters.Bounds.Height - Game1.UINativeResolution.Y * Game1.targetScale) / 2.0f;
+            float offsetX = (Game1.graphicsDevice.PresentationParameters.Bounds.Width - Game1.UINativeResolution.X * Game1.UITargetScale) / 2.0f;
+            float offsetY = (Game1.graphicsDevice.PresentationParameters.Bounds.Height - Game1.UINativeResolution.Y * Game1.UITargetScale) / 2.0f;
 
-            float nativeMouseX = (globalPos.X - offsetX) / Game1.targetScale;
-            float nativeMouseY = (globalPos.Y - offsetY) / Game1.targetScale;
+            float nativeMouseX = (globalPos.X - offsetX) / Game1.UITargetScale;
+            float nativeMouseY = (globalPos.Y - offsetY) / Game1.UITargetScale;
 
             nativeMouseX = MathHelper.Clamp(nativeMouseX, 0, Game1.UINativeResolution.X);
             nativeMouseY = MathHelper.Clamp(nativeMouseY, 0, Game1.UINativeResolution.Y);
@@ -55,6 +55,31 @@ namespace ProjectPalladium.Utils
             // subtract 1 b/c of rounding error
             return new Point((int)nativeMouseX - 1, (int)nativeMouseY - 1);
         }
+
+        public static Point GetGameworldMousePos(Point globalPos)
+        {
+            float offsetX = (Game1.graphicsDevice.PresentationParameters.Bounds.Width - Game1.NativeResolution.X * Game1.gameWorldTargetScale) / 2.0f;
+            float offsetY = (Game1.graphicsDevice.PresentationParameters.Bounds.Height - Game1.NativeResolution.Y * Game1.gameWorldTargetScale) / 2.0f;
+
+            float nativeMouseX = (globalPos.X - offsetX) / Game1.gameWorldTargetScale;
+            float nativeMouseY = (globalPos.Y - offsetY) / Game1.gameWorldTargetScale;
+
+            // add 1 due to rounding errors
+            nativeMouseX = MathHelper.Clamp(nativeMouseX, 0, Game1.NativeResolution.X);
+            nativeMouseY = MathHelper.Clamp(nativeMouseY + 1, 0, Game1.NativeResolution.Y);
+
+            return new Point((int)nativeMouseX, (int)nativeMouseY);
+        }
+
+        public static Point GetNearestTile(Point pos)
+        {
+            return new Point(pos.X / Map.tilesize, pos.Y / Map.tilesize);
+        }
+        public static Point GetNearestTile(Vector2 pos)
+        {
+            return new Point((int) (pos.X / Map.tilesize), (int)(pos.Y / Map.tilesize));
+        }
+
 
         public static Point OneToTwoDimensionalIndex(int index, int columns)
         {
@@ -71,10 +96,23 @@ namespace ProjectPalladium.Utils
             return new Vector2(text.size.X / 2, text.size.Y / 2);
         }
 
+        public static bool IsTileWithinOneTileOfPlayer(Point tile)
+        {
+            Point playerTile = Game1.player.feet;
+
+            return (
+                playerTile == tile || (
+                (tile.X >= playerTile.X - 1 && tile.X <= playerTile.X + 1) 
+                && 
+                (tile.Y >= playerTile.Y - 1 && tile.Y <= playerTile.Y + 1)
+                ));
+        }
         public static Point GetTileFromPos(Vector2 pos)
         {
             int tileSize = SceneManager.CurScene.Map.tilemaps[0].TileSize;
             return new Point((int) pos.X / tileSize, (int) pos.Y / tileSize);
         }
+
+
     }
 }

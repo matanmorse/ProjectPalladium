@@ -12,7 +12,7 @@ namespace ProjectPalladium
         protected Map currentMap;
 
         public Rectangle boundingBox;
-
+        public float layer = Game1.layers.player;
         public AnimatedSprite sprite;
         public Vector2 pos;
         public float speed = 2f * Game1.scale;
@@ -71,7 +71,7 @@ namespace ProjectPalladium
         public virtual void Draw(SpriteBatch b)
         {
             if (DebugParams.showColliders) { Util.DrawRectangle(boundingBox, b); }
-            sprite.Draw(b, pos, flipped, layerDepth: 0.9f);
+            sprite.Draw(b, pos, flipped, layerDepth: layer);
         }
         public void setMovingUp(bool b)
         {

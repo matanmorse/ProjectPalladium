@@ -31,6 +31,9 @@ namespace ProjectPalladium.UI
 
         private void SlotClicked(ItemSlot slot)
         {
+            if (Game1.player.ActiveItem != Item.none && Game1.player.ActiveItem != null) 
+            { children[inv.FindItem(Game1.player.ActiveItem)].button.clickState = false ; }
+
             if (slot.button.clickState) { Game1.player.ActiveItem = slot.Item; }
             else { Game1.player.ActiveItem = Item.none; }
         }

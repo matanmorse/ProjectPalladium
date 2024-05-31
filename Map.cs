@@ -6,6 +6,8 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Buildings;
+using ProjectPalladium.Plants;
+using ProjectPalladium.Utils;
 
 namespace ProjectPalladium
 {
@@ -22,6 +24,7 @@ namespace ProjectPalladium
         public Tilemap tillLayer;
 
         public List<Building> buildings = new List<Building>();
+        public List<GameObject> gameObjects = new List<GameObject>();
 
         MapSerializer map;
 
@@ -58,7 +61,11 @@ namespace ProjectPalladium
             }
 
             scaledTileSize = (int)(tilesize * Game1.scale);
+            AddPlant("manamelonplant", new Vector2(5, 5));
+            gameObjects.Add(new Plant("manamelonplant", new Vector2(4, 4)));
+            // gameObjects.Add(new Plant("manamelonplant", new Vector2(5, 5)));
         }
+
         // checks collisions with any collidable objects on the map
         // returns rectangle of intersection of first found collision
         public Rectangle CheckCollisions(Rectangle boundingBox)
@@ -83,6 +90,14 @@ namespace ProjectPalladium
             foreach (Building building in buildings)
             {
                 building.PlayerBehind = Rectangle.Intersect(building.walkBehind, player.boundingBox) != Rectangle.Empty;
+            }
+        }
+
+        public void CheckBehindObjects()
+        {
+            foreach (GameObject obj in gameObjects)
+            {
+                obj.PlayerBehind = obj.walkBehind.Contains(new Point(player.boundingBox.Center.X, player.boundingBox.Bottom ));
             }
         }
         /* Parses TMX file to create map representation */
@@ -115,7 +130,9 @@ namespace ProjectPalladium
         public void Update(GameTime gameTime)
         {
             foreach (Building building in buildings) building.Update(gameTime);
+            foreach (GameObject obj in gameObjects) obj.Update(gameTime);
             CheckBehindBuilding();
+            CheckBehindObjects();
         }
 
         public void Draw(SpriteBatch b)
@@ -123,6 +140,33 @@ namespace ProjectPalladium
            float layer = 0.01f; 
            foreach (Tilemap tilemap in tilemaps) { tilemap.Draw(b, layer+=0.01f); }
            foreach (Building building in buildings) { building.Draw(b); }
+           foreach (GameObject obj in gameObjects) { obj.Draw(b); }
+        }
+
+        public bool AddPlant(string plantName, Vector2 tile)
+        {
+            // check if the tile is tilled
+            if (tillLayer.Layer[(int)tile.X, (int)tile.Y] == Renderable.empty) return false;
+
+            //check if there is already something there
+            if (FindGameObjectAtTile(tile.ToPoint()) != null) return false;
+
+            // add the plant to the map
+            gameObjects.Add(new Plant(plantName, tile));
+            return true;
+        }
+
+        public void RemovePlant(Vector2 tile)
+        {
+            GameObject obj = FindGameObjectAtTile(tile.ToPoint());
+            Debug.WriteLine(obj);
+            if ( obj == null || !(obj is Plant)) return;
+            gameObjects.Remove(obj);
+        }
+        public GameObject FindGameObjectAtTile(Point tile)
+        {
+
+            return gameObjects.FirstOrDefault(i => i.LocalPos == tile.ToVector2(), null);
         }
 
         [XmlRoot("map")]
@@ -208,7 +252,6 @@ namespace ProjectPalladium
 
             [XmlAttribute("value")]
             public string value { get; set; }
-
         }
     }
 }

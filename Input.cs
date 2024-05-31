@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using ProjectPalladium.Utils;
 using System.Diagnostics;
 
-namespace Tutorial
+namespace ProjectPalladium
 {
     public class Input
     {
-        public static Point previousMousePos;
-        public static Point mousePos;
+        public static Point previousNativeMousePos;
+        public static Point nativeMousePos;
+
+        public static Point gameWorldMousePos;
 
         private static KeyboardState currentState;
         private static KeyboardState previousState;
@@ -19,7 +21,11 @@ namespace Tutorial
 
         public static KeyboardState Update()
         {
-            mousePos = Util.GetNativeMousePos(GetMousePos());
+            Point rawMousePos = GetMousePos();
+
+            nativeMousePos = Util.GetNativeMousePos(rawMousePos);
+
+            gameWorldMousePos = Util.GetGameworldMousePos(rawMousePos);
 
             previousState = currentState;
             currentState = Keyboard.GetState();
@@ -55,7 +61,7 @@ namespace Tutorial
 
         public static Point GetMousePos()
         {
-            previousMousePos = mousePos;
+            previousNativeMousePos = nativeMousePos;
             return currentMouseState.Position;
         }
         public static bool GetLeftMouseClicked()
@@ -63,11 +69,23 @@ namespace Tutorial
             return currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed;
         }
 
+        public static bool GetRightMouseClicked()
+        {
+            return currentMouseState.RightButton == ButtonState.Pressed && previousMouseState.RightButton != ButtonState.Pressed;
+        }
+
+
         public static bool GetLeftMouseDown()
         {
             return currentMouseState.LeftButton == ButtonState.Pressed;
         }
 
-        
+        public static bool GetRightMouseDown()
+        {
+            return currentMouseState.RightButton == ButtonState.Pressed;
+        }
+
+
+
     }
 }

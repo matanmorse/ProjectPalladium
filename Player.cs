@@ -3,9 +3,10 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using ProjectPalladium.Animation;
 using ProjectPalladium.Items;
-using Tutorial;
+using ProjectPalladium;
 using System.Diagnostics;
 using ProjectPalladium.Utils;
+using ProjectPalladium.Plants;
 namespace ProjectPalladium
 {
     public class Player : Character
@@ -14,17 +15,23 @@ namespace ProjectPalladium
         private Vector2 inputDir = Vector2.Zero;
         public Inventory inventory;
         private Item _activeItem;
+        public bool usingItemLocked = false;
+        public Point feet; // lmao
+
+        public float layer = Game1.layers.player;
+
         public Item ActiveItem { get { return _activeItem; } 
             
             set {
+                usingItemLocked = true;
                 _activeItem = value;
                 Debug.WriteLine("changed item to " + value);
             }
         }
-
         public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) :
             base(sprite, pos, name, startingMap, boundingBox)
         {
+            feet = Util.GetNearestTile(pos) + new Point(0, 1);
             currentMap.player = this;
             uiManager = Game1.UIManager;
             inventory = uiManager.inventoryUI.Inventory;
@@ -71,6 +78,7 @@ namespace ProjectPalladium
 
         public void doInputCheck()
         {
+            
             if (Input.GetKeyDown(Keys.E))
             {
                 uiManager.inventoryUI.ToggleShowing();
@@ -86,11 +94,38 @@ namespace ProjectPalladium
             {
                 inventory.RemoveItem(Item.GetItemFromRegistry("ectoplasmic gem"), 9);
             }
+
+            if (_activeItem != null && _activeItem != Item.none && Input.GetLeftMouseClicked())
+            {
+               
+                if (!usingItemLocked)
+                {
+                    _activeItem.Use();
+                }
+                else
+                {
+                    usingItemLocked = false;
+                }
+            }
+
+            if (Input.GetRightMouseClicked())
+            {
+                HandleRightClicks();
+            }
+        }
+
+        public void HandleRightClicks()
+        {
+            // get game object at spot of click
+            GameObject obj = SceneManager.CurScene.Map.FindGameObjectAtTile(Util.GetNearestTile(Input.gameWorldMousePos)); 
+            if (obj is Plant) { (obj as Plant).Harvest(); }
         }
 
         public override void Update(GameTime gameTime)
         {
+
             base.Update(gameTime);
+            feet = Util.GetNearestTile(pos) + new Point(0, 1);
             handleMovement();
             doInputCheck();
 

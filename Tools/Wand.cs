@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using System.Text;
 using System.Threading.Tasks;
-using Tutorial;
+using ProjectPalladium;
 using ProjectPalladium.UI;
 using Microsoft.Xna.Framework.Input;
 using ProjectPalladium.Spells;
@@ -41,7 +41,7 @@ namespace ProjectPalladium.Tools
         public Point FindDirection()
         {
             // if we don't have a starting point, set it to the current mouse poisition
-            Vector2 mousePos = Util.PointToVector2(Input.mousePos);
+            Vector2 mousePos = Util.PointToVector2(Input.nativeMousePos);
             Point dir = Directions.none;
             if (startingPos == Vector2.Zero) { startingPos = mousePos; return Directions.none; }
 

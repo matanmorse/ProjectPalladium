@@ -7,7 +7,7 @@ using System.Transactions;
 using ProjectPalladium.Utils;
 using Microsoft.Xna.Framework;
 using ProjectPalladium.Items;
-using Tutorial;
+using ProjectPalladium;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using ProjectPalladium.Utils;
+using ProjectPalladium.Plants;
 
 namespace ProjectPalladium.Spells
 {
@@ -23,7 +24,8 @@ namespace ProjectPalladium.Spells
         public static Dictionary<string, Spell> spells = new Dictionary<string, Spell>()
         {
             {"tillearth", new Spell("Till Earth", "Tills some earth", "LL", TillEarth) },
-            {"iceblast", new Spell("Ice blast", "Blasts some ice", "RR", DoNothing) }
+            {"iceblast", new Spell("Ice blast", "Blasts some ice", "RR", DoNothing) },
+            {"growth", new Spell("Growth", "Grows a plant", "LLUR", Growth) }
         };
 
         public Spell(string name, string description, string spellPath, SpellHandler onCast)
@@ -50,6 +52,21 @@ namespace ProjectPalladium.Spells
             if (tillable.Layer[playerPos.X, playerPos.Y] == Renderable.empty) return; // empty tile
             
             map.tillLayer.SetTileData(playerPos, new Renderable("TilledDirt"));
+        }
+
+        public static void Growth()
+        {
+            Map map = SceneManager.CurScene.Map;
+            Player player = SceneManager.CurScene.Player;
+
+            GameObject objAtFeet = map.FindGameObjectAtTile(player.feet);
+
+            if (objAtFeet == null) return;
+            if (!(objAtFeet is Plant)) return;
+
+            Plant plant = objAtFeet as Plant;
+            plant.GrowthStage += 1;
+
         }
 
         public static void DoNothing()

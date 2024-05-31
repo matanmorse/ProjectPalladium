@@ -7,7 +7,7 @@ using ProjectPalladium.Utils;
 using System;
 using System.Diagnostics;
 using System.Runtime.ExceptionServices;
-using Tutorial;
+using ProjectPalladium;
 
 
 namespace ProjectPalladium
@@ -39,7 +39,8 @@ namespace ProjectPalladium
 
         public static int screenWidth;
         public static int screenHeight;
-        public static float targetScale;
+        public static float UITargetScale;
+        public static float gameWorldTargetScale;
 
         public static Point hackyOffset;
 
@@ -162,7 +163,9 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
-            //Debug.WriteLine(Input.mousePos);
+            //Point rawMousePos = Input.GetMousePos();
+            //Point gameWorldMousePos = Util.GetGameworldMousePos(rawMousePos);
+            //Debug.WriteLine(Util.GetNearestTile(gameWorldMousePos));
             //Allows for GetKeyDown functionality; if you remove, it will break
             Input.Update();
 
@@ -170,9 +173,9 @@ namespace ProjectPalladium
             if (Input.GetKeyDown(Keys.X)) { DebugParams.showColliders = false; }
             if (Input.GetKeyDown(Keys.F6)) { 
                 graphics.ToggleFullScreen(); _canvas.SetDestinationRectangle(); _uiCanvas.SetDestinationRectangle();}
-
-            SceneManager.Update(gameTime);
+            
             _uiManager.Update();
+            SceneManager.Update(gameTime);
 
             CalculateTranslation();
 

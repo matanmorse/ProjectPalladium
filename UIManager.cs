@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using ProjectPalladium.UI;
 using static ProjectPalladium.UI.UIElement.OriginType;
-using Tutorial;
+using ProjectPalladium;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 namespace ProjectPalladium

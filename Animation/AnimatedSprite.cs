@@ -109,7 +109,7 @@ namespace ProjectPalladium.Animation
             if (_animation == null) { return; }
             b.Draw(spriteTexture, pos, _animation.getCurrentFrame(), Color.White, 0f, origin, Game1.scale, SpriteEffects.None, layerDepth);
         }
-        public void Draw(SpriteBatch b, Vector2 pos, bool flipped, float layerDepth = 1f)
+        public void Draw(SpriteBatch b, Vector2 pos, bool flipped=false, float layerDepth = 1f)
         {
             if (_animation == null) { return; }
             if (flipped)

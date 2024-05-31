@@ -16,7 +16,5 @@ namespace ProjectPalladium.Buildings
     {
         public int[] size { get; set; }
         public int[] location { get; set; }
-
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 
 namespace ProjectPalladium.Utils
@@ -52,6 +53,7 @@ namespace ProjectPalladium.Utils
             b.Draw(_texture, pos, sourceRect, Color.White * opacity, rotation, origin, scale, SpriteEffects.None, layer);
         }
 
+       
 
     }
 }

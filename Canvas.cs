@@ -38,7 +38,11 @@ namespace ProjectPalladium
             // if this is the ui canvas we need the scale for mouse transforms
             if (name == "ui")
             {
-                Game1.targetScale = scale;
+                Game1.UITargetScale = scale;
+            }
+            if (name == "gameworld")
+            {
+                Game1.gameWorldTargetScale = scale;
             }
 
             int newWidth = (int)(_renderTarget.Width * scale);
