@@ -119,10 +119,9 @@ namespace ProjectPalladium
             if (player.Velocity != Vector2.Zero)
             {
                 Debug.WriteLine(((prevTranslation.Translation.Y - dy) / (prevTranslation.Translation.X - dx)));
-                Debug.WriteLine(( (MathF.Floor(player.prevpos.Y - player.pos.Y)) / MathF.Floor((player.prevpos.X - player.pos.X))) );
             }
 
-            _translation = Matrix.CreateTranslation(dx, dy, 0f);
+            _translation = Matrix.CreateTranslation((int) dx, (int) dy, 0f);
         }
 
 

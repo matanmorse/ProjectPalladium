@@ -50,6 +50,7 @@ namespace ProjectPalladium
             if (moveLeft) inputDir.X -= 1;
             if (moveRight) inputDir.X += 1;
 
+            if (inputDir != Vector2.Zero) { inputDir.Normalize(); }
             if (moveUp && moveDown) inputDir.Y = Math.Sign(Velocity.Y);
 
             if (moveLeft && moveRight) inputDir.X = Math.Sign(Velocity.X);
