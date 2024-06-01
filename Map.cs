@@ -159,7 +159,6 @@ namespace ProjectPalladium
         public void RemovePlant(Vector2 tile)
         {
             GameObject obj = FindGameObjectAtTile(tile.ToPoint());
-            Debug.WriteLine(obj);
             if ( obj == null || !(obj is Plant)) return;
             gameObjects.Remove(obj);
         }

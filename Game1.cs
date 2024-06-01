@@ -49,7 +49,8 @@ namespace ProjectPalladium
         public const float scale = 1f;
 
         private Matrix _translation;
-
+        private Matrix prevTranslation; 
+        
         private static UIManager _uiManager;
         public static UIManager UIManager { get { return _uiManager; } }
 
@@ -97,6 +98,7 @@ namespace ProjectPalladium
         }
         private void CalculateTranslation()
         {
+            prevTranslation = _translation;
 
             var dx = ((screenWidth / 2) - player.pos.X );
             
@@ -107,11 +109,18 @@ namespace ProjectPalladium
 
             var dy = ((screenHeight / 2) - player.pos.Y - (player.sprite.spriteHeight * scale) / 2);
 
+            
 
             dy = MathHelper.Clamp(
                 dy,
                 -(map.tileMapSize.Y * Map.tilesize * scale) + screenHeight - (Map.tilesize * scale / 2),
                 0);
+
+            if (player.Velocity != Vector2.Zero)
+            {
+                Debug.WriteLine(((prevTranslation.Translation.Y - dy) / (prevTranslation.Translation.X - dx)));
+                Debug.WriteLine(( (MathF.Floor(player.prevpos.Y - player.pos.Y)) / MathF.Floor((player.prevpos.X - player.pos.X))) );
+            }
 
             _translation = Matrix.CreateTranslation(dx, dy, 0f);
         }

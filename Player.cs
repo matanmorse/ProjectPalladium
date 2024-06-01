@@ -25,7 +25,6 @@ namespace ProjectPalladium
             set {
                 usingItemLocked = true;
                 _activeItem = value;
-                Debug.WriteLine("changed item to " + value);
             }
         }
         public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) :
@@ -59,18 +58,25 @@ namespace ProjectPalladium
 
             if (Velocity.Y != 0 || Velocity.X != 0)
             {
-                if (sprite.Animation != sprite.Animations["walk"])
+                if (sprite.Animation != sprite.Animations["walk-side"])
                 {
                     sprite.AnimationChangeDetected();
-                    sprite.Animation = sprite.Animations["walk"];
+                    sprite.Animation = sprite.Animations["walk-side"];
                 }
             }
             else
             {
-                if (sprite.Animation != sprite.Animations["idle"])
+                if (!(sprite.Animation.Name.Contains("idle")))
                 {
+                    if (sprite.Animation == sprite.Animations["walk-side"])
+                    {
+                        sprite.Animation = sprite.Animations["idle-side"];
+                    }
+                    else
+                    {
+                        sprite.Animation = sprite.Animations["idle"];
+                    }
                     sprite.AnimationChangeDetected();
-                    sprite.Animation = sprite.Animations["idle"];
                 }
             }
             movePos();

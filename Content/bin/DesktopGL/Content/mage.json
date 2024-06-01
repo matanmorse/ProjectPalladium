@@ -3,15 +3,18 @@
   "animations": {
     "idle": {
       "startframe": 0,
-      "numframes": 1
+      "numframes": 2,
+      "intervals": [ 500, 100, 500 ]
     },
-    "walk": {
-      "startframe": 1,
-      "numframes": 1
+    "walk-side": {
+      "startframe": 3,
+      "numframes": 7,
+      "intervals": [ 50, 200, 50, 200, 50, 200, 50, 200 ]
     },
-    "blah": {
-      "blahblah": 3,
-      "blablablah" :  4
+    "idle-side": {
+      "startframe": 11,
+      "numframes": 2,
+      "intervals": [ 300, 50, 200 ]
     }
   }
 }

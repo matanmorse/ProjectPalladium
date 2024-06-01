@@ -83,7 +83,7 @@ namespace ProjectPalladium.Animation
             AnimationDeserializer dsrlzdAnimData = JsonSerializer.Deserialize<AnimationDeserializer>(jsonString);
             foreach (var anim in dsrlzdAnimData.animations)
             {
-                animations.Add(anim.Key, new Animation(anim.Key, anim.Value.startFrame, anim.Value.numFrames, 1000f, this));
+                animations.Add(anim.Key, new Animation(anim.Key, anim.Value.startFrame, anim.Value.numFrames, anim.Value.intervals, this));
             }
 
             // start on the idle animation
@@ -111,6 +111,7 @@ namespace ProjectPalladium.Animation
         }
         public void Draw(SpriteBatch b, Vector2 pos, bool flipped=false, float layerDepth = 1f)
         {
+            pos = new Vector2(MathF.Floor(pos.X), MathF.Floor(pos.Y));
             if (_animation == null) { return; }
             if (flipped)
             {

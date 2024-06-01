@@ -22,8 +22,8 @@ namespace ProjectPalladium
         public static void Update(GameTime gameTime)
         {
             if (curScene == null) { return; }
-            curScene.Map.Update(gameTime);
             curScene.Player.Update(gameTime);
+            curScene.Map.Update(gameTime);
         }
         public static void Draw(SpriteBatch _spriteBatch)
         {

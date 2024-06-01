@@ -15,9 +15,12 @@ namespace ProjectPalladium
         public float layer = Game1.layers.player;
         public AnimatedSprite sprite;
         public Vector2 pos;
-        public float speed = 2f * Game1.scale;
+        public Vector2 prevpos;
+
+        public float speed = 1.5f * Game1.scale;
         private Vector2 velocity;
 
+        
         public bool flipped;
 
         public Vector2 Velocity
@@ -26,7 +29,7 @@ namespace ProjectPalladium
             set
             {
                 velocity = value;
-                if (value.X != 0) flipped = velocity.X > 0 ? true : false;
+                if (value.X != 0) flipped = velocity.X > 0 ? false : true;
             }
         }
 
@@ -63,7 +66,7 @@ namespace ProjectPalladium
 
         public virtual void Update(GameTime gameTime)
         {
-
+            prevpos = pos;
             sprite.Update(gameTime);
 
         }

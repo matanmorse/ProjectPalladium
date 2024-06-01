@@ -38,7 +38,7 @@ namespace ProjectPalladium
             inventoryUI = new InventoryUI("inventory", "inventory", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y / 2, rootElement, originType: center, scale:3f);
 
             // toolbar
-            toolbar = new Toolbar("toolbar", "toolbar", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y - 30 , rootElement, originType: center, scale:2.75f);
+            toolbar = new Toolbar("toolbar", "toolbar", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y - 30 , rootElement, originType: center, scale:3f);
             toolbar.inv = inventoryUI.Inventory;
             Debug.WriteLine(toolbar.globalPos);
 

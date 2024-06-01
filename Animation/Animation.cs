@@ -26,7 +26,7 @@ namespace ProjectPalladium.Animation
 
         public int currentFrame;
 
-        public float interval;
+        public float[] intervals;
 
         public float timer = 0f;
 
@@ -35,23 +35,25 @@ namespace ProjectPalladium.Animation
         public struct AnimationFrame
         {
             public Rectangle sourceRect;
-            public AnimationFrame(int frame, AnimatedSprite sprite)
+            public float delay;
+            public AnimationFrame(int frame, AnimatedSprite sprite, float frameDelay=1000f)
             {
                 int spriteWidth = sprite.spriteWidth;
                 int spriteHeight = sprite.spriteHeight;
                 Texture2D spriteTexture = sprite.spriteTexture;
                 sourceRect = new Rectangle(spriteWidth * frame % spriteTexture.Width, frame * spriteWidth / spriteTexture.Width * spriteHeight,
                 spriteWidth, spriteHeight);
+                delay = frameDelay;
             }
 
         }
-        public Animation(string name, int startFrame, int numFrames, float interval, AnimatedSprite sprite)
+        public Animation(string name, int startFrame, int numFrames, float[] intervals, AnimatedSprite sprite)
         {
             Name = name;
             this.numFrames = numFrames;
             this.startFrame = startFrame;
             currentFrame = 0;
-            this.interval = interval;
+            this.intervals = intervals;
             this.sprite = sprite;
 
             frames = new AnimationFrame[numFrames + 1];
@@ -59,7 +61,7 @@ namespace ProjectPalladium.Animation
             // populate the frames array with the source rectangles of every frame of the animation
             for (int i = 0; i <= numFrames; i++)
             {
-                frames[i] = new AnimationFrame(i + startFrame, sprite);
+                frames[i] = new AnimationFrame(i + startFrame, sprite, intervals[i]);
             }
         }
 
@@ -74,7 +76,7 @@ namespace ProjectPalladium.Animation
             timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
 
-            if (timer > interval)
+            if (timer > frames[currentFrame].delay)
             {
                 currentFrame = (currentFrame + 1) % frames.Length;
                 timer = 0f;
