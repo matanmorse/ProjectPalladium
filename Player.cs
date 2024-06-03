@@ -18,6 +18,10 @@ namespace ProjectPalladium
         public bool usingItemLocked = false;
         public Point feet; // lmao
 
+        public Vector2 lerpingCamera;
+
+        int i = 0;
+
         public float layer = Game1.layers.player;
 
         public Item ActiveItem { get { return _activeItem; } 
@@ -50,13 +54,13 @@ namespace ProjectPalladium
             if (moveLeft) inputDir.X -= 1;
             if (moveRight) inputDir.X += 1;
 
-            if (inputDir != Vector2.Zero) { inputDir.Normalize(); }
+            // if (inputDir != Vector2.Zero) { inputDir.Normalize(); }
             if (moveUp && moveDown) inputDir.Y = Math.Sign(Velocity.Y);
 
             if (moveLeft && moveRight) inputDir.X = Math.Sign(Velocity.X);
 
             Velocity = inputDir;
-
+            
             if (Velocity.Y != 0 || Velocity.X != 0)
             {
                 if (sprite.Animation != sprite.Animations["walk-side"])
@@ -130,7 +134,7 @@ namespace ProjectPalladium
 
         public override void Update(GameTime gameTime)
         {
-
+            lerpingCamera = Vector2.Lerp(lerpingCamera, pos , 0.3f);
             base.Update(gameTime);
             feet = Util.GetNearestTile(pos) + new Point(0, 1);
             handleMovement();

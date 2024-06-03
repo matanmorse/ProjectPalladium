@@ -49,8 +49,10 @@ namespace ProjectPalladium.Spells
             Point playerPos = Util.GetTileFromPos(player.pos) + new Point(0, 1); // get tile of player's feet, not head
 
             Tilemap tillable = map.tilemaps.FirstOrDefault(i => i.name.ToLower() == "tillable");
-            if (tillable.Layer[playerPos.X, playerPos.Y] == Renderable.empty) return; // empty tile
-            
+            if (tillable.Layer[player.feet.X, player.feet.Y] == Renderable.empty) return; // empty tile
+
+            Debug.WriteLine("not empty");
+
             map.tillLayer.SetTileData(playerPos, new Renderable("TilledDirt"));
         }
 

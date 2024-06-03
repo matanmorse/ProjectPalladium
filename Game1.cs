@@ -26,7 +26,9 @@ namespace ProjectPalladium
 
         public static Inventory inventory;
 
-        public static Point NativeResolution = new Point(512, 288);
+        public const float scale = 5f;
+
+        public static Point NativeResolution = new Point(512 * (int) scale, 288 * (int) scale);
         public static Point UINativeResolution = new Point(1360, 768);
 
         
@@ -46,7 +48,6 @@ namespace ProjectPalladium
 
         public static ContentManager contentManager;
 
-        public const float scale = 1f;
 
         private Matrix _translation;
         private Matrix prevTranslation; 
@@ -100,27 +101,23 @@ namespace ProjectPalladium
         {
             prevTranslation = _translation;
 
-            var dx = ((screenWidth / 2) - player.pos.X );
+            var dx = ((screenWidth / 2) - player.lerpingCamera.X );
             
             dx = MathHelper.Clamp(
                 dx, 
-                -(map.tileMapSize.X * map.scaledTileSize) + screenWidth,
+                -(map.tileMapSize.X * Map.scaledTileSize) + screenWidth,
                 0);
 
-            var dy = ((screenHeight / 2) - player.pos.Y - (player.sprite.spriteHeight * scale) / 2);
+            var dy = ((screenHeight / 2) - player.lerpingCamera.Y - (player.sprite.spriteHeight * scale) / 2);
 
             
 
             dy = MathHelper.Clamp(
                 dy,
-                -(map.tileMapSize.Y * Map.tilesize * scale) + screenHeight - (Map.tilesize * scale / 2),
+                -(map.tileMapSize.Y * Map.scaledTileSize) + screenHeight - (Map.scaledTileSize / 2),
                 0);
 
-            if (player.Velocity != Vector2.Zero)
-            {
-                Debug.WriteLine(((prevTranslation.Translation.Y - dy) / (prevTranslation.Translation.X - dx)));
-            }
-
+           
             _translation = Matrix.CreateTranslation((int) dx, (int) dy, 0f);
         }
 
@@ -171,6 +168,7 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
+            // Debug.WriteLine(player.feet);
             //Point rawMousePos = Input.GetMousePos();
             //Point gameWorldMousePos = Util.GetGameworldMousePos(rawMousePos);
             //Debug.WriteLine(Util.GetNearestTile(gameWorldMousePos));

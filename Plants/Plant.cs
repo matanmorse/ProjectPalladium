@@ -48,7 +48,7 @@ namespace ProjectPalladium.Plants
         {
             this.localPos = tilePos;
             this.globalPos = Util.LocalPosToGlobalPos(tilePos);
-            this.globalPos.Y -= Map.tilesize; // need to be here to render correctly
+            this.globalPos.Y -= Map.scaledTileSize; // need to be here to render correctly
 
             sprite = new Renderable(name);
             DeserializeJsonData(name);

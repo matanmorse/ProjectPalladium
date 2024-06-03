@@ -73,11 +73,11 @@ namespace ProjectPalladium.Utils
 
         public static Point GetNearestTile(Point pos)
         {
-            return new Point(pos.X / Map.tilesize, pos.Y / Map.tilesize);
+            return new Point((int)(pos.X / (Map.scaledTileSize)), (int)(pos.Y / (Map.scaledTileSize)));
         }
         public static Point GetNearestTile(Vector2 pos)
         {
-            return new Point((int) (pos.X / Map.tilesize), (int)(pos.Y / Map.tilesize));
+            return new Point((int) (pos.X / (Map.scaledTileSize)), (int) (pos.Y / (Map.scaledTileSize)));
         }
 
 
@@ -109,7 +109,7 @@ namespace ProjectPalladium.Utils
         }
         public static Point GetTileFromPos(Vector2 pos)
         {
-            int tileSize = SceneManager.CurScene.Map.tilemaps[0].TileSize;
+            int tileSize = Map.scaledTileSize;
             return new Point((int) pos.X / tileSize, (int) pos.Y / tileSize);
         }
 

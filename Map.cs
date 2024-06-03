@@ -17,7 +17,7 @@ namespace ProjectPalladium
         private string filename;
         public string name;
 
-        public int scaledTileSize;
+        public static int scaledTileSize;
         public List<Tilemap> tilemaps = new List<Tilemap>();
         public List<Tilemap> collidingTilemaps = new List<Tilemap>();
 
@@ -31,7 +31,7 @@ namespace ProjectPalladium
         public Player player;
 
         public Point tileMapSize = new Point();
-        public static int tilesize = 16;
+        private static int tilesize = 16;
 
         public Map(string filename)
         {

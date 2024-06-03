@@ -114,6 +114,7 @@ namespace ProjectPalladium
 
         public void SetTileData(Point location, Renderable tile)
         {
+            Debug.WriteLine("setting tile data");
             layer[location.X, location.Y] = tile;
         }
 
@@ -130,7 +131,7 @@ namespace ProjectPalladium
                     Vector2 pos = new Vector2(i * tileSize * Game1.scale, j * tileSize * Game1.scale);
 
                     // debug, draws tiles around player
-                    //if (Util.IsTileWithinOneTileOfPlayer(new Point(i, j))) Util.DrawRectangle(new Rectangle(pos.ToPoint(), new Point(16,16)), b);
+                    // if (Util.IsTileWithinOneTileOfPlayer(new Point(i, j))) Util.DrawRectangle(new Rectangle(pos.ToPoint(), new Point(Map.scaledTileSize, Map.scaledTileSize)), b);
 
                     layer[i, j].Draw(b, pos, layer: layerDepth);
                 }
