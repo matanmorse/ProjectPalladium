@@ -61,12 +61,28 @@ namespace ProjectPalladium
 
             Velocity = inputDir;
             
-            if (Velocity.Y != 0 || Velocity.X != 0)
+            if (Velocity.X != 0)
             {
                 if (sprite.Animation != sprite.Animations["walk-side"])
                 {
                     sprite.AnimationChangeDetected();
                     sprite.Animation = sprite.Animations["walk-side"];
+                }
+            }
+            else if (Velocity.Y > 0)
+            {
+                if (sprite.Animation != sprite.Animations["walk-front"])
+                {
+                    sprite.AnimationChangeDetected();
+                    sprite.Animation = sprite.Animations["walk-front"];
+                }
+            }
+            else if (Velocity.Y < 0)
+            {
+                if (sprite.Animation != sprite.Animations["walk-back"])
+                {
+                    sprite.AnimationChangeDetected();
+                    sprite.Animation = sprite.Animations["walk-back"];
                 }
             }
             else
@@ -77,9 +93,13 @@ namespace ProjectPalladium
                     {
                         sprite.Animation = sprite.Animations["idle-side"];
                     }
-                    else
+                    else if (sprite.Animation == sprite.Animations["walk-front"])
                     {
                         sprite.Animation = sprite.Animations["idle"];
+                    }
+                    else if (sprite.Animation == sprite.Animations["walk-back"])
+                    {
+                        sprite.Animation = sprite.Animations["idle-back"];
                     }
                     sprite.AnimationChangeDetected();
                 }

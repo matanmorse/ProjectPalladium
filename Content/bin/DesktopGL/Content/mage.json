@@ -6,15 +6,30 @@
       "numframes": 2,
       "intervals": [ 500, 100, 500 ]
     },
-    "walk-side": {
+    "walk-front": {
       "startframe": 3,
+      "numframes": 9,
+      "intervals": [ 50, 200, 50, 25, 100, 50, 200, 50, 25, 100 ]
+    },
+    "walk-side": {
+      "startframe": 13,
       "numframes": 7,
       "intervals": [ 50, 200, 50, 200, 50, 200, 50, 200 ]
     },
     "idle-side": {
-      "startframe": 11,
+      "startframe": 21,
       "numframes": 2,
       "intervals": [ 300, 50, 200 ]
+    },
+    "walk-back": {
+      "startframe": 24,
+      "numframes": 7,
+      "intervals": [ 400, 50, 200, 50, 400, 50, 200, 50 ]
+    },
+    "idle-back": {
+      "startframe": 32,
+      "numframes": 2,
+      "intervals": [ 400, 100, 400 ]
     }
   }
 }
