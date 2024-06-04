@@ -90,12 +90,14 @@ namespace ProjectPalladium.UI
 
         public void AddChild(Point direction)
         {
-            
+
             Point startingPos = children.Count() == 0 ? Point.Zero : children.Last().LocalPos;
             //if (children.Count != 0) { wand.startingPos = Util.PointToVector2(children.Last().globalPos); }
 
             Point pos = startingPos + (SPELL_MARKER_OFFSET * direction);
             base.AddChild(new UIElement("spellmarker", "spellmarker", pos.X, pos.Y, this, OriginType.center, rotation: directions[direction]));
+
+            
         }
 
         public void Reset()

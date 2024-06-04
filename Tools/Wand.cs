@@ -24,17 +24,22 @@ namespace ProjectPalladium.Tools
         public Vector2 startingPos = Vector2.Zero;
         private Dictionary<Point, char> directionChars = CastingUI.directionChars;
         private Dictionary<string, Spell> spells = Spell.spells;
+        private CastingUI castingUI;
+        private const int SPELL_LENGTH_LIMIT = 10;
+
+        private List<Point> visitedPoints = new List<Point>(SPELL_LENGTH_LIMIT);
 
         public string spellPath = "";
         public Wand(int id, string name, string textureName, string description)
             :base(id, name, textureName, description)
         {
-
+            castingUI = ui.castingUI;
         }
 
         public override void Update()
         {
-            casting = Input.GetLeftMouseDown();
+            if (Input.GetLeftMouseClicked() && !casting) { casting = true; }
+            if (casting && !Input.GetLeftMouseDown()) { casting = false; }
             if (casting) { castingDirection = FindDirection(); }
         }
         
@@ -58,7 +63,20 @@ namespace ProjectPalladium.Tools
                 MoveStartingPoint(dir);
                 spellPath += directionChars[dir];
                 CheckSpellPaths();
+
+                if (castingUI == null) { castingUI = ui.castingUI; }
+
+                if (CheckIntersections(dir))
+                {
+                    castingUI.Reset();
+                }
+                if (spellPath.Length > SPELL_LENGTH_LIMIT)
+                {
+                    castingUI.Reset();   
+                }
+
             }
+            
             return dir;
         }
 
@@ -73,9 +91,24 @@ namespace ProjectPalladium.Tools
         }
         public void MoveStartingPoint(Point dir) { startingPos += Util.PointToVector2(new Point(SPELLMARKER_SIZE, SPELLMARKER_SIZE) * dir); }
 
+        // checks if the spell intersects with itself, given a direction from the last point
+        public bool CheckIntersections(Point dir)
+        {
+            if (visitedPoints.Count == 0) { visitedPoints.Add(dir); return false; }
+
+            Point curPoint = visitedPoints.Last() + dir;
+            if (visitedPoints.Contains(curPoint)) { return true; }
+
+            visitedPoints.Add(curPoint);
+            return false;
+
+        }
         public void ResetSpell()
         {
             if (storedSpell != Spell.none) storedSpell.Cast();
+
+            visitedPoints = new List<Point>(SPELL_LENGTH_LIMIT);
+            casting = false;
             storedSpell = Spell.none;
             startingPos = Vector2.Zero;
             spellPath = "";

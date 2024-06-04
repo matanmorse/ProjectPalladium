@@ -17,6 +17,7 @@ namespace ProjectPalladium
 
         public InventoryUI inventoryUI;
         public Toolbar toolbar;
+        public CastingUI castingUI;
 
         public enum UILayers
         {
@@ -54,7 +55,8 @@ namespace ProjectPalladium
             rootElement.AddChild(new UIElement("spellbook", "spellbook", Game1.UINativeResolution.X -100, Game1.UINativeResolution.Y -100, rootElement));
 
             // Casting UI
-            rootElement.AddChild(new CastingUI(rootElement));
+            castingUI = new CastingUI(rootElement);
+            rootElement.AddChild(castingUI);
 
             toolbar.UpdateToolbar();
             
