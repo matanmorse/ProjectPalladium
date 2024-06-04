@@ -53,7 +53,13 @@ namespace ProjectPalladium.Utils
             b.Draw(_texture, pos, sourceRect, Color.White * opacity, rotation, origin, scale, SpriteEffects.None, layer);
         }
 
-       
+        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, float rotation, float layer = 0f, float opacity = 1f, float scale = Game1.scale)
+        {
+            b.Draw(_texture, pos, sourceRect, Color.White * opacity, rotation, origin, scale, SpriteEffects.None, layer);
+        }
+
+
+
 
     }
 }

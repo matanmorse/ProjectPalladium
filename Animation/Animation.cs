@@ -97,6 +97,10 @@ namespace ProjectPalladium.Animation
                 currentFrame = (currentFrame + 1) % frames.Length;
                 timer = 0f;
 
+                if (sprite.doingSyncedAnimation)
+                {
+                    sprite.toolSprite.NextFrame();
+                }
                 // if we're on the action frame, perform the action (after increment so perform at start of frame, not end)
                 if (currentFrame == actionFrame && actionFrame != 0)
                 {

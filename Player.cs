@@ -7,6 +7,8 @@ using ProjectPalladium;
 using System.Diagnostics;
 using ProjectPalladium.Utils;
 using ProjectPalladium.Plants;
+using Microsoft.Xna.Framework.Graphics;
+using ProjectPalladium.Tools;
 namespace ProjectPalladium
 {
     public class Player : Character
@@ -15,6 +17,9 @@ namespace ProjectPalladium
         private Vector2 inputDir = Vector2.Zero;
         public Inventory inventory;
         private Item _activeItem;
+        public bool holdingTool;
+
+
         public bool usingItemLocked = false;
         public Point feet; // lmao
 
@@ -157,6 +162,12 @@ namespace ProjectPalladium
             {                
                 _activeItem.Update();
             }
+        }
+
+        public override void Draw(SpriteBatch b)
+        {
+            if (holdingTool) { (ActiveItem as Tool).Draw(b); }
+            base.Draw(b);
         }
     }
 

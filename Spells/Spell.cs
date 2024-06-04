@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using ProjectPalladium.Utils;
 using ProjectPalladium.Plants;
+using ProjectPalladium.Tools;
 
 namespace ProjectPalladium.Spells
 {
@@ -40,6 +41,7 @@ namespace ProjectPalladium.Spells
 
         public void Cast()
         {
+            
             string name = this.name.Replace(" ", "").ToLower();
             GenericSpellHandler(name);
         }
@@ -83,7 +85,10 @@ namespace ProjectPalladium.Spells
             Game1.player.mana -= spell.manaCost;
 
             // play the cast animiation, pass spell function to perform when animation is finished
+            Game1.player.flipped = false; // ensure player is not flipped
             Game1.player.sprite.PlayAnimationOnce("cast", spell.onCast);
+            Game1.player.sprite.DoToolAnimation();
+
             return true;
         }
 

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using System.Reflection.Metadata.Ecma335;
+using ProjectPalladium.Tools;
 namespace ProjectPalladium.UI
 {
     public class Toolbar : UIElement
@@ -34,8 +35,14 @@ namespace ProjectPalladium.UI
             if (Game1.player.ActiveItem != Item.none && Game1.player.ActiveItem != null) 
             { children[inv.FindItem(Game1.player.ActiveItem)].button.clickState = false ; }
 
-            if (slot.button.clickState) { Game1.player.ActiveItem = slot.Item; }
-            else { Game1.player.ActiveItem = Item.none; }
+            if (slot.button.clickState) { 
+                Game1.player.ActiveItem = slot.Item;
+                Game1.player.holdingTool = slot.Item is Tool;
+            }
+            else { 
+                Game1.player.ActiveItem = Item.none;
+                Game1.player.holdingTool = false;
+            }
         }
 
 

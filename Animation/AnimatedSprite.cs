@@ -12,6 +12,7 @@ using ProjectPalladium.Spells;
 using static ProjectPalladium.Spells.Spell;
 using System.Reflection;
 using System.Data.SqlTypes;
+using ProjectPalladium.Tools;
 
 namespace ProjectPalladium.Animation
 {
@@ -19,7 +20,9 @@ namespace ProjectPalladium.Animation
     {
         public Texture2D spriteTexture;
         public Rectangle sourceRect;
-        private Vector2 origin;
+        public Vector2 origin;
+
+        public bool doingSyncedAnimation;
 
         private Character owner;
         public Character Owner { get { return owner; } set { this.owner = value; } }  
@@ -33,6 +36,8 @@ namespace ProjectPalladium.Animation
                 _animation = value;
             }
         }
+
+        public ToolSprite toolSprite;
 
         public bool playingOnce;
 
@@ -87,6 +92,13 @@ namespace ProjectPalladium.Animation
             LoadTexture(textureName);
         }
 
+        public void DoToolAnimation ()
+        {
+            toolSprite = ((owner as Player).ActiveItem as Tool).sprite;
+
+            doingSyncedAnimation = true;
+            toolSprite.DoToolAnimation();
+        }
 
         public void AnimationChangeDetected()
         {
@@ -120,6 +132,13 @@ namespace ProjectPalladium.Animation
 
         // called when PlayAnimationOnce concludes
         public void AnimationEnded() {
+
+            if (doingSyncedAnimation)
+            {
+                toolSprite.EndAnim();
+                doingSyncedAnimation = false;
+            }
+
             playingOnce = false;
             if (animationLocked) animationLocked = false;
 
