@@ -147,6 +147,9 @@ namespace ProjectPalladium
             Vector2 playerPos = new Vector2(100, 100);
             player = new Player(new Animation.AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", map,
             new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (12 * Game1.scale), (int)(30 * Game1.scale)));
+
+            player.sprite.Owner = player;
+
             player.Initialize();
             player.setBounds(map.tileMapSize, 16);
 

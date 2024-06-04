@@ -30,6 +30,13 @@
       "startframe": 32,
       "numframes": 2,
       "intervals": [ 400, 100, 400 ]
+    },
+    "cast": {
+      "startframe": 35,
+      "numframes": 3,
+      "intervals": [ 400, 400, 100, 50 ],
+      "locking": true,
+      "action": 2
     }
   }
 }

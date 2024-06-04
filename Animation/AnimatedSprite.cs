@@ -6,6 +6,12 @@ using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
+using ProjectPalladium.UI;
+using System.Runtime.CompilerServices;
+using ProjectPalladium.Spells;
+using static ProjectPalladium.Spells.Spell;
+using System.Reflection;
+using System.Data.SqlTypes;
 
 namespace ProjectPalladium.Animation
 {
@@ -14,6 +20,9 @@ namespace ProjectPalladium.Animation
         public Texture2D spriteTexture;
         public Rectangle sourceRect;
         private Vector2 origin;
+
+        private Character owner;
+        public Character Owner { get { return owner; } set { this.owner = value; } }  
 
         private Animation _animation;
         public Animation Animation
@@ -25,10 +34,15 @@ namespace ProjectPalladium.Animation
             }
         }
 
+        public bool playingOnce;
+
         private int currentFrame;
         public int spriteWidth;
         public int spriteHeight;
         private float timer = 0;
+
+        // the function to invoke when the animation is finished, if any
+        public Delegate onAnimationFinished;
 
         public int scaledWidth;
         public int scaledHeight;
@@ -36,6 +50,17 @@ namespace ProjectPalladium.Animation
         private string animationsRegistryName;
 
         private Rectangle defaultFrame;
+
+        private bool animationLocked;
+        public bool AnimationLocked
+        {
+            get { return animationLocked; }
+            set
+            {
+                this.animationLocked = value;
+                owner.MovementLocked = value; 
+            }
+        }
 
         private Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
         public Dictionary<string, Animation> Animations { get { return animations; } }
@@ -74,6 +99,43 @@ namespace ProjectPalladium.Animation
             animationsRegistryName = registryName;
         }
 
+        public void changeAnimation (string animationName)
+        {
+            if (AnimationLocked) return;
+            if (_animation != animations[animationName])
+            {
+                _animation = animations[animationName];
+                AnimationLocked = _animation.locking;
+
+                AnimationChangeDetected();
+            }
+        }
+
+        public void PlayAnimationOnce<T>(string animationName, T onFinish) where T: Delegate
+        {
+            onAnimationFinished = onFinish;
+            playingOnce = true;
+            changeAnimation(animationName);
+        }
+
+        // called when PlayAnimationOnce concludes
+        public void AnimationEnded() {
+            playingOnce = false;
+            if (animationLocked) animationLocked = false;
+
+            // TODO: add more advanced logic for what animation to return to.
+            changeAnimation("idle");
+        }
+
+        public void DoAnimationAction ()
+        {
+            // if behavior is given, invoke end-of-animation behavior
+            if (onAnimationFinished != null)
+            {
+                onAnimationFinished.DynamicInvoke();
+                onAnimationFinished = null;
+            }
+        }
         public void LoadContent()
         {
             // open the animation metadata json
@@ -83,7 +145,7 @@ namespace ProjectPalladium.Animation
             AnimationDeserializer dsrlzdAnimData = JsonSerializer.Deserialize<AnimationDeserializer>(jsonString);
             foreach (var anim in dsrlzdAnimData.animations)
             {
-                animations.Add(anim.Key, new Animation(anim.Key, anim.Value.startFrame, anim.Value.numFrames, anim.Value.intervals, this));
+                animations.Add(anim.Key, new Animation(anim.Key, anim.Value.startFrame, anim.Value.numFrames, anim.Value.intervals, this, anim.Value.locking, anim.Value.actionFrame));
             }
 
             // start on the idle animation

@@ -47,6 +47,8 @@ namespace ProjectPalladium
         public void handleMovement()
         {
 
+            if (movementLocked) return;
+
             inputDir = Vector2.Zero;
             setMovingUp(Keyboard.GetState().IsKeyDown(Keys.W));
             setMovingDown(Keyboard.GetState().IsKeyDown(Keys.S));
@@ -67,45 +69,32 @@ namespace ProjectPalladium
             
             if (Velocity.X != 0)
             {
-                if (sprite.Animation != sprite.Animations["walk-side"])
-                {
-                    sprite.AnimationChangeDetected();
-                    sprite.Animation = sprite.Animations["walk-side"];
-                }
+                sprite.changeAnimation("walk-side");
             }
             else if (Velocity.Y > 0)
             {
-                if (sprite.Animation != sprite.Animations["walk-front"])
-                {
-                    sprite.AnimationChangeDetected();
-                    sprite.Animation = sprite.Animations["walk-front"];
-                }
+                sprite.changeAnimation("walk-front");
             }
             else if (Velocity.Y < 0)
             {
-                if (sprite.Animation != sprite.Animations["walk-back"])
-                {
-                    sprite.AnimationChangeDetected();
-                    sprite.Animation = sprite.Animations["walk-back"];
-                }
+                sprite.changeAnimation("walk-back");
             }
-            else
+            else // sprite isn't moving, need to do some kind of idle animation
             {
                 if (!(sprite.Animation.Name.Contains("idle")))
                 {
                     if (sprite.Animation == sprite.Animations["walk-side"])
                     {
-                        sprite.Animation = sprite.Animations["idle-side"];
+                        sprite.changeAnimation("idle-side");
                     }
                     else if (sprite.Animation == sprite.Animations["walk-front"])
                     {
-                        sprite.Animation = sprite.Animations["idle"];
+                        sprite.changeAnimation("idle");
                     }
                     else if (sprite.Animation == sprite.Animations["walk-back"])
                     {
-                        sprite.Animation = sprite.Animations["idle-back"];
+                        sprite.changeAnimation("idle-back");
                     }
-                    sprite.AnimationChangeDetected();
                 }
             }
             movePos();

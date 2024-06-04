@@ -40,12 +40,12 @@ namespace ProjectPalladium.Spells
 
         public void Cast()
         {
-            onCast();
+            string name = this.name.Replace(" ", "").ToLower();
+            GenericSpellHandler(name);
         }
 
         public static void TillEarth()
         {
-            if (!GenericSpellHandler("tillearth")) return;
 
             Map map = SceneManager.CurScene.Map;
             Player player = SceneManager.CurScene.Player;
@@ -77,8 +77,13 @@ namespace ProjectPalladium.Spells
         public static bool GenericSpellHandler(string spellName)
         {
             Spell spell = spells[spellName];
+
+            // check if player has enough mana
             if (Game1.player.mana < spell.manaCost) { return false; }
             Game1.player.mana -= spell.manaCost;
+
+            // play the cast animiation, pass spell function to perform when animation is finished
+            Game1.player.sprite.PlayAnimationOnce("cast", spell.onCast);
             return true;
         }
 

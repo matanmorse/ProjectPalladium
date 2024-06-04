@@ -30,8 +30,13 @@ namespace ProjectPalladium.Animation
 
         public float timer = 0f;
 
+        // if an action is to be performed during the animaiton, what frame to do it on.
+        public int actionFrame;
+
         public AnimationFrame[] frames;
         private AnimatedSprite sprite;
+
+        public bool locking; // is the sprite movement/animation locked during this animation?
         public struct AnimationFrame
         {
             public Rectangle sourceRect;
@@ -47,7 +52,7 @@ namespace ProjectPalladium.Animation
             }
 
         }
-        public Animation(string name, int startFrame, int numFrames, float[] intervals, AnimatedSprite sprite)
+        public Animation(string name, int startFrame, int numFrames, float[] intervals, AnimatedSprite sprite, bool locking, int actionFrame)
         {
             Name = name;
             this.numFrames = numFrames;
@@ -55,8 +60,12 @@ namespace ProjectPalladium.Animation
             currentFrame = 0;
             this.intervals = intervals;
             this.sprite = sprite;
+            this.locking = locking;
+            this.actionFrame = actionFrame;
+
 
             frames = new AnimationFrame[numFrames + 1];
+
 
             // populate the frames array with the source rectangles of every frame of the animation
             for (int i = 0; i <= numFrames; i++)
@@ -78,12 +87,20 @@ namespace ProjectPalladium.Animation
 
             if (timer > frames[currentFrame].delay)
             {
+               
+                // if we're at the end of an animation that only plays once, end the animation
+                if ( (currentFrame + 1 >= frames.Length) && sprite.playingOnce) {
+                    sprite.AnimationEnded();
+                    return;
+                }
+                
                 currentFrame = (currentFrame + 1) % frames.Length;
                 timer = 0f;
-                if (currentFrame > startFrame + numFrames)
+
+                // if we're on the action frame, perform the action (after increment so perform at start of frame, not end)
+                if (currentFrame == actionFrame && actionFrame != 0)
                 {
-                    // loop to start of animation
-                    currentFrame = startFrame;
+                    sprite.DoAnimationAction();
                 }
             }
         }

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Animation;
 using ProjectPalladium.Utils;
+using System.Diagnostics;
 
 namespace ProjectPalladium
 {
@@ -10,6 +11,17 @@ namespace ProjectPalladium
     public class Character
     {
         protected Map currentMap;
+
+        protected bool movementLocked; 
+        public bool MovementLocked
+        {
+            get { return movementLocked; } 
+            set
+            {
+                movementLocked = value;
+              
+            }
+        }
 
         public Rectangle boundingBox;
         public float layer = Game1.layers.player;

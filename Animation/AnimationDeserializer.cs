@@ -27,5 +27,11 @@ namespace ProjectPalladium.Animation
 
         [JsonPropertyName("intervals")]
         public float[] intervals { get; set; }
+
+        [JsonPropertyName("locking")]
+        public bool locking { get; set; }
+
+        [JsonPropertyName("action")]
+        public int actionFrame { get; set; }
     }
 }
