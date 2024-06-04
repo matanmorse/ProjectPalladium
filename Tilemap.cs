@@ -114,7 +114,6 @@ namespace ProjectPalladium
 
         public void SetTileData(Point location, Renderable tile)
         {
-            Debug.WriteLine("setting tile data");
             layer[location.X, location.Y] = tile;
         }
 

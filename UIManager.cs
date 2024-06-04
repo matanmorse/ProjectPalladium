@@ -18,7 +18,7 @@ namespace ProjectPalladium
         public InventoryUI inventoryUI;
         public Toolbar toolbar;
         public CastingUI castingUI;
-
+        
         public enum UILayers
         {
             first,
@@ -51,7 +51,9 @@ namespace ProjectPalladium
             rootElement.AddChild(toolbar);
 
             // mana bar and spellbook
-            rootElement.AddChild("mana bar", "manabar", 10, Game1.UINativeResolution.Y - 150);
+            Manabar manabar = new Manabar("manabar", "manabar", rootElement);
+
+            rootElement.AddChild(manabar);
             rootElement.AddChild(new UIElement("spellbook", "spellbook", Game1.UINativeResolution.X -100, Game1.UINativeResolution.Y -100, rootElement));
 
             // Casting UI
@@ -59,6 +61,7 @@ namespace ProjectPalladium
             rootElement.AddChild(castingUI);
 
             toolbar.UpdateToolbar();
+            manabar.Initialize();
             
         }
         public void SetPlayer(Player player) { this.player = player; }

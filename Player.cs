@@ -18,6 +18,10 @@ namespace ProjectPalladium
         public bool usingItemLocked = false;
         public Point feet; // lmao
 
+        // mana + spellcasting info
+        public const int MAX_MANA = 100;
+        public int mana = MAX_MANA;
+
         public Vector2 lerpingCamera;
 
         int i = 0;

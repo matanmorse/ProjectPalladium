@@ -139,6 +139,7 @@ namespace ProjectPalladium
             // init UI
             _uiManager = new UIManager(new UIElement("root", null, 0, 0, null, isRoot: true, isBox: true));
             _uiManager.Initialize();
+
             // load map
             map = new Map("hollow.tmx");
 

@@ -18,10 +18,14 @@ namespace ProjectPalladium.UI
             center,
         }
 
+        protected float gameScale = Game1.scale;
         public float scale;
         private Renderable sprite;
         public Renderable Sprite { get { return sprite; } set { this.sprite = value; } }
         protected Point localPos;
+
+        protected static Player player = Game1.player;
+
         public Point LocalPos
         {
             get { return localPos; }
@@ -64,10 +68,10 @@ namespace ProjectPalladium.UI
             this.localPos = new Point(localX, localY);
             this.originType = originType;
             UpdateGlobalPos();
-
         }
 
     
+        public virtual void Initialize() { }
         public void UpdateGlobalPos()
         {
             if (isRoot)

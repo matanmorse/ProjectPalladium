@@ -18,21 +18,23 @@ namespace ProjectPalladium.Spells
         public string spellPath;
         public delegate void SpellHandler();
         SpellHandler onCast;
+        public int manaCost;
         
-        public static Spell none = new Spell("", "", "", null);
+        public static Spell none = new Spell("", "", "", 0, null);
 
         public static Dictionary<string, Spell> spells = new Dictionary<string, Spell>()
         {
-            {"tillearth", new Spell("Till Earth", "Tills some earth", "LL", TillEarth) },
-            {"iceblast", new Spell("Ice blast", "Blasts some ice", "RR", DoNothing) },
-            {"growth", new Spell("Growth", "Grows a plant", "LLUR", Growth) }
+            {"tillearth", new Spell("Till Earth", "Tills some earth", "LL", 10, TillEarth) },
+            {"iceblast", new Spell("Ice blast", "Blasts some ice", "RR", 10, DoNothing) },
+            {"growth", new Spell("Growth", "Grows a plant", "LLUR", 10,Growth) }
         };
 
-        public Spell(string name, string description, string spellPath, SpellHandler onCast)
+        public Spell(string name, string description, string spellPath, int manaCost, SpellHandler onCast)
         {
             this.name = name;
             this.description = description;
             this.spellPath = spellPath;
+            this.manaCost = manaCost;
             this.onCast = onCast;
         }
 
@@ -43,15 +45,16 @@ namespace ProjectPalladium.Spells
 
         public static void TillEarth()
         {
+            if (!GenericSpellHandler("tillearth")) return;
+
             Map map = SceneManager.CurScene.Map;
             Player player = SceneManager.CurScene.Player;
+
             if (map.tillLayer == null) return;
             Point playerPos = Util.GetTileFromPos(player.pos) + new Point(0, 1); // get tile of player's feet, not head
 
             Tilemap tillable = map.tilemaps.FirstOrDefault(i => i.name.ToLower() == "tillable");
             if (tillable.Layer[player.feet.X, player.feet.Y] == Renderable.empty) return; // empty tile
-
-            Debug.WriteLine("not empty");
 
             map.tillLayer.SetTileData(playerPos, new Renderable("TilledDirt"));
         }
@@ -69,6 +72,14 @@ namespace ProjectPalladium.Spells
             Plant plant = objAtFeet as Plant;
             plant.GrowthStage += 1;
 
+        }
+        // logic to be called after any spell is cast, returns if spell failed or not
+        public static bool GenericSpellHandler(string spellName)
+        {
+            Spell spell = spells[spellName];
+            if (Game1.player.mana < spell.manaCost) { return false; }
+            Game1.player.mana -= spell.manaCost;
+            return true;
         }
 
         public static void DoNothing()
