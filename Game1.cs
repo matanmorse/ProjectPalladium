@@ -26,7 +26,7 @@ namespace ProjectPalladium
 
         public static Inventory inventory;
 
-        public const float scale = 5f;
+        public const float scale = 10f;
 
         public static Point NativeResolution = new Point(512 * (int) scale, 288 * (int) scale);
         public static Point UINativeResolution = new Point(1360, 768);

@@ -55,6 +55,8 @@ namespace ProjectPalladium
 
             // Casting UI
             rootElement.AddChild(new CastingUI(rootElement));
+
+            toolbar.UpdateToolbar();
             
         }
         public void SetPlayer(Player player) { this.player = player; }
