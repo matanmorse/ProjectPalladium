@@ -23,7 +23,6 @@ namespace ProjectPalladium.UI
         public Toolbar toolbar;
         public Inventory Inventory { get { return inv; } set { this.inv = value; } }
 
-        private int swap1 = -1;
         private bool updateItems;
 
         private List<UIElement> tmpItems;
@@ -110,7 +109,6 @@ namespace ProjectPalladium.UI
                 ((ItemSlot)children[i]).Reset();
             }
 
-            swap1 = -1;
         }
 
         public override void ToggleShowing()

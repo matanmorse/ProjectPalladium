@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium;
+using ProjectPalladium.Utils;
 namespace ProjectPalladium.UI
 {
     public class Button
@@ -20,31 +21,51 @@ namespace ProjectPalladium.UI
         public delegate void OnLeave();
         public OnLeave onLeave;
 
+        public delegate void OnRightClick();
+        public OnRightClick onRightClick; 
+
         public bool mouseOver = false;
         public bool clickState = false;
 
+        public bool UI; // is this a UI button or GameWorld button?
+        
         private UIElement owner;
-        public Button(OnEnter onEnter, OnClick onClick, OnLeave onLeave, Point pos, Point size, UIElement owner)
+        public Button(OnEnter onEnter, OnClick onClick, OnLeave onLeave, Point pos, Point size, UIElement owner, OnRightClick onRightClick=null)
         {
             this.onClick = onClick;
             this.onEnter = onEnter;
             this.onLeave = onLeave;
+            this.onRightClick = onRightClick;
             this.owner = owner;
             this.bounds = new Rectangle(pos, owner.ScalePoint(size));
-            
+            this.UI = true;
+
         }
+
+        public Button(OnEnter onEnter, OnClick onClick, OnLeave onLeave, Point pos, Point size, OnRightClick onRightClick = null)
+        {
+            this.onClick = onClick;
+            this.onEnter = onEnter;
+            this.onLeave = onLeave;
+            this.onRightClick = onRightClick;
+            this.bounds = new Rectangle(pos, size);
+            this.UI = false;
+        }
+
 
         public void Update()
         {
             CheckEnter();
             CheckLeave();
-            if (CheckClick()) onClick();
+            if (CheckLeftClick()) if (onClick != null) onClick();
+            if (CheckRightClick() ) if (onRightClick != null) onRightClick();
             CheckHover();
         }
 
+        // the following ternary gore is so that we don't have to store an instance variable for every single element
         public bool CheckHover()
         {
-            if (bounds.Contains(Input.nativeMousePos) && mouseOver == false)
+            if (bounds.Contains(UI ? Input.nativeMousePos : Input.gameWorldMousePos) && mouseOver == false)
             {
                 mouseOver = true;
                 return true;
@@ -54,7 +75,7 @@ namespace ProjectPalladium.UI
 
         public bool CheckEnter()
         {
-            if (bounds.Contains(Input.nativeMousePos) && !bounds.Contains(Input.previousNativeMousePos))
+            if (bounds.Contains(UI ? Input.nativeMousePos : Input.gameWorldMousePos) && !bounds.Contains(UI ? Input.previousNativeMousePos : Input.prevGameWorldMousePos))
             {
                 mouseOver = true;
                 return true;
@@ -64,7 +85,7 @@ namespace ProjectPalladium.UI
         
         public bool CheckLeave()
         {  
-            if (!bounds.Contains(Input.nativeMousePos) && bounds.Contains(Input.previousNativeMousePos))
+            if (!bounds.Contains(UI ? Input.nativeMousePos : Input.gameWorldMousePos) && bounds.Contains(UI ? Input.previousNativeMousePos : Input.prevGameWorldMousePos))
             {
                 mouseOver = false;
                 return true;
@@ -72,11 +93,21 @@ namespace ProjectPalladium.UI
             return false;
         }
 
-        public bool CheckClick()
+        public bool CheckLeftClick()
         {
+
             if (mouseOver && Input.GetLeftMouseClicked())
             {
                 clickState = clickState ? false : true;
+                return true;
+            }
+            return false;
+        }
+
+        public bool CheckRightClick()
+        {
+            if (mouseOver && Input.GetRightMouseClicked())
+            {
                 return true;
             }
             return false;

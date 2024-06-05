@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="60" height="60" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="27">
- <tileset firstgid="1" source="../../../../../GameDev/assets/ProjectPalladium/Tiled/Rural Village.tsx"/>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="60" height="60" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="29">
+ <tileset firstgid="1" source="Rural Village.tsx"/>
  <layer id="1" name="Base" width="60" height="60">
   <data encoding="csv">
 104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,104,
@@ -327,6 +327,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="10" name="Spawn">
+  <object id="28" name="spawnpoint" x="160" y="208"/>
+ </objectgroup>
  <objectgroup id="5" name="Scene Triggers">
   <object id="13" x="848" y="48" width="96" height="160">
    <properties>

@@ -19,14 +19,19 @@ namespace ProjectPalladium
         protected Vector2 globalPos;
         
         protected Vector2 localPos;
+
         public Vector2 LocalPos
         {
             get { return localPos; }
         }
 
+        protected string name;
+
+
         protected bool playerBehind;
         public GameObject(string name, Vector2 pos) {
-        layer = Game1.layers.buildings + 0.01f * pos.Y; // dynamic z-indexing based on y coordinates
+            this.name = name;
+            layer = Game1.layers.buildings + 0.01f * pos.Y; // dynamic z-indexing based on y coordinates
         }
 
         protected float opacity = 1f;

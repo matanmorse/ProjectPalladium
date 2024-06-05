@@ -7,7 +7,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Buildings;
 using ProjectPalladium.Plants;
+using ProjectPalladium.Triggers;
 using ProjectPalladium.Utils;
+using Trigger = ProjectPalladium.Utils.Trigger;
+
 
 namespace ProjectPalladium
 {
@@ -33,8 +36,15 @@ namespace ProjectPalladium
         public Point tileMapSize = new Point();
         private static int tilesize = 16;
 
+        private List<Trigger> triggers = new List<Trigger>();
+
+
+        public Vector2 spawnLocation;
+        
+
         public Map(string filename)
         {
+            this.spawnLocation = new Vector2(50,100);
             this.filename = filename;
             DeserializeMap();
             tileMapSize = new Point(map.Layers[0].Width, map.Layers[0].Height);
@@ -61,9 +71,6 @@ namespace ProjectPalladium
             }
 
             scaledTileSize = (int)(tilesize * Game1.scale);
-            AddPlant("manamelonplant", new Vector2(5, 5));
-            gameObjects.Add(new Plant("manamelonplant", new Vector2(4, 4)));
-            // gameObjects.Add(new Plant("manamelonplant", new Vector2(5, 5)));
         }
 
         // checks collisions with any collidable objects on the map
@@ -110,12 +117,53 @@ namespace ProjectPalladium
                 map = (MapSerializer)serializer.Deserialize(fs);
             }
 
+            GetBuildings();
+            GetTriggers();
+            GetSpawnPoint();
 
-            ObjectLayer buildingLayer = map.ObjectLayers.First(layer => layer.name.ToLower() == "buildings");
-            if (buildingLayer.objects == null) return;
+        }
 
+        public void GetTriggers()
+        {
+            ObjectLayer triggersLayer = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "triggers", null);
+            if (triggersLayer == null || triggersLayer.objects == null) return;
+
+            foreach (TiledObject trigger in triggersLayer.objects)
+            {
+                Point location = new Point(trigger.x, trigger.y) * new Point((int)Game1.scale);
+                Point size = new Point(trigger.width, trigger.height) * new Point((int)Game1.scale);
+
+                Rectangle bounds = new Rectangle(location, size);
+                Property[] pList = trigger.properties.properties; // don't even ask why i have to do this
+                string name = pList.First(prop => prop.name.ToLower() == "name").value;
+                
+                if (name == "exit")
+                { 
+                    string goToScene = pList.FirstOrDefault(prop => prop.name.ToLower() == "map", null).value;
+                    triggers.Add(new ChangeSceneTrigger(goToScene, bounds, goToScene));
+                }
+            }
+
+        }
+
+        public void GetSpawnPoint()
+        {
+            ObjectLayer spawnPoints = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "spawn", null);
+            if (spawnPoints == null || spawnPoints.objects == null) { spawnLocation = new Vector2(100, 100); return; }
+
+            foreach (TiledObject spawnPointObj in spawnPoints.objects)
+            {
+                Vector2 spawnPoint = new Vector2(spawnPointObj.x, spawnPointObj.y);
+                spawnLocation = spawnPoint;
+            }
+        }
+
+        public void GetBuildings()
+        {
+            ObjectLayer buildingLayer = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "buildings", null);
             //Checks if there is a building layer
             if (buildingLayer == null || buildingLayer.objects == null) { return; }
+
             // for each object in the building layer, add it to the list of buildings
             foreach (TiledObject building in buildingLayer.objects)
             {
@@ -126,11 +174,11 @@ namespace ProjectPalladium
                 buildings.Add(new Building(name, pos));
             }
         }
-
         public void Update(GameTime gameTime)
         {
             foreach (Building building in buildings) building.Update(gameTime);
             foreach (GameObject obj in gameObjects) obj.Update(gameTime);
+            foreach (Trigger t in triggers) t.CheckEnter();
             CheckBehindBuilding();
             CheckBehindObjects();
         }
@@ -168,6 +216,10 @@ namespace ProjectPalladium
             return gameObjects.FirstOrDefault(i => i.LocalPos == tile.ToVector2(), null);
         }
 
+        public override string ToString()
+        {
+            return filename;
+        }
         [XmlRoot("map")]
         public class MapSerializer
         {

@@ -8,6 +8,10 @@
     "behind": {
       "size": [ 44, 96 ],
       "location": [ 10, 0 ]
+    },
+    "door": {
+      "size": [ 18, 24 ],
+      "location": [ 23, 95 ]
     }
   }
 }

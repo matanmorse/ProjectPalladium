@@ -29,7 +29,6 @@ namespace ProjectPalladium
 
         public Vector2 lerpingCamera;
 
-        int i = 0;
 
         public float layer = Game1.layers.player;
 
@@ -39,7 +38,7 @@ namespace ProjectPalladium
                 usingItemLocked = true;
                 _activeItem = value;
             }
-        }
+        } 
         public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) :
             base(sprite, pos, name, startingMap, boundingBox)
         {

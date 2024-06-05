@@ -49,7 +49,7 @@ namespace ProjectPalladium
         public static ContentManager contentManager;
 
 
-        private Matrix _translation;
+        public static Matrix translation;
         private Matrix prevTranslation; 
         
         private static UIManager _uiManager;
@@ -99,7 +99,7 @@ namespace ProjectPalladium
         }
         private void CalculateTranslation()
         {
-            prevTranslation = _translation;
+            prevTranslation = translation;
 
             var dx = ((screenWidth / 2) - player.lerpingCamera.X );
             
@@ -118,7 +118,7 @@ namespace ProjectPalladium
                 0);
 
            
-            _translation = Matrix.CreateTranslation((int) dx, (int) dy, 0f);
+            translation = Matrix.CreateTranslation((int) dx, (int) dy, 0f);
         }
 
 
@@ -156,7 +156,7 @@ namespace ProjectPalladium
             _uiManager.SetPlayer(player);
 
             //Send it to SceneManager
-            Scene mainScene = new Scene(map, player, new() { spawnLocation = new Vector2(400, 400) });
+            Scene mainScene = new Scene(map, player);
             SceneManager.LoadScene(mainScene);
 
             inventory = UIManager.inventoryUI.Inventory;
@@ -192,12 +192,12 @@ namespace ProjectPalladium
             //Debug code for changing scenes
             if (Input.GetKeyDown(Keys.P))
             {
-                Scene test2 = new Scene(new Map("test1.tmx"), player, new() { spawnLocation = new Vector2(200, 400) });
+                Scene test2 = new Scene(new Map("test1.tmx"), player);
                 SceneManager.LoadScene(test2);
             }
             if (Input.GetKeyDown(Keys.L))
             {
-                Scene test3 = new Scene(new Map("test2.tmx"), player, new() { spawnLocation = new Vector2(100, 50) });
+                Scene test3 = new Scene(new Map("wizardtower.tmx"), player);
                 SceneManager.LoadScene(test3);
             }
 
@@ -211,7 +211,7 @@ namespace ProjectPalladium
 
             // Render the game world to the _canvas
             _canvas.Activate();
-            _spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp, null, null, null, _translation);
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp, null, null, null, translation);
             SceneManager.Draw(_spriteBatch);
             _spriteBatch.End();
 

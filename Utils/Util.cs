@@ -3,11 +3,13 @@ using Microsoft.Xna.Framework;
 using ProjectPalladium.Buildings;
 using System.Diagnostics;
 using static System.Formats.Asn1.AsnWriter;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ProjectPalladium.Utils
 {
     public class Util
     {
+        public static float scale = Game1.scale;
         public static int tileSize = 16;
         public static void DrawRectangle(Rectangle rect, SpriteBatch b)
         {
@@ -22,6 +24,10 @@ namespace ProjectPalladium.Utils
             b.Draw(_texture, new Vector2(rect.Left + rect.Size.X, rect.Top ), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
             b.Draw(_texture, new Vector2(rect.Left , rect.Top + rect.Size.Y -1), new Rectangle(0, 0, rect.Size.X + thickness, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
 
+        }
+        public static Point ScalePoint(Point pt)
+        {
+            return new Point((int)(pt.X * scale), (int)(pt.Y * scale));
         }
 
         public static Vector2 GlobalPosToLocalPos(Vector2 global)
@@ -68,7 +74,8 @@ namespace ProjectPalladium.Utils
             nativeMouseX = MathHelper.Clamp(nativeMouseX, 0, Game1.NativeResolution.X);
             nativeMouseY = MathHelper.Clamp(nativeMouseY + 1, 0, Game1.NativeResolution.Y);
 
-            return new Point((int)nativeMouseX, (int)nativeMouseY);
+            // have to account for the translation effect to get in game world coordinates
+            return new Point((int) (nativeMouseX - Game1.translation.Translation.X), (int) (nativeMouseY - Game1.translation.Translation.Y));
         }
 
         public static Point GetNearestTile(Point pos)

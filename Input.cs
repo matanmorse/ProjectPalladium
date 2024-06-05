@@ -12,6 +12,7 @@ namespace ProjectPalladium
         public static Point nativeMousePos;
 
         public static Point gameWorldMousePos;
+        public static Point prevGameWorldMousePos;
 
         private static KeyboardState currentState;
         private static KeyboardState previousState;
@@ -61,6 +62,7 @@ namespace ProjectPalladium
 
         public static Point GetMousePos()
         {
+            prevGameWorldMousePos = gameWorldMousePos;
             previousNativeMousePos = nativeMousePos;
             return currentMouseState.Position;
         }

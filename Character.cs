@@ -12,6 +12,7 @@ namespace ProjectPalladium
     {
         protected Map currentMap;
 
+        public Map CurrentMap{ get { return currentMap; } set { currentMap = value; } }
         protected bool movementLocked; 
         public bool MovementLocked
         {
