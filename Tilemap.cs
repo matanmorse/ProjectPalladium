@@ -107,7 +107,7 @@ namespace ProjectPalladium
         {
             foreach (Rectangle collider in colliders)
             {
-                if (Rectangle.Intersect(collider, boundingBox) != Rectangle.Empty) return Rectangle.Intersect(collider, boundingBox);
+                if (Rectangle.Intersect(collider, boundingBox) != Rectangle.Empty) return collider;
             }
             return Rectangle.Empty;
         }

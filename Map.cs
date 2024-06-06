@@ -75,20 +75,27 @@ namespace ProjectPalladium
 
         // checks collisions with any collidable objects on the map
         // returns rectangle of intersection of first found collision
-        public Rectangle CheckCollisions(Rectangle boundingBox)
+        public List<Rectangle> CheckCollisions(Rectangle boundingBox)
         {
+            List<Rectangle> intersections = new List<Rectangle>();
+            Rectangle totalInstersection = Rectangle.Empty;
             foreach (Building building in buildings)
             {
-                if (Rectangle.Intersect(building.bounds, boundingBox) != Rectangle.Empty) return Rectangle.Intersect(building.bounds, boundingBox);
+                Rectangle intersection = Rectangle.Intersect(building.bounds, boundingBox);
+                if (intersection != Rectangle.Empty) intersections.Add(intersection);
             }
 
             // check tilemaps for collision
             foreach (Tilemap tilemap in collidingTilemaps)
             {
-                if (tilemap.checkCollisions(boundingBox) != Rectangle.Empty) return tilemap.checkCollisions(boundingBox);
-            }
+                foreach (Rectangle collider in tilemap.colliders)
+                {
+                    Rectangle intersection = Rectangle.Intersect(collider, boundingBox);
+                    if (intersection != Rectangle.Empty) intersections.Add(intersection);
 
-            return Rectangle.Empty;
+                }
+            }
+            return intersections;
         }
 
         // if the player is behind a building, turn down opacity

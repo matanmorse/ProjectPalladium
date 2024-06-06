@@ -1,8 +1,10 @@
 ﻿
+using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Animation;
 using ProjectPalladium.Utils;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ProjectPalladium
@@ -33,7 +35,9 @@ namespace ProjectPalladium
         public float speed = 1.4f * Game1.scale;
         private Vector2 velocity;
 
-        
+        Rectangle intersection;
+        List<Rectangle> intersections; 
+
         public bool flipped;
 
         public Vector2 Velocity
@@ -86,6 +90,11 @@ namespace ProjectPalladium
 
         public virtual void Draw(SpriteBatch b)
         {
+            if (intersection != Rectangle.Empty) Util.DrawRectangle(intersection, b);
+            if (intersections != null)
+            {
+                 // foreach (Rectangle r in intersections) { Util.DrawRectangle(r, b); }
+            }
             if (DebugParams.showColliders) { Util.DrawRectangle(boundingBox, b); }
             sprite.Draw(b, pos, flipped, layerDepth: layer);
         }
@@ -124,38 +133,107 @@ namespace ProjectPalladium
 
 
             // get collision if one occurs, then resolve it
-            Rectangle collided = currentMap.CheckCollisions(boundingBox);
+            List<Rectangle> collided = currentMap.CheckCollisions(boundingBox);
 
-            if (collided != Rectangle.Empty)
+            if (collided.Count != 0)
             {
                 velocity = Vector2.Zero;
 
-                ResolveCollision(collided, Rectangle.Intersect(boundingBox, collided));
+                ResolveCollision(collided);
             }
 
         }
 
-        public void ResolveCollision(Rectangle collided, Rectangle interSection)
+        public void ResolveCollision(List<Rectangle> intersections)
         {
-            // distances to the outside of the bounding box
-            int distx = interSection.Size.X;
-            int disty = interSection.Size.Y;
+
+            this.intersections = intersections;
 
 
-            bool moveToSide = distx < disty ? true : false;
-            if (moveToSide)
+            bool allSameWidth = true;
+            bool allSameHeight = true;
+            int width = 0;
+            int height = 0;
+            foreach (Rectangle r in intersections)
             {
-                pos.X = pos.X < collided.Left ? collided.Left - boundingBox.Width / 2 : collided.Right + boundingBox.Width / 2;
+                if (width == 0) width = r.Width;
+                else
+                {
+                    if (r.Width != width)
+                    {
+                        allSameWidth = false;
+                        break;
+                    }
+                }
+            }
+            foreach (Rectangle r in intersections)
+            {
+                if (height == 0) height = r.Height;
+                else
+                {
+                    if (r.Height != height)
+                    {
+                        allSameHeight = false;
+                        break;
+                    }
+                }
+            }
+
+            Rectangle total = Rectangle.Empty;
+            if (allSameWidth || allSameHeight)
+            {
+                foreach(Rectangle r in intersections)
+                {
+                    total = total == Rectangle.Empty ? r : Rectangle.Union(r, total);
+                }
+                this.intersection = total;
+            }
+            if (total != Rectangle.Empty) {
+                intersection = total;
+
+
+                // distances to the outside of the bounding box
+                int distx = intersection.Size.X;
+                int disty = intersection.Size.Y;
+
+
+                bool moveToSide = distx < disty ? true : false;
+                if (moveToSide)
+                {
+                    pos.X = pos.X < intersection.Left ? intersection.Left - boundingBox.Width / 2 : intersection.Right + boundingBox.Width / 2;
+                }
+                else
+                {
+                    pos.Y = pos.Y < intersection.Top ? intersection.Top - boundingBox.Height / 2 : intersection.Bottom + boundingBox.Height / 2;
+                }
             }
             else
             {
-                pos.Y = pos.Y < collided.Top ? collided.Top - boundingBox.Height / 2 : collided.Bottom + boundingBox.Height / 2;
+                foreach (Rectangle intersection in intersections)
+                {
+
+                    // distances to the outside of the bounding box
+                    int distx = intersection.Size.X;
+                    int disty = intersection.Size.Y;
+
+
+                    bool moveToSide = distx < disty ? true : false;
+                    if (moveToSide)
+                    {
+                        pos.X = pos.X < intersection.Left ? intersection.Left - boundingBox.Width / 2 : intersection.Right + boundingBox.Width / 2;
+                    }
+                    else
+                    {
+                        pos.Y = pos.Y < intersection.Top ? intersection.Top - boundingBox.Height / 2 : intersection.Bottom + boundingBox.Height / 2;
+                    }
+                }
             }
+
             boundingBox.Location = new Point((int)(pos.X - sprite.scaledWidth / 2 + (sprite.scaledWidth - boundingBox.Width) / 2),
-                (int)(pos.Y - sprite.scaledHeight / 2) + (sprite.scaledHeight - boundingBox.Height) / 2);
-            // TODO: fix jank collisions, but in the meantime if this didn't acually fix just put it at the top right
-            Rectangle stillCollides = currentMap.CheckCollisions(boundingBox);
-            if (stillCollides != Rectangle.Empty) { ResolveCollision(stillCollides, Rectangle.Intersect(stillCollides, boundingBox)); }
+            (int)(pos.Y - sprite.scaledHeight / 2) + (sprite.scaledHeight - boundingBox.Height) / 2);
+            List<Rectangle> stillColliding = currentMap.CheckCollisions(boundingBox);
+            if (stillColliding.Count != 0) ResolveCollision(stillColliding);
+
 
         }
 
