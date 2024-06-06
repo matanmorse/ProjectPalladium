@@ -32,7 +32,7 @@ namespace ProjectPalladium
         public Vector2 pos;
         public Vector2 prevpos;
 
-        public float speed = 1.4f * Game1.scale;
+        public float speed = 1.5f * Game1.scale;
         private Vector2 velocity;
 
         Rectangle intersection;
@@ -144,12 +144,12 @@ namespace ProjectPalladium
 
         }
 
-        public void ResolveCollision(List<Rectangle> intersections)
+        public void ResolveCollision(List<Rectangle> intersections, int depth = 0)
         {
 
             this.intersections = intersections;
 
-
+            // if all the rectangles are the same width/height, i.e. a set of rectangles lying on the same axis, we should combine them and resolve them as one to avoid issues
             bool allSameWidth = true;
             bool allSameHeight = true;
             int width = 0;
@@ -179,6 +179,7 @@ namespace ProjectPalladium
                 }
             }
 
+            // calculate combined rectangle
             Rectangle total = Rectangle.Empty;
             if (allSameWidth || allSameHeight)
             {
@@ -187,56 +188,51 @@ namespace ProjectPalladium
                     total = total == Rectangle.Empty ? r : Rectangle.Union(r, total);
                 }
                 this.intersection = total;
+                ResolveCollision(total);
             }
+
+
             if (total != Rectangle.Empty) {
-                intersection = total;
-
-
-                // distances to the outside of the bounding box
-                int distx = intersection.Size.X;
-                int disty = intersection.Size.Y;
-
-
-                bool moveToSide = distx < disty ? true : false;
-                if (moveToSide)
-                {
-                    pos.X = pos.X < intersection.Left ? intersection.Left - boundingBox.Width / 2 : intersection.Right + boundingBox.Width / 2;
-                }
-                else
-                {
-                    pos.Y = pos.Y < intersection.Top ? intersection.Top - boundingBox.Height / 2 : intersection.Bottom + boundingBox.Height / 2;
-                }
             }
             else
             {
                 foreach (Rectangle intersection in intersections)
                 {
-
-                    // distances to the outside of the bounding box
-                    int distx = intersection.Size.X;
-                    int disty = intersection.Size.Y;
-
-
-                    bool moveToSide = distx < disty ? true : false;
-                    if (moveToSide)
-                    {
-                        pos.X = pos.X < intersection.Left ? intersection.Left - boundingBox.Width / 2 : intersection.Right + boundingBox.Width / 2;
-                    }
-                    else
-                    {
-                        pos.Y = pos.Y < intersection.Top ? intersection.Top - boundingBox.Height / 2 : intersection.Bottom + boundingBox.Height / 2;
-                    }
+                    ResolveCollision(intersection);
                 }
             }
 
+            // avoid stack overflow from recursive resolution
+            if (depth > 100) return;
+
+            // update bounding box location
             boundingBox.Location = new Point((int)(pos.X - sprite.scaledWidth / 2 + (sprite.scaledWidth - boundingBox.Width) / 2),
             (int)(pos.Y - sprite.scaledHeight / 2) + (sprite.scaledHeight - boundingBox.Height) / 2);
-            List<Rectangle> stillColliding = currentMap.CheckCollisions(boundingBox);
-            if (stillColliding.Count != 0) ResolveCollision(stillColliding);
 
+            // check if this set of resolutions put us in collision with another object, if so resolve it
+            List<Rectangle> stillColliding = currentMap.CheckCollisions(boundingBox);
+            if (stillColliding.Count != 0) ResolveCollision(stillColliding, depth + 1);
 
         }
 
+        // resolves a single collision
+        public void ResolveCollision(Rectangle intersection)
+        {
+            // distances to the outside of the bounding box
+            int distx = intersection.Size.X;
+            int disty = intersection.Size.Y;
+
+
+            bool moveToSide = distx < disty ? true : false;
+            if (moveToSide)
+            {
+                pos.X = pos.X < intersection.Left ? intersection.Left - boundingBox.Width / 2 : intersection.Right + boundingBox.Width / 2;
+            }
+            else
+            {
+                pos.Y = pos.Y < intersection.Top ? intersection.Top - boundingBox.Height / 2 : intersection.Bottom + boundingBox.Height / 2;
+            }
+        }
         public override string ToString()
         {
             return "Name: " + name;
