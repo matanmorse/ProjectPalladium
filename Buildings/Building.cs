@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Diagnostics;
 using ProjectPalladium.Utils;
 using ProjectPalladium.UI;
+using ProjectPalladium.Animation;
 
 namespace ProjectPalladium.Buildings
 {

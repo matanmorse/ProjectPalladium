@@ -27,7 +27,7 @@ namespace ProjectPalladium.Buildings
 
                 ChangeSceneTrigger cst = (ChangeSceneTrigger)t;
                 Button door = exteriorBuilding.door;
-                cst.SpawnPos = door.bounds.Location.ToVector2() + new Vector2(door.bounds.Size.X / 2, door.bounds.Size.Y + (2 * Game1.scale));
+                cst.SpawnPos = door.bounds.Location.ToVector2() + new Vector2(door.bounds.Size.X / 2, door.bounds.Size.Y / 2 + Game1.player.boundingBox.Size.Y);
             }
         }
     }

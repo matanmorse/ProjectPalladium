@@ -14,7 +14,12 @@ namespace ProjectPalladium
 {
     internal class SceneManager
     {
+        private static bool transitioning; 
+
         private static Scene curScene;
+        private static Scene storedScene;
+        private static Vector2 storedPos;
+
         public static Scene CurScene { get { return curScene; }  }
         public static void LoadScene(Scene scene)
         {
@@ -32,31 +37,40 @@ namespace ProjectPalladium
         // load scene at non-default spawn position
         public static void LoadScene (Scene scene, Vector2 pos)
         {
-            LoadScene(scene);
-            curScene.Player.pos = pos;
-            curScene.Map.player.lerpingCamera = curScene.Player.pos; // avoid camera movement when changing scenes, less motion sick
+            storedScene = scene;
+            storedPos = pos;
         }
-        public static void ChangeScene(string sceneName)
-        {
-            Map map = new Map(sceneName + ".tmx");
-
-            Scene newScene = new Scene(map, curScene.Player);
-            LoadScene(newScene);
-        }
-
+      
         public static void ChangeScene(string sceneName, Vector2 pos)
         {
             Map map = new Map(sceneName + ".tmx");
             
             Scene newScene = new Scene(map, curScene.Player);
             LoadScene(newScene, pos);
+            Game1.shader.DoSceneTransition();
+
         }
 
         public static void EnterBuilding(string sceneName, Building exteriorBuilding)
         {
             BuildingInterior building = new BuildingInterior(sceneName, exteriorBuilding);
             Scene newScene = new Scene(building, curScene.Player);
-            LoadScene(newScene);
+            storedScene = newScene;
+            Game1.shader.DoSceneTransition();
+        }
+
+        public static void OnSceneTransitionFinished()
+        {
+            LoadScene(storedScene);
+            storedScene = null;
+
+            if (storedPos != Vector2.Zero)
+            {
+                curScene.Player.pos = storedPos;
+                curScene.Player.lerpingCamera = storedPos;
+                storedPos = Vector2.Zero;
+            }
+   
         }
         public static void Update(GameTime gameTime)
         {
@@ -69,6 +83,8 @@ namespace ProjectPalladium
             if (curScene == null) { return; }
             curScene.Map.Draw(_spriteBatch);
             curScene.Player.Draw(_spriteBatch);
+
+            
         }
     }
 }

@@ -85,25 +85,35 @@ namespace ProjectPalladium
             }
             else // sprite isn't moving, need to do some kind of idle animation
             {
-                if (!(sprite.Animation.Name.Contains("idle")))
-                {
-                    if (sprite.Animation == sprite.Animations["walk-side"])
-                    {
-                        sprite.changeAnimation("idle-side");
-                    }
-                    else if (sprite.Animation == sprite.Animations["walk-front"])
-                    {
-                        sprite.changeAnimation("idle");
-                    }
-                    else if (sprite.Animation == sprite.Animations["walk-back"])
-                    {
-                        sprite.changeAnimation("idle-back");
-                    }
-                }
+                SetToIdle();
             }
             movePos();
         }
 
+        public void Halt()
+        {
+            Velocity = Vector2.Zero;
+            SetToIdle();
+        }
+
+        public void SetToIdle()
+        {
+            if (!(sprite.Animation.Name.Contains("idle")))
+            {
+                if (sprite.Animation == sprite.Animations["walk-side"])
+                {
+                    sprite.changeAnimation("idle-side");
+                }
+                else if (sprite.Animation == sprite.Animations["walk-front"])
+                {
+                    sprite.changeAnimation("idle");
+                }
+                else if (sprite.Animation == sprite.Animations["walk-back"])
+                {
+                    sprite.changeAnimation("idle-back");
+                }
+            }
+        }
         public void doInputCheck()
         {
             

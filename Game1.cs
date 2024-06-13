@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using ProjectPalladium;
+using ProjectPalladium.Animation;
 
 
 namespace ProjectPalladium
@@ -55,7 +56,9 @@ namespace ProjectPalladium
         private static UIManager _uiManager;
         public static UIManager UIManager { get { return _uiManager; } }
 
-       
+        public static ScreenShader shader;
+
+
         public static class layers
         {
             public const float tile = 0f;
@@ -136,6 +139,9 @@ namespace ProjectPalladium
             _canvas.SetDestinationRectangle();
             _uiCanvas.SetDestinationRectangle();
 
+            shader = new ScreenShader();
+            shader.onFinishEffect += SceneManager.OnSceneTransitionFinished;
+
             // init UI
             _uiManager = new UIManager(new UIElement("root", null, 0, 0, null, isRoot: true, isBox: true));
             _uiManager.Initialize();
@@ -160,6 +166,7 @@ namespace ProjectPalladium
             SceneManager.LoadScene(mainScene);
 
             inventory = UIManager.inventoryUI.Inventory;
+
         }
 
         protected override void LoadContent()
@@ -201,6 +208,8 @@ namespace ProjectPalladium
                 SceneManager.LoadScene(test3);
             }
 
+            shader.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -228,6 +237,10 @@ namespace ProjectPalladium
             _canvas.Draw(_spriteBatch);
             _uiCanvas.Draw(_spriteBatch);
 
+            // last, apply shading effects
+            _spriteBatch.Begin();
+            shader.Draw(_spriteBatch);
+            _spriteBatch.End();
         }
     }
 }
