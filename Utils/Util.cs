@@ -11,6 +11,9 @@ namespace ProjectPalladium.Utils
     {
         public static float scale = Game1.scale;
         public static int tileSize = 16;
+        public static Vector2 OneTileDown = new Vector2(0, 1);
+        public static Vector2 OneTileDownGameWorld = LocalPosToGlobalPos(OneTileDown);
+
         public static void DrawRectangle(Rectangle rect, SpriteBatch b)
         {
             Color color = Color.Red;

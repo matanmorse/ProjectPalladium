@@ -90,11 +90,7 @@ namespace ProjectPalladium
 
         public virtual void Draw(SpriteBatch b)
         {
-            if (intersection != Rectangle.Empty) Util.DrawRectangle(intersection, b);
-            if (intersections != null)
-            {
-                 // foreach (Rectangle r in intersections) { Util.DrawRectangle(r, b); }
-            }
+           
             if (DebugParams.showColliders) { Util.DrawRectangle(boundingBox, b); }
             sprite.Draw(b, pos, flipped, layerDepth: layer);
         }
@@ -233,7 +229,7 @@ namespace ProjectPalladium
                 pos.Y = pos.Y < intersection.Top ? intersection.Top - boundingBox.Height / 2 : intersection.Bottom + boundingBox.Height / 2;
             }
         }
-        public override string ToString()
+        public override string ToString()   
         {
             return "Name: " + name;
         }

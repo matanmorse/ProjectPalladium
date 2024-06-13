@@ -36,7 +36,7 @@ namespace ProjectPalladium
         public Point tileMapSize = new Point();
         private static int tilesize = 16;
 
-        private List<Trigger> triggers = new List<Trigger>();
+        protected List<Trigger> triggers = new List<Trigger>();
 
 
         public Vector2 spawnLocation;

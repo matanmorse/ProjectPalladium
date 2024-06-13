@@ -16,7 +16,7 @@ namespace ProjectPalladium.Buildings
 
     public class Building : GameObject
     {
-        private Button door;
+        public Button door;
         private float opacityDecayFactor = 1f;
 
         /* The name of the building (as defined by the "name" property of the .tmx file) is also the name of the json data file and the texture. */
@@ -49,7 +49,7 @@ namespace ProjectPalladium.Buildings
         public void EnterBuilding()
         {
             if (!door.bounds.Intersects(Game1.player.boundingBox)) return; // check if player is standing over door
-            SceneManager.ChangeScene(name); // the tmx file of the building is the same as the building name
+            SceneManager.EnterBuilding(name + ".tmx", this); // the tmx file of the building is the same as the building name
         }
 
         public override void Draw(SpriteBatch b)

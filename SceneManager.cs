@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPalladium.Buildings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,14 +29,35 @@ namespace ProjectPalladium
 
         }
 
+        // load scene at non-default spawn position
+        public static void LoadScene (Scene scene, Vector2 pos)
+        {
+            LoadScene(scene);
+            curScene.Player.pos = pos;
+            curScene.Map.player.lerpingCamera = curScene.Player.pos; // avoid camera movement when changing scenes, less motion sick
+        }
         public static void ChangeScene(string sceneName)
         {
             Map map = new Map(sceneName + ".tmx");
-            
+
             Scene newScene = new Scene(map, curScene.Player);
             LoadScene(newScene);
         }
 
+        public static void ChangeScene(string sceneName, Vector2 pos)
+        {
+            Map map = new Map(sceneName + ".tmx");
+            
+            Scene newScene = new Scene(map, curScene.Player);
+            LoadScene(newScene, pos);
+        }
+
+        public static void EnterBuilding(string sceneName, Building exteriorBuilding)
+        {
+            BuildingInterior building = new BuildingInterior(sceneName, exteriorBuilding);
+            Scene newScene = new Scene(building, curScene.Player);
+            LoadScene(newScene);
+        }
         public static void Update(GameTime gameTime)
         {
             if (curScene == null) { return; }
