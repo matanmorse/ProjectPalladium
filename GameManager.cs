@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,11 +34,11 @@ namespace ProjectPalladium
             }
             public bool isAM;
 
-            public GameWorldTime()
+            public GameWorldTime(int hour = 6, int minute = 0, bool isAM = true)
             {
-                hour = 6;
-                minute = 0;
-                isAM = true;
+                this.hour = hour;
+                this.minute = minute;
+                this.isAM = isAM;
             }
 
             public override string ToString()
@@ -47,16 +48,15 @@ namespace ProjectPalladium
         }
 
         public static GameWorldTime time;
-        private const float MILLIS_PER_TEN_GAMEMINUTES = 1000f;
+        private const float MILLIS_PER_TEN_GAMEMINUTES = 10000f; // ten seconds per in-game ten minutes
         private static float timer = 0f;
         public GameManager()
         {
-            time = new GameWorldTime();
+            time = new GameWorldTime(hour: 6, minute: 0, isAM: true); // start at 6:00am
         }
         public static void Update(GameTime gameTime)
         {
             timer += (float) gameTime.ElapsedGameTime.TotalMilliseconds;
-            // Debug.WriteLine(timer);
             if (timer > MILLIS_PER_TEN_GAMEMINUTES)
             {
                 timer = 0;
@@ -79,6 +79,7 @@ namespace ProjectPalladium
                     time.Hour = 1; 
                 }
             }
+            SceneManager.CurScene.Map.DoTenMinuteTick();
         }
     }
 }

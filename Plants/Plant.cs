@@ -33,6 +33,8 @@ namespace ProjectPalladium.Plants
 
         public List<Renderable> sprites = new List<Renderable>();
 
+        private GameManager.GameWorldTime timeSincePlanted;
+
         public class PlantDeserializer
         {
             public string name { get; set; }
@@ -49,6 +51,8 @@ namespace ProjectPalladium.Plants
             this.localPos = tilePos;
             this.globalPos = Util.LocalPosToGlobalPos(tilePos);
             this.globalPos.Y -= Map.scaledTileSize; // need to be here to render correctly
+
+            this.timeSincePlanted = new GameManager.GameWorldTime(hour:0, minute:0); // get the time at planting
 
             sprite = new Renderable(name);
             DeserializeJsonData(name);
@@ -103,6 +107,18 @@ namespace ProjectPalladium.Plants
 
         }
 
+        public void DoTenMinuteTick()
+        {
+            timeSincePlanted.Minute += 10;
+            if (timeSincePlanted.Minute == 60)
+            {
+                timeSincePlanted.Hour++;
+                GrowthStage++;
+                timeSincePlanted.Minute = 0;
+            }
+
+            
+        }
         public void Harvest()
         {
             if (growthStage != totalGrowthStages - 1) return;

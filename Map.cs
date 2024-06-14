@@ -129,7 +129,18 @@ namespace ProjectPalladium
             GetSpawnPoint();
 
         }
-
+        // everything that updates when a gametime tick occurs goes here
+        public void DoTenMinuteTick()
+        {
+            foreach (GameObject g in gameObjects)
+            {
+                if (g is Plant)
+                {
+                    Plant p = g as Plant;
+                    p.DoTenMinuteTick();
+                }
+            }
+        }
         public void GetTriggers()
         {
             ObjectLayer triggersLayer = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "triggers", null);
