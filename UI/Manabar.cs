@@ -18,14 +18,14 @@ namespace ProjectPalladium.UI
         public Point maxSize;
 
 
-        private static Point LOCAL_POS = new Point(10, Game1.UINativeResolution.Y - 150);
         private Color MANA_COLOR = Color.BlueViolet;
         private Rectangle manaRectangle;
         private Texture2D ManaRect;
 
         public Manabar(string name, string textureName, UIElement parent)
-        :base(name, textureName, LOCAL_POS.X, LOCAL_POS.Y, parent)
+        :base(name, textureName, 0,0, parent)
         {
+            LocalPos = new Point((int)(10 * scale), Game1.UINativeResolution.Y - (int)((Sprite.size.Y + 7)* scale));
             topLeft = new Point(0, (int) (12 * scale));
             maxSize = new Point((int) (10 * scale), (int) (53 * scale));
         }

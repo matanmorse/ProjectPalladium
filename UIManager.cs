@@ -5,6 +5,7 @@ using static ProjectPalladium.UI.UIElement.OriginType;
 using ProjectPalladium;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography.X509Certificates;
 namespace ProjectPalladium
 {
     public class UIManager
@@ -13,7 +14,7 @@ namespace ProjectPalladium
         private Player player;
         public Player Player { get { return player; } }
 
-        public static float defaultUIScale = 2f;
+        public static float defaultUIScale = 4f;
 
         public InventoryUI inventoryUI;
         public Toolbar toolbar;
@@ -36,10 +37,12 @@ namespace ProjectPalladium
         public void Initialize()
         {
             // inventory screen
-            inventoryUI = new InventoryUI("inventory", "inventory", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y / 2, rootElement, originType: center, scale:3f);
+            float inventoryScale = 5f;
+            inventoryUI = new InventoryUI("inventory", "inventory", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y / 2, rootElement, originType: center, scale:inventoryScale);
 
             // toolbar
-            toolbar = new Toolbar("toolbar", "toolbar", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y - 30 , rootElement, originType: center, scale:3f);
+            float toolbarscale = 6f;
+            toolbar = new Toolbar("toolbar", "toolbar", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y - (int) (10 * toolbarscale) , rootElement, originType: center, scale:toolbarscale);
             toolbar.inv = inventoryUI.Inventory;
             Debug.WriteLine(toolbar.globalPos);
 
@@ -59,6 +62,10 @@ namespace ProjectPalladium
             // Casting UI
             castingUI = new CastingUI(rootElement);
             rootElement.AddChild(castingUI);
+
+            // game info
+            TimeDisplay gameInfo = new TimeDisplay("Game Info", "TimeDisplay", rootElement);
+            rootElement.AddChild(gameInfo);
 
             toolbar.UpdateToolbar();
             manabar.Initialize();

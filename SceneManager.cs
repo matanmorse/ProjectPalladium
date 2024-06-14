@@ -2,19 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Buildings;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
+
 
 namespace ProjectPalladium
 {
     internal class SceneManager
     {
-        private static bool transitioning; 
 
         private static Scene curScene;
         private static Scene storedScene;

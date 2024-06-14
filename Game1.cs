@@ -30,7 +30,7 @@ namespace ProjectPalladium
         public const float scale = 10f;
 
         public static Point NativeResolution = new Point(512 * (int) scale, 288 * (int) scale);
-        public static Point UINativeResolution = new Point(1360, 768);
+        public static Point UINativeResolution = new Point(1360 * 2, 768 * 2);
 
         
         public Map map;
@@ -55,6 +55,7 @@ namespace ProjectPalladium
         
         private static UIManager _uiManager;
         public static UIManager UIManager { get { return _uiManager; } }
+        public static GameManager gameManager;
 
         public static ScreenShader shader;
 
@@ -142,6 +143,9 @@ namespace ProjectPalladium
             shader = new ScreenShader();
             shader.onFinishEffect += SceneManager.OnSceneTransitionFinished;
 
+            // init game manager
+            gameManager = new GameManager();
+
             // init UI
             _uiManager = new UIManager(new UIElement("root", null, 0, 0, null, isRoot: true, isBox: true));
             _uiManager.Initialize();
@@ -179,10 +183,7 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
-            // Debug.WriteLine(player.feet);
-            //Point rawMousePos = Input.GetMousePos();
-            //Point gameWorldMousePos = Util.GetGameworldMousePos(rawMousePos);
-            //Debug.WriteLine(Util.GetNearestTile(gameWorldMousePos));
+            GameManager.Update(gameTime);
             //Allows for GetKeyDown functionality; if you remove, it will break
             Input.Update();
 

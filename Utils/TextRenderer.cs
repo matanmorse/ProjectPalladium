@@ -14,17 +14,35 @@ namespace ProjectPalladium.Utils
     {
         private SpriteFont font;
         public Vector2 pos;
-        public TextRenderer(Vector2 pos)
+        private Origin originType;
+        public enum Origin
         {
-            font = Game1.contentManager.Load<SpriteFont>("text");
+            bottomRight,
+            topLeft,
+            center,
+        }
+
+        public TextRenderer(Vector2 pos, Origin originType=Origin.bottomRight, string textType = "text")
+        {
+            this.originType = originType;
+            font = Game1.contentManager.Load<SpriteFont>(textType);
             this.pos = pos;
         }
 
-        public void Draw(SpriteBatch b, string text)
+        public virtual void Draw(SpriteBatch b, string text)
         {
             if (text == null) return;
             Vector2 size = font.MeasureString(text);
-            b.DrawString(font, text, pos, Color.Black, 0f, size, 1f, SpriteEffects.None, 1f);
+
+            Vector2 origin = Vector2.Zero;
+            switch (originType) 
+            {
+                case Origin.bottomRight: origin = size; break;
+                case Origin.topLeft: origin = Vector2.Zero; break;
+                case Origin.center: origin = size / 2; break;
+            }
+
+            b.DrawString(font, text, pos, Color.Black, 0f, origin, 1f, SpriteEffects.None, 1f);
         }
         
     }

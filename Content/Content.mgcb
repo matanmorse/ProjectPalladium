@@ -176,6 +176,25 @@
 /processorParam:TextureFormat=Color
 /build:TilledDirt.png
 
+#begin TimeDisplay.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TimeDisplay.png;timedisplay.png
+
+#begin timetext.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:timetext.spritefont
+
 #begin toolbar.png
 /importer:TextureImporter
 /processor:TextureProcessor

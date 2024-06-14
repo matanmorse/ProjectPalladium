@@ -18,13 +18,14 @@ namespace ProjectPalladium.Tools
     {
         public Spell storedSpell = Spell.none;
         public Point castingDirection = Directions.none;
-        public int SPELLMARKER_SIZE = 32;
         public bool casting = false;
         public UIManager ui = Game1.UIManager;
         public Vector2 startingPos = Vector2.Zero;
         private Dictionary<Point, char> directionChars = CastingUI.directionChars;
         private Dictionary<string, Spell> spells = Spell.spells;
         private CastingUI castingUI;
+        public int SPELLMARKER_SIZE = 16;
+
         private const int SPELL_LENGTH_LIMIT = 10;
 
         private List<Point> visitedPoints = new List<Point>(SPELL_LENGTH_LIMIT);
@@ -65,6 +66,7 @@ namespace ProjectPalladium.Tools
                 CheckSpellPaths();
 
                 if (castingUI == null) { castingUI = ui.castingUI; }
+                SPELLMARKER_SIZE = (int)(16 * castingUI.scale);
 
                 if (CheckIntersections(dir))
                 {
