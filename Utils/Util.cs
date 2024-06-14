@@ -5,6 +5,7 @@ using System.Diagnostics;
 using static System.Formats.Asn1.AsnWriter;
 using System.Reflection.Metadata.Ecma335;
 using ProjectPalladium;
+using System.Transactions;
 namespace ProjectPalladium.Utils
 {
     public class Util
@@ -132,5 +133,15 @@ namespace ProjectPalladium.Utils
             return (((endAdjustedHours * 60) + EndTime.Minute) - ((startAdjustedHours * 60) + StartTime.Minute));
         }
 
+        public static int FindTileIDFromRect(Rectangle sourceRectangle, Texture2D tileMap)
+        {
+            int tilesPerRow = tileMap.Width / tileSize;
+
+            // the tile's x and y index is the texture coordinate divide by tile size, convert this to 1 dimensional index
+            int index = (sourceRectangle.Y / tileSize) * tilesPerRow + (sourceRectangle.X / tileSize);
+            if (index == 0) return index;
+            
+            return index + 1;
+        }
     }
 }

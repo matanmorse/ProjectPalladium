@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -30,6 +31,7 @@ namespace ProjectPalladium
         public List<GameObject> gameObjects = new List<GameObject>();
 
         MapSerializer map;
+        XmlSerializer serializer;
 
         public Player player;
 
@@ -117,7 +119,7 @@ namespace ProjectPalladium
         /* Parses TMX file to create map representation */
         public void DeserializeMap()
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(MapSerializer));
+            serializer = new XmlSerializer(typeof(MapSerializer));
 
             using (FileStream fs = new FileStream("Content/" + filename, FileMode.Open))
             {
@@ -234,11 +236,70 @@ namespace ProjectPalladium
             return gameObjects.FirstOrDefault(i => i.LocalPos == tile.ToVector2(), null);
         }
 
+        public void SaveTilemaps()
+        {
+            Layer[] layers = new Layer[tilemaps.Count];
+
+            Debug.WriteLine(collidingTilemaps[0].Layer[0, 1].getSourceRect);
+            Debug.WriteLine( Util.FindTileIDFromRect(collidingTilemaps[0].Layer[0, 1].getSourceRect, collidingTilemaps[0].tileMap));
+            // update data of mapserializer
+            for (int i = 0; i < tilemaps.Count; i++)
+            {
+                Layer curLayer = new Layer();
+                string tileData = tilemaps[i].GetSerializedTileData();
+
+                Data curData = new Data();
+                curData.Text = tileData;
+                curData.Encoding = "csv";
+
+                curLayer.Data = curData;
+                
+                curLayer.Width = tilemaps[i].MapTileSize.X;
+                curLayer.Height = tilemaps[i].MapTileSize.Y;
+                curLayer.Name = tilemaps[i].name;
+                curLayer.properties = map.Layers[i].properties; // properties are static, so just copy them from the original file.
+
+                layers[i] = curLayer;
+            }
+
+            map.Layers = layers; // update the new layer
+        }
+
+        public void Save(string fileName)
+        {
+
+            SaveTilemaps();
+
+            fileName = "Content\\" + fileName;
+            // Combine with current directory to get the full path
+            string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+
+            using (TextWriter writer = new StreamWriter(fullPath))
+            {
+                serializer.Serialize(writer, map);
+            }
+
+            Debug.WriteLine("Serialization successful. File created at: " + fullPath);
+           
+        }
+
         public override string ToString()
         {
             return filename;
         }
+
+        [Serializable]
+        public class Test
+        {
+            public string Name { get; set; }
+            public int Width { get; set; }
+            public int Height { get; set; }
+
+            // Add other properties as needed
+        }
+
         [XmlRoot("map")]
+        [Serializable]
         public class MapSerializer
         {
             [XmlElement("layer")]

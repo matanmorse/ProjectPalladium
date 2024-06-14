@@ -113,14 +113,12 @@ namespace ProjectPalladium.Plants
         public void UpdateOnGameTime()
         {
             timeSinceGrowth = Util.CalculateMinutesDifference(GameManager.time, timeOfLastGrowth);
-            Debug.WriteLine("before growing: " + timeSinceGrowth);
             while (timeSinceGrowth >= GROWTH_INTERVAL)
             {
                 timeSinceGrowth -= GROWTH_INTERVAL;
                 GrowthStage++;
                 timeOfLastGrowth = GameManager.time;
             }
-            Debug.WriteLine("time left over: " + timeSinceGrowth);
         }
         public void Harvest()
         {

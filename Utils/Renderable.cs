@@ -11,6 +11,7 @@ namespace ProjectPalladium.Utils
         private Texture2D _texture;
         public Texture2D Texture { get { return _texture; } }
         private Rectangle sourceRect;
+        public Rectangle getSourceRect {  get { return sourceRect; } }
 
         private Vector2 zero = Vector2.Zero;
 

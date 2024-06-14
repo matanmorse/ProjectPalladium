@@ -210,6 +210,14 @@ namespace ProjectPalladium
                 Scene test3 = new Scene(new Map("wizardtower.tmx"), player);
                 SceneManager.LoadScene(test3);
             }
+            if (Input.GetKeyDown(Keys.M))
+            {
+                SceneManager.CurScene.Map.Save("map.tmx");
+            }
+            if (Input.GetKeyDown(Keys.N))
+            {
+                SceneManager.LoadScene(new Scene(new Map("map.tmx"), player));
+            }
 
             shader.Update(gameTime);
 

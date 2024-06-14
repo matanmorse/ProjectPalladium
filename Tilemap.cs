@@ -41,7 +41,7 @@ namespace ProjectPalladium
 
         public Point MapTileSize { get { return _mapTileSize; } }
 
-        Texture2D tileMap;
+        public Texture2D tileMap;
         public Tilemap(string tileData, Point MapTileSize, string name, bool collideLayer=false, bool isTillLayer=false)
         {
             layer = new Renderable[MapTileSize.X, MapTileSize.Y];
@@ -58,6 +58,7 @@ namespace ProjectPalladium
         public void DecodeTileData(string data)
         {
             // parse the numbers from the layer into a 1d array
+            // Debug.WriteLine(data);
             int[] tiles = Array.ConvertAll(data.Split(','), int.Parse);
             for (int i = 0; i < _mapTileSize.X * _mapTileSize.Y; i++)
             {
@@ -115,6 +116,20 @@ namespace ProjectPalladium
         public void SetTileData(Point location, Renderable tile)
         {
             layer[location.X, location.Y] = tile;
+        }
+
+        public string GetSerializedTileData()
+        {
+            string result = "";
+            for (int i = 0; i < _mapTileSize.Y; i++)
+            {
+                for (int j = 0; j < _mapTileSize.X; j++)
+                {
+                    result += Util.FindTileIDFromRect(Layer[j, i].getSourceRect, tileMap) + ",";
+                }
+            }
+            result = result.Remove(result.Length - 1, 1);
+            return result;
         }
 
         /* draw tilemap */
