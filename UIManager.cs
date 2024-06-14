@@ -57,7 +57,7 @@ namespace ProjectPalladium
             Manabar manabar = new Manabar("manabar", "manabar", rootElement);
 
             rootElement.AddChild(manabar);
-            rootElement.AddChild(new UIElement("spellbook", "spellbook", Game1.UINativeResolution.X -100, Game1.UINativeResolution.Y -100, rootElement));
+            rootElement.AddChild(new UIElement("spellbook", "spellbook", Game1.UINativeResolution.X -150, Game1.UINativeResolution.Y -100, rootElement));
 
             // Casting UI
             castingUI = new CastingUI(rootElement);

@@ -4,7 +4,7 @@ using ProjectPalladium.Buildings;
 using System.Diagnostics;
 using static System.Formats.Asn1.AsnWriter;
 using System.Reflection.Metadata.Ecma335;
-
+using ProjectPalladium;
 namespace ProjectPalladium.Utils
 {
     public class Util
@@ -123,6 +123,14 @@ namespace ProjectPalladium.Utils
             return new Point((int) pos.X / tileSize, (int) pos.Y / tileSize);
         }
 
+        /* Calculates the difference (in minutes) between two game times */
+        public static int CalculateMinutesDifference(GameManager.GameWorldTime EndTime, GameManager.GameWorldTime StartTime)
+        {
+            int endAdjustedHours = EndTime.isAM ? EndTime.Hour : EndTime.Hour + 12; // convert to 24-hour time
+            int startAdjustedHours = StartTime.isAM ? StartTime.Hour : StartTime.Hour + 12;
+
+            return (((endAdjustedHours * 60) + EndTime.Minute) - ((startAdjustedHours * 60) + StartTime.Minute));
+        }
 
     }
 }

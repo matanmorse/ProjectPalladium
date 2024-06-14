@@ -31,9 +31,12 @@ namespace ProjectPalladium.Plants
 
         private PlantDeserializer info;
 
+        private const int GROWTH_INTERVAL = 30; // in-game minutes between growth stages
+
         public List<Renderable> sprites = new List<Renderable>();
 
-        private GameManager.GameWorldTime timeSincePlanted;
+        private int timeSinceGrowth = 0; // time since last growth in minutes
+        private GameManager.GameWorldTime timeOfLastGrowth;
 
         public class PlantDeserializer
         {
@@ -52,7 +55,7 @@ namespace ProjectPalladium.Plants
             this.globalPos = Util.LocalPosToGlobalPos(tilePos);
             this.globalPos.Y -= Map.scaledTileSize; // need to be here to render correctly
 
-            this.timeSincePlanted = new GameManager.GameWorldTime(hour:0, minute:0); // get the time at planting
+            this.timeOfLastGrowth = GameManager.time;
 
             sprite = new Renderable(name);
             DeserializeJsonData(name);
@@ -107,17 +110,17 @@ namespace ProjectPalladium.Plants
 
         }
 
-        public void DoTenMinuteTick()
+        public void UpdateOnGameTime()
         {
-            timeSincePlanted.Minute += 10;
-            if (timeSincePlanted.Minute == 60)
+            timeSinceGrowth = Util.CalculateMinutesDifference(GameManager.time, timeOfLastGrowth);
+            Debug.WriteLine("before growing: " + timeSinceGrowth);
+            while (timeSinceGrowth >= GROWTH_INTERVAL)
             {
-                timeSincePlanted.Hour++;
+                timeSinceGrowth -= GROWTH_INTERVAL;
                 GrowthStage++;
-                timeSincePlanted.Minute = 0;
+                timeOfLastGrowth = GameManager.time;
             }
-
-            
+            Debug.WriteLine("time left over: " + timeSinceGrowth);
         }
         public void Harvest()
         {

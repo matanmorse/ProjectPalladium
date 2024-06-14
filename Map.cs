@@ -130,14 +130,14 @@ namespace ProjectPalladium
 
         }
         // everything that updates when a gametime tick occurs goes here
-        public void DoTenMinuteTick()
+        public void UpdateOnGameTime()
         {
             foreach (GameObject g in gameObjects)
             {
                 if (g is Plant)
                 {
                     Plant p = g as Plant;
-                    p.DoTenMinuteTick();
+                    p.UpdateOnGameTime();
                 }
             }
         }

@@ -27,7 +27,8 @@ namespace ProjectPalladium.Spells
         {
             {"tillearth", new Spell("Till Earth", "Tills some earth", "LL", 10, TillEarth) },
             {"iceblast", new Spell("Ice blast", "Blasts some ice", "RR", 10, DoNothing) },
-            {"growth", new Spell("Growth", "Grows a plant", "LLUR", 10,Growth) }
+            {"growth", new Spell("Growth", "Grows a plant", "LLUR", 10,Growth) },
+            {"chronoshift", new Spell("Chrono Shift", "Advance Time", "DDRUUL", 10, ChronoShift) }
         };
 
         public Spell(string name, string description, string spellPath, int manaCost, SpellHandler onCast)
@@ -46,6 +47,14 @@ namespace ProjectPalladium.Spells
             GenericSpellHandler(name);
         }
 
+        public static void ChronoShift()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                GameManager.time.Minute += 10;
+            }
+            SceneManager.CurScene.Map.UpdateOnGameTime();
+        }
         public static void TillEarth()
         {
 
@@ -73,6 +82,7 @@ namespace ProjectPalladium.Spells
 
             Plant plant = objAtFeet as Plant;
             plant.GrowthStage += 1;
+
 
         }
         // logic to be called after any spell is cast, returns if spell failed or not

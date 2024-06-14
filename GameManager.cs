@@ -30,6 +30,7 @@ namespace ProjectPalladium
                 set
                 {
                     this.minute = value;
+                    FixTime();
                 }
             }
             public bool isAM;
@@ -48,8 +49,9 @@ namespace ProjectPalladium
         }
 
         public static GameWorldTime time;
-        private const float MILLIS_PER_TEN_GAMEMINUTES = 10000f; // ten seconds per in-game ten minutes
+        private const float MILLIS_PER_TEN_GAMEMINUTES = 5000f; // ten seconds per in-game ten minutes
         private static float timer = 0f;
+        private const int MINUTES_IN_HOUR = 60;
         public GameManager()
         {
             time = new GameWorldTime(hour: 6, minute: 0, isAM: true); // start at 6:00am
@@ -67,19 +69,31 @@ namespace ProjectPalladium
         public static void DoTenMinuteTick()
         {
             time.Minute += 10;
-            if (time.Minute == 60)
+            
+            SceneManager.CurScene.Map.UpdateOnGameTime();
+        }
+
+        public static void FixTime()
+        {
+            if (time.Minute >= MINUTES_IN_HOUR)
             {
+                int remainder = time.Minute - MINUTES_IN_HOUR;
                 time.Minute = 0;
                 time.Hour++;
-
                 if (time.Hour == 12) time.isAM = !time.isAM;
+                if (time.Hour >= 13) time.Hour = 1;
 
-                if (time.Hour == 13)
+
+                while (remainder > 0)
                 {
-                    time.Hour = 1; 
+                    time.Hour++;
+                    if (time.Hour == 12) time.isAM = !time.isAM;
+                    if (time.Hour >= 13) time.Hour = 1;
+
+                    remainder -= MINUTES_IN_HOUR;
                 }
+                if (remainder > 0) { time.Minute += remainder; }
             }
-            SceneManager.CurScene.Map.DoTenMinuteTick();
         }
     }
 }

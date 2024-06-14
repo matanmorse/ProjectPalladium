@@ -128,6 +128,8 @@ namespace ProjectPalladium
 
         protected override void Initialize()
         {
+            
+
             base.Initialize();
 
             graphics.HardwareModeSwitch = false;
