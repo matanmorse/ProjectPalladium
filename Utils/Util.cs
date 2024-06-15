@@ -151,15 +151,6 @@ namespace ProjectPalladium.Utils
             return index + 1; // otherwise the true index is one more than the position because of tmx fuckery
         }
 
-        // get name of saved map given default map name
-        // just a util function until a more sophisticated method of dealing with this is found
-        public static string GetSavedFromName(string name)
-        {
-            if (name == "hollow")
-            {
-                return "map";
-            }
-            return "";
-        }
+     
     }
 }

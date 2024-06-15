@@ -15,8 +15,8 @@ namespace ProjectPalladium
         protected float layer;
         public Rectangle bounds;
         public Rectangle walkBehind;
-        protected Renderable sprite;
-        protected Vector2 globalPos;
+        public Renderable sprite;
+        public Vector2 globalPos;
         
         protected Vector2 localPos;
 

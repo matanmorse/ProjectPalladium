@@ -11,6 +11,8 @@ using System.Text.Json;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Items;
+using ProjectPalladium;
+using static ProjectPalladium.Map;
 
 namespace ProjectPalladium.Plants
 {
@@ -36,8 +38,13 @@ namespace ProjectPalladium.Plants
         public List<Renderable> sprites = new List<Renderable>();
 
         private int timeSinceGrowth = 0; // time since last growth in minutes
-        private GameManager.GameWorldTime timeOfLastGrowth;
+        public int TimeSinceLastGrowth
+        {
+            get { return timeSinceGrowth; }
+        }
 
+        private GameManager.GameWorldTime timeOfLastGrowth;
+      
         public class PlantDeserializer
         {
             public string name { get; set; }
@@ -47,6 +54,20 @@ namespace ProjectPalladium.Plants
             public int height { get; set; } 
 
             public Dictionary<string, ColliderDetails> colliders { get; set; }
+        }
+
+        public Plant(PlantSerialized pobj) : base(pobj.name, new Vector2(pobj.x, pobj.y))
+        {
+            this.name = pobj.name;
+            this.globalPos = new Vector2(pobj.x, pobj.y);
+            this.localPos = Util.GlobalPosToLocalPos(globalPos) + new Vector2(0, 1);
+            this.growthStage = pobj.growthStage;
+
+            this.timeSinceGrowth = pobj.timeSinceLastGrowth;
+            this.timeOfLastGrowth = GameManager.time;
+
+            sprite = new Renderable(name);
+            DeserializeJsonData(name);
         }
 
         public Plant(string name, Vector2 tilePos) : base(name, tilePos)

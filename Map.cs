@@ -18,8 +18,7 @@ namespace ProjectPalladium
     /* Contains Map data about a given location (tilemaps, terrain, objects */
     public class Map
     {
-        private string filename;
-        public string name;
+        public string filename;
 
         public static int scaledTileSize;
         public List<Tilemap> tilemaps = new List<Tilemap>();
@@ -138,7 +137,27 @@ namespace ProjectPalladium
             GetBuildings();
             GetTriggers();
             GetSpawnPoint();
+            LoadGameObjects();
+        }
 
+        public void LoadGameObjects()
+        {
+            ObjectLayer gameObjectLayer = map.ObjectLayers.FirstOrDefault(p => p.name == "gameobjects", null);
+            if (gameObjectLayer == null) return;
+
+            TiledObject[] objects = gameObjectLayer.objects;
+            if (objects == null) return;
+
+            foreach (TiledObject obj in objects)
+            {
+                // this object is a plant
+                if(obj.GetType().Name == "PlantSerialized") 
+                {
+                    PlantSerialized plantSerialized = obj as PlantSerialized;
+                    gameObjects.Add(new Plant(plantSerialized));
+                }
+            }
+            
         }
         // everything that updates when a gametime tick occurs goes here
         public void UpdateOnGameTime()
@@ -169,7 +188,6 @@ namespace ProjectPalladium
                 if (name == "exit")
                 { 
                     string goToScene = pList.FirstOrDefault(prop => prop.name.ToLower() == "map", null).value;
-                    goToScene = Util.GetSavedFromName(goToScene);
 
                     triggers.Add(new ChangeSceneTrigger(goToScene, bounds, goToScene));
                 }
@@ -219,7 +237,10 @@ namespace ProjectPalladium
            float layer = 0.01f; 
            foreach (Tilemap tilemap in tilemaps) { tilemap.Draw(b, layer+=0.01f); }
            foreach (Building building in buildings) { building.Draw(b); }
-           foreach (GameObject obj in gameObjects) { obj.Draw(b); }
+           foreach (GameObject obj in gameObjects) {
+                obj.Draw(b); 
+            
+            }
         }
 
         public bool AddPlant(string plantName, Vector2 tile)
@@ -227,6 +248,11 @@ namespace ProjectPalladium
             // check if the tile is tilled
             if (tillLayer.Layer[(int)tile.X, (int)tile.Y] == Renderable.empty) return false;
 
+            if (gameObjects.Count > 0)
+            {
+                Debug.WriteLine(gameObjects[0].LocalPos.ToPoint());
+                Debug.WriteLine(tile.ToPoint());
+            }
             //check if there is already something there
             if (FindGameObjectAtTile(tile.ToPoint()) != null) return false;
 
@@ -247,7 +273,7 @@ namespace ProjectPalladium
             return gameObjects.FirstOrDefault(i => i.LocalPos == tile.ToVector2(), null);
         }
 
-        public void SaveTilemaps()
+        private void SaveTilemaps()
         {
             Layer[] layers = new Layer[tilemaps.Count];
 
@@ -256,8 +282,6 @@ namespace ProjectPalladium
             {
                 Layer curLayer = new Layer();
                 string tileData = tilemaps[i].GetSerializedTileData();
-
-                if (tilemaps[i].isTillLayer) { Debug.WriteLine(tileData); }
 
                 Data curData = new Data();
                 curData.Text = tileData;
@@ -276,10 +300,43 @@ namespace ProjectPalladium
             map.Layers = layers; // update the new layer
         }
 
+        private void SaveObjects()
+        {
+            TiledObject[] gObjList = new TiledObject[gameObjects.Count];
+            int i = 0;
+            foreach (GameObject obj in gameObjects)
+            {
+
+                if (obj is Plant)
+                {
+                    Plant pobj = (Plant)obj;
+
+                    PlantSerialized p = new PlantSerialized();
+                    p.growthStage = pobj.GrowthStage;
+                    p.timeSinceLastGrowth = pobj.TimeSinceLastGrowth;
+                    p.name = pobj.name.ToLower().Replace(" ", "") + "plant";
+
+                    p.x = (int)pobj.globalPos.X;
+                    p.y = (int)pobj.globalPos.Y;
+
+                    p.id = i;
+
+                    gObjList[i] = p;
+                }
+                i++;
+            }
+            ObjectLayer gObjLayer = new ObjectLayer();
+            gObjLayer.name = "gameobjects";
+            gObjLayer.objects = gObjList;
+
+            map.ObjectLayers[1] = gObjLayer;
+        }
         public void Save(string fileName)
         {
 
             SaveTilemaps();
+
+            SaveObjects();
 
             fileName = "Content\\" + fileName;
             // Combine with current directory to get the full path
@@ -360,6 +417,7 @@ namespace ProjectPalladium
 
         }
 
+        [XmlInclude(typeof(PlantSerialized))]
         public class TiledObject
         {
             [XmlAttribute("id")]
@@ -379,6 +437,18 @@ namespace ProjectPalladium
 
             [XmlElement("properties")]
             public PropertyList properties { get; set; }
+        }
+
+        public class PlantSerialized : TiledObject
+        {
+            [XmlAttribute("name")]
+            public string name { get; set; }
+
+            [XmlAttribute("growthstage")]
+            public int growthStage { get; set; }
+
+            [XmlAttribute("timesincelastgrowth")]
+            public int timeSinceLastGrowth { get; set; }
         }
 
         public class PropertyList

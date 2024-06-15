@@ -153,7 +153,7 @@ namespace ProjectPalladium
             _uiManager.Initialize();
 
             // load map
-            map = new Map("hollow.tmx");
+            map = new Map("hollowdefault.tmx");
 
             // init player object
             Vector2 playerPos = new Vector2(100, 100);
