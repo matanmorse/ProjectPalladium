@@ -57,6 +57,7 @@ namespace ProjectPalladium
                 // check if the layer has appropriate properties  and its value
                 bool isCollideLayer = false;
                 bool isTillLayer = false;
+
                 if (layer.properties != null)
                 {
                     Property isCollider = layer.properties.properties.FirstOrDefault(prop => prop.name == "iscollider", null);
@@ -64,9 +65,17 @@ namespace ProjectPalladium
                     isCollideLayer = isCollider == null || isCollider.value == "false" ? false : true;
                     isTillLayer = isTill == null || isTill.value == "false" ? false : true;
                 }
-                
+                Tilemap tmap;
 
-                Tilemap tmap = new Tilemap(layer.Data.Text, tileMapSize, layer.Name, isCollideLayer, isTillLayer);
+                if (isTillLayer)
+                {
+                    tmap = new Tilemap(layer.Data.Text, tileMapSize, layer.Name, isCollideLayer, isTillLayer, imageName:"TilledDirt");
+                }
+                else
+                {
+                    tmap = new Tilemap(layer.Data.Text, tileMapSize, layer.Name, isCollideLayer, isTillLayer);
+                }
+
                 tilemaps.Add(tmap);
                 if (tmap.isCollideLayer) collidingTilemaps.Add(tmap);
                 if (tmap.isTillLayer) this.tillLayer = tmap;
@@ -160,6 +169,8 @@ namespace ProjectPalladium
                 if (name == "exit")
                 { 
                     string goToScene = pList.FirstOrDefault(prop => prop.name.ToLower() == "map", null).value;
+                    goToScene = Util.GetSavedFromName(goToScene);
+
                     triggers.Add(new ChangeSceneTrigger(goToScene, bounds, goToScene));
                 }
             }
@@ -240,13 +251,13 @@ namespace ProjectPalladium
         {
             Layer[] layers = new Layer[tilemaps.Count];
 
-            Debug.WriteLine(collidingTilemaps[0].Layer[0, 1].getSourceRect);
-            Debug.WriteLine( Util.FindTileIDFromRect(collidingTilemaps[0].Layer[0, 1].getSourceRect, collidingTilemaps[0].tileMap));
             // update data of mapserializer
             for (int i = 0; i < tilemaps.Count; i++)
             {
                 Layer curLayer = new Layer();
                 string tileData = tilemaps[i].GetSerializedTileData();
+
+                if (tilemaps[i].isTillLayer) { Debug.WriteLine(tileData); }
 
                 Data curData = new Data();
                 curData.Text = tileData;

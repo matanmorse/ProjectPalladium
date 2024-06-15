@@ -139,9 +139,27 @@ namespace ProjectPalladium.Utils
 
             // the tile's x and y index is the texture coordinate divide by tile size, convert this to 1 dimensional index
             int index = (sourceRectangle.Y / tileSize) * tilesPerRow + (sourceRectangle.X / tileSize);
-            if (index == 0) return index;
             
-            return index + 1;
+            // because of the fact that tile ID 0 is actually represented by 1 in the tmx file (since 0 is an empty tile), we have to distinguish between two kinds of index 0's
+            // one kind is the empty rectangle representing no tile, and one is the first tile in the list, which has an id of 0 but is given as one in the tmx file.
+            // therefore to correctly determine if a rectangle is truly index 0 or just empty we need to check the size of the rectangle.
+            if (index == 0)
+            {
+                if (sourceRectangle.Size == Point.Zero) { return index; } // empty rectangle, return index 0
+            }
+
+            return index + 1; // otherwise the true index is one more than the position because of tmx fuckery
+        }
+
+        // get name of saved map given default map name
+        // just a util function until a more sophisticated method of dealing with this is found
+        public static string GetSavedFromName(string name)
+        {
+            if (name == "hollow")
+            {
+                return "map";
+            }
+            return "";
         }
     }
 }

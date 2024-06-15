@@ -67,7 +67,8 @@ namespace ProjectPalladium.Spells
             Tilemap tillable = map.tilemaps.FirstOrDefault(i => i.name.ToLower() == "tillable");
             if (tillable.Layer[player.feet.X, player.feet.Y] == Renderable.empty) return; // empty tile
 
-            map.tillLayer.SetTileData(playerPos, map.tilemaps.First().Layer[1,1]);
+            // by convention the first tile index 1 is the till tile
+            map.tillLayer.SetTileData(playerPos, map.tillLayer.tileIndex[1]);
         }
 
         public static void Growth()

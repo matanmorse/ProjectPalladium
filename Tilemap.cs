@@ -42,14 +42,14 @@ namespace ProjectPalladium
         public Point MapTileSize { get { return _mapTileSize; } }
 
         public Texture2D tileMap;
-        public Tilemap(string tileData, Point MapTileSize, string name, bool collideLayer=false, bool isTillLayer=false)
+        public Tilemap(string tileData, Point MapTileSize, string name, bool collideLayer=false, bool isTillLayer=false, string imageName="tilemap")
         {
             layer = new Renderable[MapTileSize.X, MapTileSize.Y];
             this.name = name;
             _mapTileSize = MapTileSize;
             isCollideLayer = collideLayer;
             this.isTillLayer = isTillLayer;
-            tileIndex = ExtractTiles("tilemap");
+            tileIndex = ExtractTiles(imageName);
             DecodeTileData(tileData);
         }
 
