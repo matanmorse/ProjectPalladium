@@ -50,7 +50,6 @@ namespace ProjectPalladium.Buildings
         public void EnterBuilding()
         {
             if (!door.bounds.Intersects(Game1.player.boundingBox)) return; // check if player is standing over door
-            SceneManager.CurScene.Map.Save(SceneManager.CurScene.Map.filename.Replace("default", "")); // save the current version of the map, if we're on the default save to the user's version
 
             SceneManager.EnterBuilding(name + ".tmx", this); // the tmx file of the building is the same as the building name
         }

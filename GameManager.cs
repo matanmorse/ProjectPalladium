@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
+using ProjectPalladium.Plants;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -71,6 +72,12 @@ namespace ProjectPalladium
             time.Minute += 10;
             
             SceneManager.CurScene.Map.UpdateOnGameTime();
+
+            // make sure hollow is getting updated too
+            if (SceneManager.CurScene.Map != SceneManager.hollow) 
+            {
+                SceneManager.hollow.UpdateOnGameTime();
+            }
         }
 
         public static void FixTime()

@@ -154,6 +154,7 @@ namespace ProjectPalladium
 
             // load map
             map = new Map("hollowdefault.tmx");
+            SceneManager.hollow = map;
 
             // init player object
             Vector2 playerPos = new Vector2(100, 100);
@@ -168,8 +169,8 @@ namespace ProjectPalladium
             _uiManager.SetPlayer(player);
 
             //Send it to SceneManager
-            Scene mainScene = new Scene(map, player);
-            SceneManager.LoadScene(mainScene);
+            Scene hollow = new Scene(map, player);
+            SceneManager.LoadScene(hollow);
 
             inventory = UIManager.inventoryUI.Inventory;
 

@@ -51,7 +51,7 @@ namespace ProjectPalladium.Spells
         {
             for (int i = 0; i < 5; i++)
             {
-                GameManager.time.Minute += 10;
+                GameManager.DoTenMinuteTick();
             }
             SceneManager.CurScene.Map.UpdateOnGameTime();
         }

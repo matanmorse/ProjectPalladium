@@ -83,6 +83,7 @@ namespace ProjectPalladium
             scaledTileSize = (int)(tilesize * Game1.scale);
         }
 
+
         // checks collisions with any collidable objects on the map
         // returns rectangle of intersection of first found collision
         public List<Rectangle> CheckCollisions(Rectangle boundingBox)
@@ -117,6 +118,7 @@ namespace ProjectPalladium
             }
         }
 
+        /* Update the "behind objects" property of buildings and gameobjects */
         public void CheckBehindObjects()
         {
             foreach (GameObject obj in gameObjects)
@@ -124,6 +126,7 @@ namespace ProjectPalladium
                 obj.PlayerBehind = obj.walkBehind.Contains(new Point(player.boundingBox.Center.X, player.boundingBox.Bottom ));
             }
         }
+
         /* Parses TMX file to create map representation */
         public void DeserializeMap()
         {
@@ -140,6 +143,7 @@ namespace ProjectPalladium
             LoadGameObjects();
         }
 
+        /* Helper function to load all GameObjects from a tmx file */
         public void LoadGameObjects()
         {
             ObjectLayer gameObjectLayer = map.ObjectLayers.FirstOrDefault(p => p.name == "gameobjects", null);
@@ -159,6 +163,7 @@ namespace ProjectPalladium
             }
             
         }
+
         // everything that updates when a gametime tick occurs goes here
         public void UpdateOnGameTime()
         {
@@ -171,6 +176,8 @@ namespace ProjectPalladium
                 }
             }
         }
+
+        /* Loads triggers from tmx file */
         public void GetTriggers()
         {
             ObjectLayer triggersLayer = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "triggers", null);
@@ -195,6 +202,7 @@ namespace ProjectPalladium
 
         }
 
+        /* Loads Spawn point from TMX file */
         public void GetSpawnPoint()
         {
             ObjectLayer spawnPoints = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "spawn", null);
@@ -207,6 +215,7 @@ namespace ProjectPalladium
             }
         }
 
+        /* Loads buildings from TMX file */
         public void GetBuildings()
         {
             ObjectLayer buildingLayer = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "buildings", null);
@@ -223,6 +232,12 @@ namespace ProjectPalladium
                 buildings.Add(new Building(name, pos));
             }
         }
+
+        /* Called when the map is loaded via the scenemanager */
+        //public void OnLoad()
+        //{
+        //    UpdateOnGameTime(); // sync with game world
+        //}
         public void Update(GameTime gameTime)
         {
             foreach (Building building in buildings) building.Update(gameTime);
@@ -243,16 +258,12 @@ namespace ProjectPalladium
             }
         }
 
+        /* Interface to add new plant to map */
         public bool AddPlant(string plantName, Vector2 tile)
         {
             // check if the tile is tilled
             if (tillLayer.Layer[(int)tile.X, (int)tile.Y] == Renderable.empty) return false;
 
-            if (gameObjects.Count > 0)
-            {
-                Debug.WriteLine(gameObjects[0].LocalPos.ToPoint());
-                Debug.WriteLine(tile.ToPoint());
-            }
             //check if there is already something there
             if (FindGameObjectAtTile(tile.ToPoint()) != null) return false;
 
@@ -273,6 +284,7 @@ namespace ProjectPalladium
             return gameObjects.FirstOrDefault(i => i.LocalPos == tile.ToVector2(), null);
         }
 
+        /* Helper function for tilemap xml serialization */
         private void SaveTilemaps()
         {
             Layer[] layers = new Layer[tilemaps.Count];
@@ -300,6 +312,7 @@ namespace ProjectPalladium
             map.Layers = layers; // update the new layer
         }
 
+        /* Helper function for GameObject xml serialization */
         private void SaveObjects()
         {
             TiledObject[] gObjList = new TiledObject[gameObjects.Count];
@@ -331,6 +344,8 @@ namespace ProjectPalladium
 
             map.ObjectLayers[1] = gObjLayer;
         }
+
+        /* Save map to TMX file */
         public void Save(string fileName)
         {
 
@@ -345,10 +360,7 @@ namespace ProjectPalladium
             using (TextWriter writer = new StreamWriter(fullPath))
             {
                 serializer.Serialize(writer, map);
-            }
-
-            Debug.WriteLine("Serialization successful. File created at: " + fullPath);
-           
+            }           
         }
 
         public override string ToString()

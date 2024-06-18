@@ -33,7 +33,7 @@ namespace ProjectPalladium.UI
         Point SPELL_MARKER_OFFSET;
         private Player curPlayer;
         private static UIManager ui = Game1.UIManager;
-        private Vector2 SPELL_DISPLAY_POS = Util.PointToVector2(ui.toolbar.globalPos - new Point(0, 30));
+        private Vector2 SPELL_DISPLAY_POS = Util.PointToVector2(ui.toolbar.globalPos - new Point(0, 8) * new Point((int)Game1.scale));
         private TextRenderer _storedSpellDisplay;
         private Dictionary<string, Spell> spells = Spell.spells;
         public Dictionary<Point, float> directions = new Dictionary<Point, float>()
@@ -55,7 +55,7 @@ namespace ProjectPalladium.UI
         public CastingUI(UIElement root) : 
             base("Casting UI", "", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y / 2, root, OriginType.center, isBox: true) { 
             SPELL_MARKER_OFFSET = new Point(15, 15) * new Point((int) scale, (int) scale);
-            _storedSpellDisplay = new TextRenderer(SPELL_DISPLAY_POS);
+            _storedSpellDisplay = new TextRenderer(SPELL_DISPLAY_POS, originType:TextRenderer.Origin.center);
             showing = false;
          }
 
