@@ -176,7 +176,7 @@ namespace ProjectPalladium
                 }
             }
         }
-
+        
         /* Loads triggers from tmx file */
         public void GetTriggers()
         {
@@ -195,7 +195,6 @@ namespace ProjectPalladium
                 if (name == "exit")
                 { 
                     string goToScene = pList.FirstOrDefault(prop => prop.name.ToLower() == "map", null).value;
-
                     triggers.Add(new ChangeSceneTrigger(goToScene, bounds, goToScene));
                 }
             }
@@ -206,7 +205,10 @@ namespace ProjectPalladium
         public void GetSpawnPoint()
         {
             ObjectLayer spawnPoints = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "spawn", null);
-            if (spawnPoints == null || spawnPoints.objects == null) { spawnLocation = new Vector2(100, 100); return; }
+            if (spawnPoints == null || spawnPoints.objects == null) {
+                Debug.WriteLine("no spawn point found");    
+                spawnLocation = new Vector2(100, 100); return; 
+            }
 
             foreach (TiledObject spawnPointObj in spawnPoints.objects)
             {

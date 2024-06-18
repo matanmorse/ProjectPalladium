@@ -73,7 +73,7 @@ namespace ProjectPalladium
             
             SceneManager.CurScene.Map.UpdateOnGameTime();
 
-            // make sure hollow is getting updated too
+            // make sure hollow is getting updated too  
             if (SceneManager.CurScene.Map != SceneManager.hollow) 
             {
                 SceneManager.hollow.UpdateOnGameTime();
