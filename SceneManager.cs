@@ -53,8 +53,9 @@ namespace ProjectPalladium
                 }
             }
             Map map = new Map(sceneName + ".tmx");
-            pos = map.spawnLocation;
+            // pos = map.spawnLocation;
 
+            
             Scene newScene = new Scene(map, curScene.Player);
             LoadScene(newScene, pos);
             Game1.shader.DoSceneTransition();

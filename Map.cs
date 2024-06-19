@@ -191,11 +191,21 @@ namespace ProjectPalladium
                 Rectangle bounds = new Rectangle(location, size);
                 Property[] pList = trigger.properties.properties; // don't even ask why i have to do this
                 string name = pList.First(prop => prop.name.ToLower() == "name").value;
-                
                 if (name == "exit")
-                { 
+                {
+                    string linkID;
+                    Property link = pList.FirstOrDefault(prop => prop.name.ToLower() == "link", null);
+                    if (link != null)
+                    {
+                        linkID = pList.FirstOrDefault(prop => prop.name.ToLower() == "link", null).value;
+                    }
+                    else
+                    {
+                        linkID = "";
+                    }
+
                     string goToScene = pList.FirstOrDefault(prop => prop.name.ToLower() == "map", null).value;
-                    triggers.Add(new ChangeSceneTrigger(goToScene, bounds, goToScene));
+                    triggers.Add(new ChangeSceneTrigger(goToScene, bounds, goToScene, linkID));
                 }
             }
 
@@ -206,12 +216,14 @@ namespace ProjectPalladium
         {
             ObjectLayer spawnPoints = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "spawn", null);
             if (spawnPoints == null || spawnPoints.objects == null) {
-                Debug.WriteLine("no spawn point found");    
-                spawnLocation = new Vector2(100, 100); return; 
+                Debug.Write("no default spawn pos");
+                return;
+                //throw new Exception("no spawn point found");
             }
 
             foreach (TiledObject spawnPointObj in spawnPoints.objects)
             {
+                if (spawnPointObj.properties != null) continue;
                 Vector2 spawnPoint = new Vector2(spawnPointObj.x, spawnPointObj.y);
                 spawnLocation = spawnPoint;
             }
@@ -365,6 +377,44 @@ namespace ProjectPalladium
             }           
         }
 
+        // get the spawnPos for a trigger based on the map it is going to's tmx file.
+        public static Vector2 GetAssociatedSpawnPosFromLink(string mapName, string linkID)
+        {
+            // partially deserialize map to access properties
+            MapSerializer map;
+            Vector2 spawnPos = Vector2.Zero;
+
+            XmlSerializer serializer = new XmlSerializer(typeof(MapSerializer));
+
+            Debug.WriteLine("This link ID: " + linkID);
+            Debug.WriteLine("Deserializing CST Links in " + mapName);
+
+            if (mapName == "hollow") mapName = "hollowdefault"; // since triggers are unchanging, just use the default version for simplicity
+
+            using (FileStream fs = new FileStream("Content/" + mapName + ".tmx", FileMode.Open))
+            {
+                map = (MapSerializer)serializer.Deserialize(fs);
+
+                ObjectLayer triggersLayer = map.ObjectLayers.FirstOrDefault(x => x.name.ToLower() == "spawn", null);
+
+                foreach (TiledObject spawnObject in triggersLayer.objects)
+                {
+                    if (spawnObject.properties == null) continue;
+                    Property[] pList = spawnObject.properties.properties;
+
+                    
+                        string thisLinkID = pList.FirstOrDefault(prop => prop.name.ToLower() == "link").value;
+                        if (thisLinkID == linkID) // it is the associated spawn object for this cst
+                        {
+                            Debug.WriteLine("Link found in " + mapName + " name " + thisLinkID);
+                            spawnPos = new Vector2(spawnObject.x, spawnObject.y);
+                        }
+                    
+                }
+            }
+
+            return spawnPos;
+        }
         public override string ToString()
         {
             return filename;

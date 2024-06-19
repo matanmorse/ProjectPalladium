@@ -31,7 +31,6 @@ namespace ProjectPalladium.Plants
 
         public string name;
 
-        private PlantDeserializer info;
 
         private const int GROWTH_INTERVAL = 30; // in-game minutes between growth stages
 

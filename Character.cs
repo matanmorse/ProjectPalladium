@@ -32,7 +32,7 @@ namespace ProjectPalladium
         public Vector2 pos;
         public Vector2 prevpos;
 
-        public float speed = 1.5f * Game1.scale;
+        public float speed = 1.25f * Game1.scale;
         private Vector2 velocity;
 
         Rectangle intersection;

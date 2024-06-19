@@ -20,7 +20,6 @@ namespace ProjectPalladium.UI
         private Vector2 pos;
         private Renderable sprite;
         private float scale;
-        private Rectangle bounds;
         public int originalIndex;
         public GhostItem(Item item, float scale) {
             this.scale = scale;
