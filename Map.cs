@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Buildings;
+using ProjectPalladium.Items;
 using ProjectPalladium.Plants;
 using ProjectPalladium.Triggers;
 using ProjectPalladium.Utils;
@@ -15,7 +16,7 @@ using Trigger = ProjectPalladium.Utils.Trigger;
 
 namespace ProjectPalladium
 {
-    /* Contains Map data about a given location (tilemaps, terrain, objects */
+    /* Contains Map data about a given location (tilemaps, terrain, objects) */
     public class Map
     {
         public string filename;
@@ -35,7 +36,7 @@ namespace ProjectPalladium
         public Player player;
 
         public Point tileMapSize = new Point();
-        private static int tilesize = 16;
+        public static int tilesize = 16;
 
         protected List<Trigger> triggers = new List<Trigger>();
 
@@ -96,6 +97,12 @@ namespace ProjectPalladium
                 if (intersection != Rectangle.Empty) intersections.Add(intersection);
             }
 
+            foreach(GameObject gameObject in gameObjects)
+            {
+                if (gameObject.bounds == null || gameObject.bounds == Rectangle.Empty) continue;
+                Rectangle intersection = Rectangle.Intersect(gameObject.bounds, boundingBox);
+                if (intersection != Rectangle.Empty) intersections.Add(intersection);
+            }
             // check tilemaps for collision
             foreach (Tilemap tilemap in collidingTilemaps)
             {
@@ -123,7 +130,14 @@ namespace ProjectPalladium
         {
             foreach (GameObject obj in gameObjects)
             {
-                obj.PlayerBehind = obj.walkBehind.Contains(new Point(player.boundingBox.Center.X, player.boundingBox.Bottom ));
+                if (obj is Plant)
+                {
+                    obj.PlayerBehind = obj.walkBehind.Contains(new Point(player.boundingBox.Center.X, player.boundingBox.Bottom));
+                }
+                else
+                {
+                    obj.PlayerBehind = obj.walkBehind.Intersects(player.boundingBox);
+                }
             }
         }
 
@@ -132,7 +146,7 @@ namespace ProjectPalladium
         {
             serializer = new XmlSerializer(typeof(MapSerializer));
 
-            using (FileStream fs = new FileStream("Content/" + filename, FileMode.Open))
+            using (FileStream fs = new FileStream("Content/maps/" + filename, FileMode.Open))
             {
                 map = (MapSerializer)serializer.Deserialize(fs);
             }
@@ -286,6 +300,15 @@ namespace ProjectPalladium
             return true;
         }
 
+        public bool AddGameObject(string itemName, Vector2 tile)
+        {
+            if (FindGameObjectAtTile(tile.ToPoint()) != null) return false;
+            if (tile.ToPoint() == player.feet) return false; // shouldn't be able to place buildings under us
+
+            string textureName = itemName.Replace(" ", "").ToLower() + "placed";
+            gameObjects.Add(new GameObject(itemName, tile, textureName));
+            return true;
+        }
         public void RemovePlant(Vector2 tile)
         {
             GameObject obj = FindGameObjectAtTile(tile.ToPoint());
@@ -386,12 +409,9 @@ namespace ProjectPalladium
 
             XmlSerializer serializer = new XmlSerializer(typeof(MapSerializer));
 
-            Debug.WriteLine("This link ID: " + linkID);
-            Debug.WriteLine("Deserializing CST Links in " + mapName);
-
             if (mapName == "hollow") mapName = "hollowdefault"; // since triggers are unchanging, just use the default version for simplicity
 
-            using (FileStream fs = new FileStream("Content/" + mapName + ".tmx", FileMode.Open))
+            using (FileStream fs = new FileStream("Content/maps/" + mapName + ".tmx", FileMode.Open))
             {
                 map = (MapSerializer)serializer.Deserialize(fs);
 
@@ -402,14 +422,11 @@ namespace ProjectPalladium
                     if (spawnObject.properties == null) continue;
                     Property[] pList = spawnObject.properties.properties;
 
-                    
-                        string thisLinkID = pList.FirstOrDefault(prop => prop.name.ToLower() == "link").value;
-                        if (thisLinkID == linkID) // it is the associated spawn object for this cst
-                        {
-                            Debug.WriteLine("Link found in " + mapName + " name " + thisLinkID);
-                            spawnPos = new Vector2(spawnObject.x, spawnObject.y);
-                        }
-                    
+                    string thisLinkID = pList.FirstOrDefault(prop => prop.name.ToLower() == "link").value;
+                    if (thisLinkID == linkID) // it is the associated spawn object for this cst
+                    {
+                        spawnPos = new Vector2(spawnObject.x, spawnObject.y);
+                    }
                 }
             }
 

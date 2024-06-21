@@ -120,7 +120,7 @@ namespace ProjectPalladium
         {
 
             pos += velocity * speed;
-            boundingBox.Location = new Point((int)(pos.X - sprite.scaledWidth / 2 + (sprite.scaledWidth - boundingBox.Width) / 2), (int)(pos.Y - sprite.scaledHeight / 2) + (sprite.scaledHeight - boundingBox.Height) / 2);
+            boundingBox.Location = new Point((int)pos.X - (sprite.scaledWidth / 2), (int)pos.Y);
 
             if (pos.X - sprite.scaledWidth / 2 < 0) pos.X = sprite.scaledWidth / 2;
             if (pos.X > edgex) pos.X = edgex;
@@ -202,8 +202,7 @@ namespace ProjectPalladium
             if (depth > 100) return;
 
             // update bounding box location
-            boundingBox.Location = new Point((int)(pos.X - sprite.scaledWidth / 2 + (sprite.scaledWidth - boundingBox.Width) / 2),
-            (int)(pos.Y - sprite.scaledHeight / 2) + (sprite.scaledHeight - boundingBox.Height) / 2);
+            boundingBox.Location = new Point((int)pos.X - (sprite.scaledWidth / 2), (int)pos.Y);
 
             // check if this set of resolutions put us in collision with another object, if so resolve it
             List<Rectangle> stillColliding = currentMap.CheckCollisions(boundingBox);
@@ -226,7 +225,7 @@ namespace ProjectPalladium
             }
             else
             {
-                pos.Y = pos.Y < intersection.Top ? intersection.Top - boundingBox.Height / 2 : intersection.Bottom + boundingBox.Height / 2;
+                pos.Y = pos.Y < intersection.Top ? intersection.Top - boundingBox.Height : intersection.Bottom;
             }
         }
         public override string ToString()   

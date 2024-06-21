@@ -59,11 +59,12 @@ namespace ProjectPalladium
 
         public static ScreenShader shader;
 
+        public static float LAYER_CONSTANT = 0.00001f;
 
         public static class layers
         {
             public const float tile = 0f;
-            public const float player = 0.9f;
+            public const float player = 0.1f;
             public const float rectangles = 1f;
             public const float UI = 0.95f;
             public const float buildings = 0.1f;
@@ -159,7 +160,7 @@ namespace ProjectPalladium
             // init player object
             Vector2 playerPos = new Vector2(100, 100);
             player = new Player(new Animation.AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", map,
-            new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (12 * Game1.scale), (int)(30 * Game1.scale)));
+            new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (16 * Game1.scale), (int)(16 * Game1.scale)));
 
             player.sprite.Owner = player;
 

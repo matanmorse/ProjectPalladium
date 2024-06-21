@@ -38,7 +38,9 @@ namespace ProjectPalladium.Items
         {
             { "wand", new Wand(0, "wand", "wand", "a wand") },
             { "ectoplasmic gem", new Item(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", 99)},
-            { "mana melon seed", new Seed(2, "Mana Melon Seed", "manamelonseed", 1, "some mana melon seeds", 99, "manamelonplant") }
+            { "mana melon seed", new Seed(2, "Mana Melon Seed", "manamelonseed", 1, "some mana melon seeds", 99, "manamelonplant") },
+            { "scrying orb", new Placeable(3, "Scrying Orb", "scryingorb", 1, "An orb for scrying.")}
+        
         };
 
         public static Item GetItemFromRegistry(string name)

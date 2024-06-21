@@ -1,0 +1,13 @@
+﻿{
+  "name": "Scrying Orb",
+  "colliders": {
+    "move": {
+      "size": [ 16, 8 ],
+      "location": [ 0, 24 ]
+    },
+    "behind": {
+      "size": [ 16, 20 ],
+      "location": [ 0, 5 ]
+    }
+  }
+}

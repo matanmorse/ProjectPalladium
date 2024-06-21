@@ -158,7 +158,7 @@ namespace ProjectPalladium.Animation
         public void LoadContent()
         {
             // open the animation metadata json
-            string registryPath = "Content/" + animationsRegistryName + ".json";
+            string registryPath = "Content/animations/" + animationsRegistryName + ".json";
             string jsonString = File.ReadAllText(registryPath);
 
             AnimationDeserializer dsrlzdAnimData = JsonSerializer.Deserialize<AnimationDeserializer>(jsonString);

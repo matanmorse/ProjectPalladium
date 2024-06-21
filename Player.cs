@@ -30,7 +30,6 @@ namespace ProjectPalladium
         public Vector2 lerpingCamera;
 
 
-        public float layer = Game1.layers.player;
 
         public Item ActiveItem { get { return _activeItem; } 
             
@@ -161,6 +160,12 @@ namespace ProjectPalladium
 
         public override void Update(GameTime gameTime)
         {
+            layer = 0.1f + (Game1.LAYER_CONSTANT * (pos.Y + sprite.scaledHeight));
+            if (Input.GetKeyDown(Keys.H))
+            {
+                Debug.WriteLine(pos.Y); 
+                Debug.WriteLine("player layer: " + layer);
+            }
             lerpingCamera = Vector2.Lerp(lerpingCamera, pos , 0.3f);
             base.Update(gameTime);
             feet = Util.GetNearestTile(pos) + new Point(0, 1);

@@ -21,7 +21,7 @@ namespace ProjectPalladium.Buildings
         private float opacityDecayFactor = 1f;
 
         /* The name of the building (as defined by the "name" property of the .tmx file) is also the name of the json data file and the texture. */
-        public Building(string name, Vector2 pos) : base(name, pos)
+        public Building(string name, Vector2 pos) : base(name, pos, name)
         {
             sprite = new Renderable(name);
             localPos = pos;
