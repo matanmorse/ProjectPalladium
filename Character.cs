@@ -36,6 +36,8 @@ namespace ProjectPalladium
         public float speed = 1.25f * Game1.scale;
         private Vector2 velocity;
 
+        private List<Projectile> projectiles = new List<Projectile>(); // list of projectiles belonging to this character
+
         Rectangle intersection;
         List<Rectangle> intersections; 
 
@@ -90,7 +92,8 @@ namespace ProjectPalladium
         {
             layer = 0.1f + (Game1.LAYER_CONSTANT * (pos.Y + sprite.scaledHeight));
 
-            
+            foreach (Projectile p in projectiles) { p.Update(gameTime); }
+
 
             prevpos = pos;
             sprite.Update(gameTime);
@@ -100,6 +103,7 @@ namespace ProjectPalladium
         {
             
             if (DebugParams.showColliders) { Util.DrawRectangle(boundingBox, b); }
+            foreach(Projectile p in projectiles) { p.Draw(b); }
             sprite.Draw(b, pos, tintColor, flipped, layerDepth: layer);
         }
         public void setMovingUp(bool b)
@@ -235,6 +239,11 @@ namespace ProjectPalladium
             {
                 pos.Y = pos.Y < intersection.Top ? intersection.Top - boundingBox.Height : intersection.Bottom;
             }
+        }
+
+        public void AddProjectile(string name, Vector2 vel, float rotation)
+        {
+            projectiles.Add(new Projectile(name, this, 40f, pos, vel, rotation));
         }
         public override string ToString()   
         {

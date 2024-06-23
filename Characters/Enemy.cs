@@ -76,7 +76,7 @@ namespace ProjectPalladium.Characters
             {
                 tintColor = Color.White;
             }
-            , 1000f);
+            , 150f);
         }
     }
 }

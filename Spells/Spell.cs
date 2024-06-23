@@ -26,7 +26,7 @@ namespace ProjectPalladium.Spells
         public static Dictionary<string, Spell> spells = new Dictionary<string, Spell>()
         {
             {"tillearth", new Spell("Till Earth", "Tills some earth", "LL", 10, TillEarth) },
-            {"iceblast", new Spell("Ice blast", "Blasts some ice", "RR", 10, DoNothing) },
+            {"iceblast", new Spell("Ice blast", "Blasts some ice", "RR", 10, IceBlast) },
             {"growth", new Spell("Growth", "Grows a plant", "LLUR", 10,Growth) },
             {"chronoshift", new Spell("Chrono Shift", "Advance Time", "DDRUUL", 10, ChronoShift) }
         };
@@ -45,6 +45,19 @@ namespace ProjectPalladium.Spells
             
             string name = this.name.Replace(" ", "").ToLower();
             GenericSpellHandler(name);
+        }
+
+        public static void IceBlast()
+        {
+            Player p = SceneManager.CurScene.Player;
+
+            Vector2 dir = Vector2.Normalize((Input.gameWorldMousePos.ToVector2() - p.pos));
+
+
+            float rotation = (float)Math.Acos(Vector2.Dot(dir, Vector2.UnitX));
+            if (dir.Y < 0) rotation = -rotation;
+
+            p.AddProjectile("iceblast", dir, rotation) ;
         }
 
         public static void ChronoShift()

@@ -75,7 +75,7 @@ namespace ProjectPalladium
 
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
-
+            Window.Position = new Point(0, 0);
             Content.RootDirectory = "Content";
             contentManager = new ContentManager(base.Content.ServiceProvider, base.Content.RootDirectory);
             IsMouseVisible = true;
