@@ -78,8 +78,6 @@ namespace ProjectPalladium.Plants
             layer = 0.1f + (Game1.LAYER_CONSTANT * (globalPos.Y + ((SPRITE_SIZE.Y / 1.25f) * Game1.scale))); // dynamic z-indexing based on y coordinates
             this.globalPos.Y -= Map.scaledTileSize; // need to be here to render correctly
 
-            Debug.WriteLine("sprite bottom at pos " + (globalPos.Y + (SPRITE_SIZE.Y * Game1.scale)));
-            Debug.WriteLine(layer);
             this.timeOfLastGrowth = GameManager.time;
 
             sprite = new Renderable(name);

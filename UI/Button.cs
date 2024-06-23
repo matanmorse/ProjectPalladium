@@ -108,6 +108,7 @@ namespace ProjectPalladium.UI
         {
             if (mouseOver && Input.GetRightMouseClicked())
             {
+                Debug.WriteLine("right mouse");
                 return true;
             }
             return false;

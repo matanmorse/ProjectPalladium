@@ -29,6 +29,7 @@ namespace ProjectPalladium
 
         public List<Building> buildings = new List<Building>();
         public List<GameObject> gameObjects = new List<GameObject>();
+        private Stack<GameObject> objectsToRemove = new Stack<GameObject>();
 
         MapSerializer map;
         XmlSerializer serializer;
@@ -273,6 +274,8 @@ namespace ProjectPalladium
             foreach (Trigger t in triggers) t.CheckEnter();
             CheckBehindBuilding();
             CheckBehindObjects();
+
+            RemoveStagedObjects();
         }
 
         public void Draw(SpriteBatch b)
@@ -306,8 +309,34 @@ namespace ProjectPalladium
             if (tile.ToPoint() == player.feet) return false; // shouldn't be able to place buildings under us
 
             string textureName = itemName.Replace(" ", "").ToLower() + "placed";
-            gameObjects.Add(new GameObject(itemName, tile, textureName));
+            gameObjects.Add(new PlaceableGameObject(itemName, tile, textureName));
             return true;
+        }
+
+        public bool RemoveGameObject(GameObject obj)
+        {
+            if (obj == null) return false;
+            foreach (GameObject x in gameObjects)
+            {
+                if (obj == x)
+                {
+                    objectsToRemove.Push(x);
+                    return true;
+                }
+            }
+            return false; // the provided object does not exist on the map
+        }
+
+        private void RemoveStagedObjects()
+        {
+            if (objectsToRemove.Count > 0)
+            {
+                foreach (GameObject obj in objectsToRemove)
+                {
+                    gameObjects.Remove(obj);
+                }
+                objectsToRemove.Clear();
+            }
         }
         public void RemovePlant(Vector2 tile)
         {
