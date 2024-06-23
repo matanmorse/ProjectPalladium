@@ -45,6 +45,7 @@ namespace ProjectPalladium
             currentMap.player = this;
             uiManager = Game1.UIManager;
             inventory = uiManager.inventoryUI.Inventory;
+
         }
 
         public void handleMovement()
@@ -125,7 +126,7 @@ namespace ProjectPalladium
             // debug code for adding and removing items
             if (Input.GetKeyDown(Keys.O))
             {
-                currentMap.AddNPC("mage", new Vector2(100, 100) * Game1.scale);
+                currentMap.AddEnemy("mage", new Vector2(100, 100) * Game1.scale);
             }
 
 
@@ -144,6 +145,7 @@ namespace ProjectPalladium
 
             if (Input.GetRightMouseClicked())
             {
+                sprite.AddTimer(() => Debug.WriteLine("ding!"), 1000f);
                 HandleRightClicks();
             }
         }
@@ -161,8 +163,10 @@ namespace ProjectPalladium
             lerpingCamera = Vector2.Lerp(lerpingCamera, pos , 0.3f);
             base.Update(gameTime);
             feet = Util.GetNearestTile(pos) + new Point(0, 1);
+
             handleMovement();
             doInputCheck();
+
 
             if (_activeItem != null && _activeItem != Item.none)
             {                

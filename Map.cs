@@ -33,6 +33,7 @@ namespace ProjectPalladium
         public List<Building> buildings = new List<Building>();
         public List<GameObject> gameObjects = new List<GameObject>();
         private Stack<GameObject> objectsToRemove = new Stack<GameObject>();
+        private Stack<Character> charactersToRemove = new Stack<Character>();
 
         MapSerializer map;
         XmlSerializer serializer;
@@ -286,7 +287,7 @@ namespace ProjectPalladium
             CheckBehindBuilding();
             CheckBehindObjects();
 
-            RemoveStagedObjects();
+            DoStagedChanges();
         }
 
         public void Draw(SpriteBatch b)
@@ -314,6 +315,25 @@ namespace ProjectPalladium
                     pos,
                     name,
                     SceneManager.CurScene.Map,boundingBox
+                ));
+
+            return true;
+        }
+
+        public bool AddEnemy(string name, Vector2 pos)
+        {
+            Rectangle boundingBox = new Rectangle(
+                    (int)pos.X - ((int)(16 * Game1.scale) / 2),
+                   (int)pos.Y,
+                   (int)(16 * Game1.scale),
+                   (int)(16 * Game1.scale));
+
+            SceneManager.CurScene.Characters.Add(
+                new Enemy(
+                    new AnimatedSprite(16, 32, name + "anims", name),
+                    pos,
+                    name,
+                    SceneManager.CurScene.Map, boundingBox
                 ));
 
             return true;
@@ -356,7 +376,20 @@ namespace ProjectPalladium
             return false; // the provided object does not exist on the map
         }
 
-        private void RemoveStagedObjects()
+        public bool RemoveCharacter(Character c)
+        {
+            if (c == null) return false;
+            foreach (Character x in SceneManager.CurScene.Characters)
+            {
+                if ( c == x)
+                {
+                    charactersToRemove.Push(x);
+                }
+                return true;
+            }
+            return false; // character does not exist
+        }
+        private void DoStagedChanges()
         {
             if (objectsToRemove.Count > 0)
             {
@@ -365,6 +398,14 @@ namespace ProjectPalladium
                     gameObjects.Remove(obj);
                 }
                 objectsToRemove.Clear();
+            }
+            if (charactersToRemove.Count > 0)
+            {
+                foreach(Character x in charactersToRemove)
+                {
+                    SceneManager.CurScene.Characters.Remove(x);
+                }
+                charactersToRemove.Clear();
             }
         }
         public void RemovePlant(Vector2 tile)

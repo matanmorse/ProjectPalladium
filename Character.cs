@@ -14,7 +14,7 @@ namespace ProjectPalladium
     public class Character
     {
         protected Map currentMap;
-
+        public Color tintColor = Color.White;
         public Map CurrentMap{ get { return currentMap; } set { currentMap = value; } }
         protected bool movementLocked; 
         public bool MovementLocked
@@ -98,9 +98,9 @@ namespace ProjectPalladium
 
         public virtual void Draw(SpriteBatch b)
         {
-           
+            
             if (DebugParams.showColliders) { Util.DrawRectangle(boundingBox, b); }
-            sprite.Draw(b, pos, flipped, layerDepth: layer);
+            sprite.Draw(b, pos, tintColor, flipped, layerDepth: layer);
         }
         public void setMovingUp(bool b)
         {

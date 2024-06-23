@@ -10,9 +10,13 @@ using ProjectPalladium.UI;
 using System.Runtime.CompilerServices;
 using ProjectPalladium.Spells;
 using static ProjectPalladium.Spells.Spell;
+using static ProjectPalladium.Utils.Timer.Callback;
 using System.Reflection;
 using System.Data.SqlTypes;
 using ProjectPalladium.Tools;
+using System.Threading;
+using ProjectPalladium.Utils;
+using Timer = ProjectPalladium.Utils.Timer;
 
 namespace ProjectPalladium.Animation
 {
@@ -21,6 +25,8 @@ namespace ProjectPalladium.Animation
         public Texture2D spriteTexture;
         public Rectangle sourceRect;
         public Vector2 origin;
+
+        public List<Timer> timers = new List<Timer>();
 
         public bool doingSyncedAnimation;
 
@@ -90,6 +96,11 @@ namespace ProjectPalladium.Animation
             origin = new Vector2(spriteWidth / 2, spriteHeight / 2);
             initSprite(registryName);
             LoadTexture(textureName);
+        }
+
+        public void AddTimer(Timer.Callback callback, float time )
+        {
+            timers.Add(new Timer(0f, time, callback, timers));
         }
 
         public void DoToolAnimation ()
@@ -181,6 +192,9 @@ namespace ProjectPalladium.Animation
 
         public void Update(GameTime gameTime)
         {
+            foreach(Timer t in timers) { t.Update(gameTime); }
+            Timer.TimerUpdates(timers);
+
             _animation.Update(gameTime);
         }
 
@@ -201,6 +215,19 @@ namespace ProjectPalladium.Animation
             else
             {
                 b.Draw(spriteTexture, pos, _animation.getCurrentFrame(), Color.White, 0f, origin, Game1.scale, SpriteEffects.None, layerDepth);
+            }
+        }
+        public void Draw(SpriteBatch b, Vector2 pos, Color color, bool flipped = false, float layerDepth = 1f)
+        {
+            pos = new Vector2(MathF.Floor(pos.X), MathF.Floor(pos.Y));
+            if (_animation == null) { return; }
+            if (flipped)
+            {
+                b.Draw(spriteTexture, pos, _animation.getCurrentFrame(), color, 0f, origin, Game1.scale, SpriteEffects.FlipHorizontally, layerDepth);
+            }
+            else
+            {
+                b.Draw(spriteTexture, pos, _animation.getCurrentFrame(), color, 0f, origin, Game1.scale, SpriteEffects.None, layerDepth);
             }
         }
 

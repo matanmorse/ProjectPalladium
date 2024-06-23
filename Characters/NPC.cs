@@ -35,7 +35,9 @@ namespace ProjectPalladium.Characters
 
         public override void Update(GameTime gameTime)
         {
+
             base.Update(gameTime);
+
             if (t < 10)
             {
                 Move(Direction.right);
@@ -59,6 +61,7 @@ namespace ProjectPalladium.Characters
             t++;
             FindLocomotionAnimation();
             movePos();
+
         }
         private void Move(Direction dir)
         {
