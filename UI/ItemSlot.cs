@@ -75,7 +75,7 @@ namespace ProjectPalladium.UI
             
             if (item.quantity > 1) { itemCount.Draw(b, item.quantity.ToString()); }
             
-            if (button != null && item != Item.none) if (button.mouseOver || (button.clickState && parent is Toolbar)) { Util.DrawRectangle(button.bounds, b); }
+            if (button != null && item != Item.none) if (button.mouseOver || (item.IsSameItemStack(Game1.player.ActiveItem) && parent is Toolbar)) { Util.DrawRectangle(button.bounds, b); }
         }
     }
 }

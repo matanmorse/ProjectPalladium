@@ -17,7 +17,7 @@ namespace ProjectPalladium
         public static float defaultUIScale = 4f;
 
         public InventoryUI inventoryUI;
-        public Toolbar toolbar;
+        public static Toolbar toolbar;
         public CastingUI castingUI;
         
         public enum UILayers

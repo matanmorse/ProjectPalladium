@@ -61,6 +61,7 @@ namespace ProjectPalladium.Items
 
         public bool IsSameItemStack (Item other)
         {
+            if (other == null) return false;
             return (other.id == id && other.quantity == quantity);
         }
 

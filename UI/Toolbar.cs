@@ -65,5 +65,14 @@ namespace ProjectPalladium.UI
             }
             
         }
+
+        public void Reset()
+        {
+            Game1.player.ActiveItem = null;
+            foreach (ItemSlot slot in children)
+            {
+                slot.Reset();
+            }
+        }
     }
 }

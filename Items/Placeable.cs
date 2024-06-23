@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using System.Diagnostics;
 
 namespace ProjectPalladium.Items
 {
@@ -21,12 +22,15 @@ namespace ProjectPalladium.Items
         {
             Point clickedTile = Util.GetNearestTile(Input.gameWorldMousePos);
             if (!Util.IsTileWithinOneTileOfPlayer(clickedTile)) { return; }
-
-            // if the add was successfull, remove the seed
+            if (Game1.player.boundingBox.Intersects(new Rectangle(clickedTile * new Point(Map.scaledTileSize), new Point(Map.scaledTileSize))))
+            { Debug.WriteLine("stop"); return; }
+            // don't let us place in a way that causes a collision
+            // if the add was successfull, remove the item
             if (SceneManager.CurScene.Map.AddGameObject(name, clickedTile.ToVector2()))
             {
                 int thisIndex = Game1.player.inventory.FindExactItemStack(this);
                 Game1.player.inventory.RemoveItemAtIndex(thisIndex, 1);
+                UIManager.toolbar.Reset();
             }
 
         }

@@ -33,7 +33,7 @@ namespace ProjectPalladium.UI
         Point SPELL_MARKER_OFFSET;
         private Player curPlayer;
         private static UIManager ui = Game1.UIManager;
-        private Vector2 SPELL_DISPLAY_POS = Util.PointToVector2(ui.toolbar.globalPos - new Point(0, 8) * new Point((int)Game1.scale));
+        private Vector2 SPELL_DISPLAY_POS = Util.PointToVector2(UIManager.toolbar.globalPos - new Point(0, 8) * new Point((int)Game1.scale));
         private TextRenderer _storedSpellDisplay;
         private Dictionary<string, Spell> spells = Spell.spells;
         public Dictionary<Point, float> directions = new Dictionary<Point, float>()
