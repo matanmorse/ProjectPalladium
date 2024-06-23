@@ -3,6 +3,7 @@ using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Animation;
+using ProjectPalladium.Characters;
 using ProjectPalladium.Utils;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -73,19 +74,26 @@ namespace ProjectPalladium
             this.name = name;
             currentMap = startingMap;
             this.boundingBox = boundingBox;
+            sprite.Owner = this;
+
+            Initialize();
         }
 
         public virtual void Initialize()
         {
             // load sprite data
             sprite.LoadContent();
+            setBounds(currentMap.tileMapSize, 16);
         }
 
         public virtual void Update(GameTime gameTime)
         {
+            layer = 0.1f + (Game1.LAYER_CONSTANT * (pos.Y + sprite.scaledHeight));
+
+            
+
             prevpos = pos;
             sprite.Update(gameTime);
-
         }
 
         public virtual void Draw(SpriteBatch b)
@@ -118,7 +126,7 @@ namespace ProjectPalladium
         }
         public void movePos()
         {
-
+        
             pos += velocity * speed;
             boundingBox.Location = new Point((int)pos.X - (sprite.scaledWidth / 2), (int)pos.Y);
 
@@ -142,7 +150,7 @@ namespace ProjectPalladium
 
         public void ResolveCollision(List<Rectangle> intersections, int depth = 0)
         {
-
+            
             this.intersections = intersections;
 
             // if all the rectangles are the same width/height, i.e. a set of rectangles lying on the same axis, we should combine them and resolve them as one to avoid issues

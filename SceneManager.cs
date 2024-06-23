@@ -93,6 +93,11 @@ namespace ProjectPalladium
             if (curScene == null) { return; }
             curScene.Player.Update(gameTime);
             curScene.Map.Update(gameTime);
+
+            foreach(Character c in curScene.Characters)
+            {
+                c.Update(gameTime);
+            }
         }
         public static void Draw(SpriteBatch _spriteBatch)
         {
@@ -100,7 +105,10 @@ namespace ProjectPalladium
             curScene.Map.Draw(_spriteBatch);
             curScene.Player.Draw(_spriteBatch);
 
-            
+            foreach (Character c in curScene.Characters)
+            {
+                c.Draw(_spriteBatch);
+            }
         }
     }
 }

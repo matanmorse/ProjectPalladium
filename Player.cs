@@ -125,12 +125,9 @@ namespace ProjectPalladium
             // debug code for adding and removing items
             if (Input.GetKeyDown(Keys.O))
             {
-                inventory.AddItem(Item.GetItemFromRegistry("ectoplasmic gem"), 10);
+                currentMap.AddNPC("mage", new Vector2(100, 100) * Game1.scale);
             }
-            if (Input.GetKeyDown(Keys.I))
-            {
-                inventory.RemoveItem(Item.GetItemFromRegistry("ectoplasmic gem"), 9);
-            }
+
 
             if (_activeItem != null && _activeItem != Item.none && Input.GetLeftMouseClicked())
             {
@@ -160,12 +157,7 @@ namespace ProjectPalladium
 
         public override void Update(GameTime gameTime)
         {
-            layer = 0.1f + (Game1.LAYER_CONSTANT * (pos.Y + sprite.scaledHeight));
-            if (Input.GetKeyDown(Keys.H))
-            {
-                Debug.WriteLine(pos.Y); 
-                Debug.WriteLine("player layer: " + layer);
-            }
+          
             lerpingCamera = Vector2.Lerp(lerpingCamera, pos , 0.3f);
             base.Update(gameTime);
             feet = Util.GetNearestTile(pos) + new Point(0, 1);

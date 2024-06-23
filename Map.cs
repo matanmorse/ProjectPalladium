@@ -11,6 +11,9 @@ using ProjectPalladium.Items;
 using ProjectPalladium.Plants;
 using ProjectPalladium.Triggers;
 using ProjectPalladium.Utils;
+using ProjectPalladium.Animation;
+using ProjectPalladium.Characters;
+
 using Trigger = ProjectPalladium.Utils.Trigger;
 
 
@@ -94,27 +97,35 @@ namespace ProjectPalladium
             Rectangle totalInstersection = Rectangle.Empty;
             foreach (Building building in buildings)
             {
-                Rectangle intersection = Rectangle.Intersect(building.bounds, boundingBox);
-                if (intersection != Rectangle.Empty) intersections.Add(intersection);
+                CheckSingleCollision(building.bounds, boundingBox, intersections);
             }
 
             foreach(GameObject gameObject in gameObjects)
             {
                 if (gameObject.bounds == null || gameObject.bounds == Rectangle.Empty) continue;
-                Rectangle intersection = Rectangle.Intersect(gameObject.bounds, boundingBox);
-                if (intersection != Rectangle.Empty) intersections.Add(intersection);
+                CheckSingleCollision(gameObject.bounds, boundingBox, intersections);
             }
             // check tilemaps for collision
             foreach (Tilemap tilemap in collidingTilemaps)
             {
                 foreach (Rectangle collider in tilemap.colliders)
                 {
-                    Rectangle intersection = Rectangle.Intersect(collider, boundingBox);
-                    if (intersection != Rectangle.Empty) intersections.Add(intersection);
-
+                   CheckSingleCollision(collider, boundingBox, intersections);
                 }
             }
+
+            foreach (Character c in SceneManager.CurScene.Characters)
+            {
+                if (c.boundingBox == boundingBox) continue; // dont collide with ourself
+                CheckSingleCollision(c.boundingBox, boundingBox, intersections);
+            }
             return intersections;
+        }
+
+        public void CheckSingleCollision(Rectangle r1,  Rectangle r2, List<Rectangle> intersections)
+        {
+            Rectangle intersection = Rectangle.Intersect(r1, r2);
+            if (intersection != Rectangle.Empty) intersections.Add(intersection);
         }
 
         // if the player is behind a building, turn down opacity
@@ -289,6 +300,24 @@ namespace ProjectPalladium
             }
         }
 
+        public bool AddNPC(string name, Vector2 pos)
+        {
+            Rectangle boundingBox = new Rectangle(
+                     (int)pos.X - ((int)(16 * Game1.scale) / 2),
+                    (int)pos.Y,
+                    (int)(16 * Game1.scale),
+                    (int)(16 * Game1.scale));
+
+            SceneManager.CurScene.Characters.Add(
+                new NPC(
+                    new AnimatedSprite(16, 32, name + "anims", name), 
+                    pos,
+                    name,
+                    SceneManager.CurScene.Map,boundingBox
+                ));
+
+            return true;
+        }
         /* Interface to add new plant to map */
         public bool AddPlant(string plantName, Vector2 tile)
         {

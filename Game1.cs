@@ -164,7 +164,7 @@ namespace ProjectPalladium
 
             player.sprite.Owner = player;
 
-            player.Initialize();
+            // player.Initialize();
             player.setBounds(map.tileMapSize, 16);
 
             _uiManager.SetPlayer(player);
