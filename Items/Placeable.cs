@@ -22,9 +22,10 @@ namespace ProjectPalladium.Items
         {
             Point clickedTile = Util.GetNearestTile(Input.gameWorldMousePos);
             if (!Util.IsTileWithinOneTileOfPlayer(clickedTile)) { return; }
-            if (Game1.player.boundingBox.Intersects(new Rectangle(clickedTile * new Point(Map.scaledTileSize), new Point(Map.scaledTileSize))))
-            { Debug.WriteLine("stop"); return; }
+
             // don't let us place in a way that causes a collision
+            if (Game1.player.boundingBox.Intersects(new Rectangle(clickedTile * new Point(Map.scaledTileSize), new Point(Map.scaledTileSize))))
+            { return; }
             // if the add was successfull, remove the item
             if (SceneManager.CurScene.Map.AddGameObject(name, clickedTile.ToVector2()))
             {

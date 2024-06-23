@@ -147,7 +147,18 @@ namespace ProjectPalladium.UI
 
         public void AddButton(Button.OnEnter onEnter, Button.OnLeave onLeave, Button.OnClick onClick, Point size)
         {
-            button = new Button(onEnter, onClick, onLeave, globalPos - new Point(1, 1), size, this) ;
+            // position of the button will depend on the origin type
+            if (originType == OriginType.center)
+            {
+                if (this is ItemSlot) // ItemSlots have constant size but sprites are sometimes null, so include a special case
+                {
+                    button = new Button(onEnter, onClick, onLeave, globalPos - new Point(1, 1) - ScalePoint(new Point(8, 8)), size, this);
+                    return;
+                }
+                button = new Button(onEnter, onClick, onLeave, globalPos - new Point(1, 1) - ScalePoint(sprite.size / new Point(2)), size, this);
+                return;
+            }
+            button = new Button(onEnter, onClick, onLeave, globalPos - new Point(1, 1), size, this);
         }
 
         public virtual void ToggleShowing ()
