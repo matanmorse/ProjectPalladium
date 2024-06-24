@@ -177,6 +177,7 @@ namespace ProjectPalladium
 
         public override void Draw(SpriteBatch b)
         {
+            
             if (holdingTool) { (ActiveItem as Tool).Draw(b); }
             base.Draw(b);
         }

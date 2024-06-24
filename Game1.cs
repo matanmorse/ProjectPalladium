@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ProjectPalladium.UI;
 using ProjectPalladium.Utils;
+
 using System;
 using System.Diagnostics;
 using System.Runtime.ExceptionServices;
@@ -15,6 +16,9 @@ namespace ProjectPalladium
 {
     public class Game1 : Game
     {
+
+        
+
         private static GraphicsDeviceManager _graphics;
         public static GraphicsDeviceManager graphics { get { return _graphics; } }
 
@@ -244,6 +248,7 @@ namespace ProjectPalladium
             SceneManager.Draw(_spriteBatch);
             _spriteBatch.End();
 
+            
             // Render the UI elements to the _uiCanvas
             _uiCanvas.Activate();
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
@@ -261,6 +266,7 @@ namespace ProjectPalladium
             _spriteBatch.Begin();
             shader.Draw(_spriteBatch);
             _spriteBatch.End();
+
         }
     }
 }

@@ -12,10 +12,8 @@ namespace ProjectPalladium.Characters
     public class Enemy : NPC
     {
         public int health = 10;
-        private float invincibilityTimer = 0f;
         private bool invincible;
 
-        private float hitEffectTimer = 0f;
 
         public Enemy(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) : base(sprite, pos, name, startingMap, boundingBox)
         {
@@ -25,21 +23,13 @@ namespace ProjectPalladium.Characters
         {
             
 
-            if (invincibilityTimer > 0f)
-            {
-                invincibilityTimer -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            }
-            else
-            {
-                if (invincible) {  invincible = false; }
-                invincibilityTimer = 0f;
-            }
+         
 
           
 
             if (GetCharacterCollisions() > 0)
             {
-                GetHit();
+                GetHit(1);
             }
             // NOTE: Any collision logic for purposes of combat MUST occur before the movement step, because after collision resolution concludes
             // no characters will collide with each other
@@ -56,17 +46,42 @@ namespace ProjectPalladium.Characters
             Debug.WriteLine(name + " was killed");
             SceneManager.CurScene.Map.RemoveCharacter(this);
         }
-        private void GetHit()
+        public void GetHit(int damage)
         {
             if (invincible) return;
 
             DoHitEffect();
-            health -= 1;
+            health -= damage;
+
             if (health <= 0) { Kill(); return; }
 
-            invincible = true;
-            invincibilityTimer = 1000f;
+            sprite.AddTimer(() =>
+            {
+                invincible = true;
+            },
+            () =>
+            {
+                invincible = false;
+            }, 1000f);
+            
             Debug.WriteLine("hit!" + " Health: " + health);
+        }
+
+        public void GetHit(Projectile p)
+        {
+            GetHit(p.baseDamage);
+
+            // apply knockback effects
+            Vector2 knockback = p.velocity * p.knockbackFactor;
+
+            Velocity = knockback;
+            movementLocked = true;
+
+            sprite.AddTimer(() =>
+            {
+                Velocity = Vector2.Zero; movementLocked = false;
+            }, 100f);
+
         }
 
         private void DoHitEffect()

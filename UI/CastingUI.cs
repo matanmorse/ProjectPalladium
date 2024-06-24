@@ -31,7 +31,6 @@ namespace ProjectPalladium.UI
     {
         private Wand wand;
         Point SPELL_MARKER_OFFSET;
-        private Player curPlayer;
         private static UIManager ui = Game1.UIManager;
         private Vector2 SPELL_DISPLAY_POS = Util.PointToVector2(UIManager.toolbar.globalPos - new Point(0, 8) * new Point((int)Game1.scale));
         private TextRenderer _storedSpellDisplay;

@@ -1,44 +1,73 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPalladium.Characters;
 using ProjectPalladium.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Circle = ProjectPalladium.Utils.Util.Circle;
 
 namespace ProjectPalladium
 {
-    public class Projectile
+    public class Projectile 
     {
+        public int knockbackFactor = 100;
+        public int baseDamage = 1;
         public Vector2 origin;
         public Renderable sprite;
         public Vector2 velocity;
-        public Vector2 pos;
+        private Vector2 pos;
+
+        private const float MAX_DISTANCE = 100 * Game1.scale;
+        public Vector2 Pos { get { return pos; } set { this.pos = value; hitbox.Pos = value.ToPoint(); } }
         public float speed;
         private float rotation;
         public Object owner;
 
+        public Vector2 distanceTraveled = Vector2.Zero;
+        public Vector2 startPos; 
+
+        public Circle hitbox;
         public Projectile(string textureName, Object owner, float speed, Vector2 pos, Vector2 velocity, float rotation) 
         {
             this.rotation = rotation;
             this.velocity = velocity;
             this.pos = pos;
+            this.startPos = pos;
             this.speed = speed;
             this.sprite = new Renderable(textureName);
             this.owner = owner;
 
+            hitbox = new Circle(pos, 50);
             origin = sprite.Texture.Bounds.Size.ToVector2() / 2;
         }
 
+        public void Destroy() 
+        { 
+            if (owner is Player) { (owner as Player).RemoveProjectile(this); }
+        }
         public void Update(GameTime gameTime)
         {
-            this.pos += velocity * speed;
+            distanceTraveled = pos - startPos;
+            if (distanceTraveled.Length() > MAX_DISTANCE) { Destroy(); return; }
+
+            Object hit = SceneManager.CurScene.Map.checkCollisions(hitbox, owner);
+            if (hit != null)
+            {
+                if (hit is Enemy)
+                {
+                    (hit as Enemy).GetHit(this);
+                }
+                Destroy(); return;
+            }
+            
+            this.Pos += velocity * speed;
         }
+
+       
 
         public void Draw(SpriteBatch b)
         {
-            sprite.Draw(b, pos, layer: 1f, origin:origin, rotation: rotation);
+            if (DebugParams.showProjectileColliders) hitbox.DrawCircle(b);
+            sprite.Draw(b, pos, layer: 0.9f, origin:origin, rotation: rotation);
         }
     }
 }

@@ -13,8 +13,9 @@ using ProjectPalladium.Triggers;
 using ProjectPalladium.Utils;
 using ProjectPalladium.Animation;
 using ProjectPalladium.Characters;
-
+using Circle = ProjectPalladium.Utils.Util.Circle;
 using Trigger = ProjectPalladium.Utils.Trigger;
+using System.Buffers;
 
 
 namespace ProjectPalladium
@@ -89,6 +90,56 @@ namespace ProjectPalladium
             scaledTileSize = (int)(tilesize * Game1.scale);
         }
 
+        // return first object a circle collides with on the map
+        public Object checkCollisions(Circle c)
+        {
+            foreach (Tilemap t in collidingTilemaps)
+            {
+                foreach (Rectangle r in t.colliders) { if (c.Intersects(r)) return r; }
+            }
+            foreach (Character character in SceneManager.CurScene.Characters)
+            {
+                if (c.Intersects(character.boundingBox)) return character;
+            }
+            foreach (Building b in buildings)
+            {
+                if (c.Intersects(b.bounds)) return b;
+            }
+            foreach (GameObject g in gameObjects)
+            {
+                if (c.Intersects(g.bounds)) return g;
+            }
+            return null; // null means no intersections
+        }
+
+        // collisions excluding owner
+        public Object checkCollisions(Circle c, Object owner)
+        {
+            foreach (Tilemap t in collidingTilemaps)
+            {
+                foreach (Rectangle r in t.colliders) 
+                {
+                    if ((Object) r == owner) continue;
+                    if (c.Intersects(r)) return r; 
+                }
+            }
+            foreach (Character character in SceneManager.CurScene.Characters)
+            {
+                if ((Object)character == owner) continue;
+                if (c.Intersects(character.boundingBox)) return character;
+            }
+            foreach (Building b in buildings)
+            {
+                if ((Object)b == owner) continue;
+                if (c.Intersects(b.bounds)) return b;
+            }
+            foreach (GameObject g in gameObjects)
+            {
+                if ((Object)g == owner) continue;
+                if (c.Intersects(g.bounds)) return g;
+            }
+            return null; // null means no intersections
+        }
 
         // checks collisions with any collidable objects on the map
         // returns rectangle of intersection of first found collision

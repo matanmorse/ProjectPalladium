@@ -50,7 +50,6 @@ namespace ProjectPalladium.Animation
         private int currentFrame;
         public int spriteWidth;
         public int spriteHeight;
-        private float timer = 0;
 
         // the function to invoke when the animation is finished, if any
         public Delegate onAnimationFinished;
@@ -102,6 +101,13 @@ namespace ProjectPalladium.Animation
         {
             timers.Add(new Timer(0f, time, callback, timers));
         }
+
+        public void AddTimer(Timer.Callback doNow, Timer.Callback callback, float time)
+        {
+            doNow.Invoke();
+            timers.Add(new Timer(0f, time, callback, timers));
+        }
+
 
         public void DoToolAnimation ()
         {

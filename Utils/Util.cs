@@ -6,6 +6,7 @@ using static System.Formats.Asn1.AsnWriter;
 using System.Reflection.Metadata.Ecma335;
 using ProjectPalladium;
 using System.Transactions;
+using System;
 namespace ProjectPalladium.Utils
 {
     public class Util
@@ -14,6 +15,96 @@ namespace ProjectPalladium.Utils
         public static int tileSize = 16;
         public static Vector2 OneTileDown = new Vector2(0, 1);
         public static Vector2 OneTileDownGameWorld = LocalPosToGlobalPos(OneTileDown);
+
+        public struct Circle
+        {
+
+            public Circle(Vector2 pos, int radius)
+            {
+                this.pos = pos.ToPoint();
+                x = (int)pos.X;
+                y = (int)pos.Y;
+                this.radius = radius;
+            }
+            public Circle(Point pos, int radius)
+            {
+                this.pos = pos;
+                x = pos.X;
+                y = pos.Y;
+                this.radius = radius;
+            }
+            public Circle(int x, int y, int radius)
+            {
+                this.x = x;
+                this.y = y;
+                pos = new Point(x, y);
+                this.radius = radius;
+            }
+
+            public int radius;
+            public int x;
+            public int y;
+            private Point pos;
+            public Point Pos { get { return pos; } set { x = value.X; y = value.Y; this.pos = value; } }
+            private Vector2[] CreateCirclePoints(float radius, int sides)
+            {
+                Vector2[] points = new Vector2[sides];
+                float angleStep = MathHelper.TwoPi / sides;
+
+                for (int i = 0; i < sides; i++)
+                {
+                    float angle = i * angleStep;
+                    points[i] = new Vector2(radius * (float)Math.Cos(angle), radius * (float)Math.Sin(angle));
+                }
+
+                return points;
+            }
+            public void DrawCircle(SpriteBatch spriteBatch)
+            {
+                int sides = 20;
+                Vector2 center = new Vector2(x, y);
+                Vector2[] points = CreateCirclePoints(radius, sides);
+
+                for (int i = 0; i < points.Length; i++)
+                {
+                    Vector2 start = points[i] + center;
+                    Vector2 end = points[(i + 1) % points.Length] + center;
+                    DrawLine(spriteBatch, start, end, Color.Red);
+                }
+            }
+
+            public bool Intersects(Rectangle r)
+            {
+                // find the closest point on the rectangle to the center of the circle
+                Vector2 closestPoint = new Vector2(Math.Clamp(x, r.X, r.X + r.Width), Math.Clamp(y, r.Y, r.Y + r.Height)); 
+
+                float distFromClosestPointSquared = (pos.ToVector2() - closestPoint).LengthSquared();
+
+                // using euclidian distance formula, if distance to closest point is larger than radius-squared of the circle, the two do not intersect
+                return distFromClosestPointSquared <= (radius * radius);
+            }
+        }
+
+        public static void DrawLine(SpriteBatch b, Vector2 start, Vector2 end, Color color)
+        {
+            int thickness = 10;
+
+            // Create a 1x1 white texture
+            Texture2D pixel = new Texture2D(b.GraphicsDevice, 1, 1);
+            pixel.SetData(new[] { Color.White });
+
+            Vector2 edge = end - start;
+            float angle = (float)Math.Atan2(edge.Y, edge.X);
+
+            b.Draw(pixel,
+                new Rectangle((int)start.X, (int)start.Y, (int)edge.Length(), thickness),
+                null,
+                color,
+                angle,
+                Vector2.Zero,
+                SpriteEffects.None,
+                1f);    
+        }
 
         public static void DrawRectangle(Rectangle rect, SpriteBatch b)
         {

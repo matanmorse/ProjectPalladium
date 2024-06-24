@@ -37,9 +37,10 @@ namespace ProjectPalladium
         private Vector2 velocity;
 
         private List<Projectile> projectiles = new List<Projectile>(); // list of projectiles belonging to this character
+        List<Projectile> projectilesToRemove = new List<Projectile>();
 
         Rectangle intersection;
-        List<Rectangle> intersections; 
+        List<Rectangle> intersections;
 
         public bool flipped;
 
@@ -93,7 +94,11 @@ namespace ProjectPalladium
             layer = 0.1f + (Game1.LAYER_CONSTANT * (pos.Y + sprite.scaledHeight));
 
             foreach (Projectile p in projectiles) { p.Update(gameTime); }
-
+            if (projectilesToRemove.Count > 0)
+            {
+                foreach(Projectile p in projectilesToRemove) { projectiles.Remove(p); }
+                projectilesToRemove.Clear();
+            }
 
             prevpos = pos;
             sprite.Update(gameTime);
@@ -244,6 +249,15 @@ namespace ProjectPalladium
         public void AddProjectile(string name, Vector2 vel, float rotation)
         {
             projectiles.Add(new Projectile(name, this, 40f, pos, vel, rotation));
+        }
+
+        public bool RemoveProjectile(Projectile p)
+        {
+            foreach(Projectile x in projectiles)
+            {
+                if (x == p) { projectilesToRemove.Add(p); return true; }
+            }
+            return false;
         }
         public override string ToString()   
         {

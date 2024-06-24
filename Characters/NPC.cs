@@ -30,7 +30,7 @@ namespace ProjectPalladium.Characters
 
         public NPC(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) : base(sprite, pos, name, startingMap, boundingBox)
         {
-
+            speed = 0.75f * Game1.scale;
         }
 
         public override void Update(GameTime gameTime)
@@ -38,19 +38,28 @@ namespace ProjectPalladium.Characters
 
             base.Update(gameTime);
 
-            if (t < 10)
+            Idle();
+            
+            movePos();
+
+        }
+
+        private void Idle()
+        {
+            if (movementLocked) { return; }
+            if (t < 50)
             {
                 Move(Direction.right);
             }
-            else if (t < 20)
+            else if (t < 100)
             {
                 Move(Direction.down);
             }
-            else if (t < 30)
+            else if (t < 150)
             {
                 Move(Direction.left);
             }
-            else if (t < 40)
+            else if (t < 200)
             {
                 Move(Direction.up);
             }
@@ -60,7 +69,6 @@ namespace ProjectPalladium.Characters
             }
             t++;
             FindLocomotionAnimation();
-            movePos();
 
         }
         private void Move(Direction dir)
