@@ -12,6 +12,7 @@ namespace ProjectPalladium.Utils
 {
     public class TextRenderer
     {
+        public bool showing = true;
         private SpriteFont font;
         public Vector2 pos;
         private Origin originType;
@@ -32,6 +33,8 @@ namespace ProjectPalladium.Utils
         public virtual void Draw(SpriteBatch b, string text)
         {
             if (text == null) return;
+            if (!showing) return;
+
             Vector2 size = font.MeasureString(text);
 
             Vector2 origin = Vector2.Zero;

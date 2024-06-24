@@ -102,7 +102,7 @@ namespace ProjectPalladium
         public virtual void Draw(SpriteBatch b)
         {
             
-            if (DebugParams.showColliders) { Util.DrawRectangle(boundingBox, b); }
+            if (DebugParams.showCharacterColliders) { Util.DrawRectangle(boundingBox, b); }
             foreach(Projectile p in projectiles) { p.Draw(b); }
             sprite.Draw(b, pos, tintColor, flipped, layerDepth: layer);
         }

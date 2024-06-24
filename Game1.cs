@@ -191,8 +191,15 @@ namespace ProjectPalladium
             //Allows for GetKeyDown functionality; if you remove, it will break
             Input.Update();
 
-            if (Input.GetKeyDown(Keys.Z)) { DebugParams.showColliders = true; }
-            if (Input.GetKeyDown(Keys.X)) { DebugParams.showColliders = false; }
+            // Debug settings
+            if (Input.GetKeyDown(Keys.Z)) { UIManager.debugText.showing = !UIManager.debugText.showing; }
+            if (Input.GetKeyDown(Keys.F1)) { DebugParams.showTileColliders = !DebugParams.showTileColliders; }
+            if (Input.GetKeyDown(Keys.F2)) { DebugParams.showCharacterColliders = !DebugParams.showCharacterColliders; }
+            if (Input.GetKeyDown(Keys.F3)) { DebugParams.showObjectColliders = !DebugParams.showObjectColliders; }
+            if (Input.GetKeyDown(Keys.F4)) { DebugParams.showFootTile = !DebugParams.showFootTile; }
+            if (Input.GetKeyDown(Keys.F5)) { DebugParams.showProjectileColliders = !DebugParams.showProjectileColliders; }
+
+
             if (Input.GetKeyDown(Keys.F6)) { 
                 graphics.ToggleFullScreen(); _canvas.SetDestinationRectangle(); _uiCanvas.SetDestinationRectangle();}
             

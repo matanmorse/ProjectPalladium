@@ -6,6 +6,7 @@ using ProjectPalladium;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
+using ProjectPalladium.Utils;
 namespace ProjectPalladium
 {
     public class UIManager
@@ -19,7 +20,8 @@ namespace ProjectPalladium
         public InventoryUI inventoryUI;
         public static Toolbar toolbar;
         public CastingUI castingUI;
-        
+        public static TextRenderer debugText;
+
         public enum UILayers
         {
             first,
@@ -69,7 +71,10 @@ namespace ProjectPalladium
 
             toolbar.UpdateToolbar();
             manabar.Initialize();
-            
+
+            // setup debug menu
+            debugText = new TextRenderer(new Vector2(Game1.UINativeResolution.X - (int)(100 * defaultUIScale), (int)(50 * defaultUIScale)), originType:TextRenderer.Origin.topLeft);
+            debugText.showing = false;
         }
         public void SetPlayer(Player player) { this.player = player; }
         public void Update()
@@ -79,6 +84,12 @@ namespace ProjectPalladium
 
         public void Draw(SpriteBatch b)
         {
+            debugText.Draw(b, "DEBUG\n " + "tile colliders: " + DebugParams.showTileColliders 
+                + "\n character colliders: " + DebugParams.showCharacterColliders
+                + "\n object colliders: " + DebugParams.showObjectColliders
+                + "\n feet: " + DebugParams.showFootTile
+                + "\n projectile colliders " + DebugParams.showProjectileColliders);
+
             rootElement.Draw(b);
         }
     }

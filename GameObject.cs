@@ -98,7 +98,7 @@ namespace ProjectPalladium
         }
         public virtual void Draw(SpriteBatch b)
         {
-            if (DebugParams.showColliders)
+            if (DebugParams.showObjectColliders)
             {
                 Util.DrawRectangle(bounds, b); Util.DrawRectangle(walkBehind, b);
             }

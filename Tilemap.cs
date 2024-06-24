@@ -135,7 +135,7 @@ namespace ProjectPalladium
         /* draw tilemap */
         public void Draw(SpriteBatch b, float layerDepth = Game1.layers.tile)
         {
-            showColliders = DebugParams.showColliders;
+            showColliders = DebugParams.showTileColliders;
             if (showColliders) { foreach (Rectangle r in colliders) { Util.DrawRectangle(r, b); } }
 
             for (int i = 0; i < _mapTileSize.X; i++)
@@ -145,7 +145,7 @@ namespace ProjectPalladium
                     Vector2 pos = new Vector2(i * tileSize * Game1.scale, j * tileSize * Game1.scale);
 
                     // debug, draws tiles around player
-                    // if (Util.IsTileWithinOneTileOfPlayer(new Point(i, j))) Util.DrawRectangle(new Rectangle(pos.ToPoint(), new Point(Map.scaledTileSize, Map.scaledTileSize)), b);
+                    if (DebugParams.showFootTile) if (Util.IsTileWithinOneTileOfPlayer(new Point(i, j))) Util.DrawRectangle(new Rectangle(pos.ToPoint(), new Point(Map.scaledTileSize, Map.scaledTileSize)), b);
 
                     layer[i, j].Draw(b, pos, layer: layerDepth);
                 }
