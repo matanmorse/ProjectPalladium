@@ -16,15 +16,17 @@ namespace ProjectPalladium
         protected Map currentMap;
         public Color tintColor = Color.White;
         public Map CurrentMap{ get { return currentMap; } set { currentMap = value; } }
-        protected bool movementLocked; 
+        protected bool movementLocked;
+        protected bool gettingKnockedBack;
+
         public bool MovementLocked
         {
             get { return movementLocked; } 
             set
             {
+                
                 movementLocked = value;
-              
-            }
+                }
         }
 
         private Rectangle currentIntersection;
@@ -142,7 +144,7 @@ namespace ProjectPalladium
         }
         public void movePos()
         {
-        
+            if (movementLocked) return;
             pos += velocity * speed;
             boundingBox.Location = (pos + bBoxOffset).ToPoint();
 

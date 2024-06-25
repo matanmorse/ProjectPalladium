@@ -18,6 +18,7 @@ namespace ProjectPalladium.Characters
     {
         public int health = 10;
         private bool invincible;
+        private bool dying;
         public Mode mode;
         private Direction movingDir;
 
@@ -59,16 +60,13 @@ namespace ProjectPalladium.Characters
             mode = Mode.Idle;
         }
         
-        public void WalkTowardsPlayer()
-        {
-            if (movementLocked) return;
-            Velocity = Vector2.Normalize(SceneManager.CurScene.Player.pos - pos);
-        }
+        
         public override void Update(GameTime gameTime)
         {
-
+            if (health < 0) SendRemoveMapCall();
             DoModeActions();
             UpdateContextSteering();
+            
             // NOTE: Any collision logic for purposes of combat MUST occur before the movement step, because after collision resolution concludes
             // no characters will collide with each other
             base.Update(gameTime);
@@ -86,18 +84,18 @@ namespace ProjectPalladium.Characters
                
                 interests[(int)dir] = dot;
             }
-            Move();
         }
 
         protected void Move()
         {
-            if (movementLocked) return;
+
+            if (movementLocked || gettingKnockedBack) return;
 
             int highestIndex = Array.IndexOf(interests, interests.Max());
             movingDir = (Direction)highestIndex;
 
             Velocity = UnitDirections[(Direction) highestIndex];
-            boundingBox.Location = pos.ToPoint();
+            // boundingBox.Location = pos.ToPoint();
         }
         protected void DoModeActions()
         {
@@ -110,7 +108,8 @@ namespace ProjectPalladium.Characters
                         break;
                     }
 
-                case (Mode.Pursue): WalkTowardsPlayer(); break;
+                case (Mode.Pursue):
+                    Move(); break;
             }
 
         }
@@ -124,6 +123,7 @@ namespace ProjectPalladium.Characters
         }
         protected override void FindLocomotionAnimation()
         {
+            if (movementLocked) return;
             if (mode == Mode.Idle)
             {
                 if (sprite.Animation.Name != "idle")
@@ -147,12 +147,20 @@ namespace ProjectPalladium.Characters
         /* Remove this enemy from the game >:) */
         public void Kill()
         {
-            Debug.WriteLine(name + " was killed");
+            dying = true;
+            Velocity = Vector2.Zero;
+            movementLocked = true;
+            sprite.PlayAnimationOnce("die", SendRemoveMapCall);
+        }
+
+        public void SendRemoveMapCall() {
+            Debug.WriteLine("killing");
             SceneManager.CurScene.Map.RemoveCharacter(this);
+            dying = false;
         }
         public void GetHit(int damage)
         {
-            if (invincible) return;
+            if (invincible || dying) return;
 
             DoHitEffect();
             health -= damage;
@@ -166,7 +174,7 @@ namespace ProjectPalladium.Characters
             () =>
             {
                 invincible = false;
-            }, 1000f);
+            }, 100f);
             
         }
 
@@ -178,11 +186,11 @@ namespace ProjectPalladium.Characters
             Vector2 knockback = p.velocity * p.knockbackFactor;
 
             Velocity = knockback;
-            movementLocked = true;
+            gettingKnockedBack = true;
 
             sprite.AddTimer(() =>
             {
-                Velocity = Vector2.Zero; movementLocked = false;
+                Velocity = Vector2.Zero; gettingKnockedBack = false;
             }, 100f);
 
         }

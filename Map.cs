@@ -360,11 +360,7 @@ namespace ProjectPalladium
 
         public bool AddEnemy(string name, Vector2 pos)
         {
-            Rectangle boundingBox = new Rectangle(
-                    (int)pos.X, 
-                   (int)pos.Y,
-                   (int)(16 * Game1.scale),
-                   (int)(16 * Game1.scale));
+           
 
             SceneManager.CurScene.Characters.Add(
                 new Enemy(
@@ -372,8 +368,8 @@ namespace ProjectPalladium
                     pos,
                     name,
                     SceneManager.CurScene.Map,
-                    new Vector2(-8, -8) * Game1.scale,
-                    new Vector2(16, 16) * Game1.scale
+                    new Vector2(-4, -4) * Game1.scale,
+                    new Vector2(10, 10) * Game1.scale
                 ));
 
             return true;
@@ -419,14 +415,7 @@ namespace ProjectPalladium
         public bool RemoveCharacter(Character c)
         {
             if (c == null) return false;
-            foreach (Character x in SceneManager.CurScene.Characters)
-            {
-                if ( c == x)
-                {
-                    charactersToRemove.Push(x);
-                }
-                return true;
-            }
+            charactersToRemove.Push(c); return true;
             return false; // character does not exist
         }
         private void DoStagedChanges()

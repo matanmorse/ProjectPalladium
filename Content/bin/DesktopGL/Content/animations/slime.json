@@ -14,7 +14,9 @@
     "die": {
       "startframe": 8,
       "numframes": 6,
-      "intervals":  [300,400,300,100,100,100,600]
+      "intervals": [ 300, 400, 300, 100, 100, 100, 600 ],
+      "locking": true,
+      "action": 6
     }
   }
 }

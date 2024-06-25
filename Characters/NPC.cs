@@ -35,11 +35,12 @@ namespace ProjectPalladium.Characters
 
         public override void Update(GameTime gameTime)
         {
-
+            
             base.Update(gameTime);
 
-
+            if (movementLocked) return;
             FindLocomotionAnimation();
+
 
             movePos();
 
@@ -78,6 +79,7 @@ namespace ProjectPalladium.Characters
 
         public void SetToIdle()
         {
+            if (movementLocked) { return; }
             if (!sprite.Animation.Name.Contains("idle"))
             {
                 if (sprite.Animation == sprite.Animations["walk-side"])
