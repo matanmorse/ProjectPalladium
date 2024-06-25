@@ -23,7 +23,6 @@ namespace ProjectPalladium.Animation
     public class AnimatedSprite
     {
         public Texture2D spriteTexture;
-        public Rectangle sourceRect;
         public Vector2 origin;
 
         public List<Timer> timers = new List<Timer>();
@@ -163,7 +162,7 @@ namespace ProjectPalladium.Animation
             changeAnimation("idle");
         }
 
-        public void DoAnimationAction ()
+        public void DoAnimationAction (GameTime gameTime)
         {
             // if behavior is given, invoke end-of-animation behavior
             if (onAnimationFinished != null)

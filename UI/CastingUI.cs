@@ -35,6 +35,8 @@ namespace ProjectPalladium.UI
         private Vector2 SPELL_DISPLAY_POS = Util.PointToVector2(UIManager.toolbar.globalPos - new Point(0, 8) * new Point((int)Game1.scale));
         private TextRenderer _storedSpellDisplay;
         private Dictionary<string, Spell> spells = Spell.spells;
+        private UIElement aimElement = new UIElement("aim indicator", "aim", 0,0, UIManager.rootElement, originType:OriginType.center);
+
         public Dictionary<Point, float> directions = new Dictionary<Point, float>()
         {
             { Directions.up, 0f },
@@ -56,11 +58,15 @@ namespace ProjectPalladium.UI
             SPELL_MARKER_OFFSET = new Point(15, 15) * new Point((int) scale, (int) scale);
             _storedSpellDisplay = new TextRenderer(SPELL_DISPLAY_POS, originType:TextRenderer.Origin.center);
             showing = false;
+
+            aimElement.opacity = 0.7f;
          }
 
         public override void Draw(SpriteBatch b)
         {
             base.Draw(b);
+            aimElement.Draw(b);
+
             if (!showing) return;
 
             _storedSpellDisplay.Draw(b, wand.storedSpell.name);
@@ -68,6 +74,9 @@ namespace ProjectPalladium.UI
 
         public override void Update()
         {
+            aimElement.showing = Game1.player.castingAttackSpell;
+            if (aimElement.showing) { aimElement.LocalPos = Input.nativeMousePos; }
+
             if (ui.inventoryUI.showing) { return; }
 
             base.Update();

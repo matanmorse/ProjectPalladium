@@ -8,11 +8,37 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+using Timer = ProjectPalladium.Utils.Timer;
 namespace ProjectPalladium
 {
     public class GameManager
     {
+        // generic Timer Manager
+        public class TimerManager
+        {
+            public static List<Timer> timers = new List<Timer>();
+            public TimerManager() { }
+            public static void Update(GameTime gameTime)
+            {
+                foreach (Timer timer in timers)
+                {
+                    timer.Update(gameTime);
+                }
+                Timer.TimerUpdates(timers);
+            }
+
+            public static void AddTimer(Timer.Callback onStart, Timer.Callback callback, float interval)
+            {
+                onStart.Invoke();
+                AddTimer(callback, interval);
+            }
+
+            public static void AddTimer(Timer.Callback callback, float interval)
+            {
+                timers.Add(new Timer(0f, interval, callback, timers));
+            }
+        }
+
         public struct GameWorldTime
         {
             private int hour;
@@ -59,6 +85,7 @@ namespace ProjectPalladium
         }
         public static void Update(GameTime gameTime)
         {
+            TimerManager.Update(gameTime);
             timer += (float) gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timer > MILLIS_PER_TEN_GAMEMINUTES)
             {

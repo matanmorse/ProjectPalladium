@@ -8,6 +8,7 @@ namespace ProjectPalladium.Utils
         public static bool showProjectileColliders = false;
         public static bool showCharacterColliders = false;
         public static bool showFootTile = false;
+        public static float elapsedMillis;
     }
 
 }

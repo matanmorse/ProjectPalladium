@@ -20,6 +20,7 @@ namespace ProjectPalladium.UI
 
         protected float gameScale = Game1.scale;
         public float scale;
+        public float opacity = 1f;
         private Renderable sprite;
         public Renderable Sprite { get { return sprite; } set { this.sprite = value; } }
         protected Point localPos;
@@ -117,11 +118,11 @@ namespace ProjectPalladium.UI
                 if (originType == OriginType.center)
                 {
                     sprite.Draw(b, Util.PointToVector2(globalPos), layer: Game1.layers.UI, scale: scale,
-                        origin: new Vector2(Sprite.size.X / 2, sprite.size.Y / 2));
+                        origin: new Vector2(Sprite.size.X / 2, sprite.size.Y / 2), opacity:opacity);
                 }
                 else
                 {
-                    sprite.Draw(b, new Vector2(drawPos.X, drawPos.Y), layer: Game1.layers.UI, scale:scale);
+                    sprite.Draw(b, new Vector2(drawPos.X, drawPos.Y), layer: Game1.layers.UI, scale: scale, opacity:opacity) ;
                 }
             }
 

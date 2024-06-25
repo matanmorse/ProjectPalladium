@@ -11,7 +11,7 @@ namespace ProjectPalladium
 {
     public class UIManager
     {
-        public UIElement rootElement;
+        public static UIElement rootElement;
         private Player player;
         public Player Player { get { return player; } }
 
@@ -88,7 +88,8 @@ namespace ProjectPalladium
                 + "\n character colliders: " + DebugParams.showCharacterColliders
                 + "\n object colliders: " + DebugParams.showObjectColliders
                 + "\n feet: " + DebugParams.showFootTile
-                + "\n projectile colliders " + DebugParams.showProjectileColliders);
+                + "\n projectile colliders " + DebugParams.showProjectileColliders 
+                + "\n elapsed millis " + DebugParams.elapsedMillis);
 
             rootElement.Draw(b);
         }

@@ -47,6 +47,8 @@ namespace ProjectPalladium.Animation
                 int spriteHeight = sprite.spriteHeight;
                 Texture2D spriteTexture = sprite.spriteTexture;
                 sourceRect = new Rectangle(spriteWidth * frame % spriteTexture.Width, frame * spriteWidth / spriteTexture.Width * spriteHeight,
+                
+                    
                 spriteWidth, spriteHeight);
                 delay = frameDelay;
             }
@@ -104,7 +106,7 @@ namespace ProjectPalladium.Animation
                 // if we're on the action frame, perform the action (after increment so perform at start of frame, not end)
                 if (currentFrame == actionFrame && actionFrame != 0)
                 {
-                    sprite.DoAnimationAction();
+                    sprite.DoAnimationAction(gameTime);
                 }
             }
         }

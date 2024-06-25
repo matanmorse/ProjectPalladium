@@ -10,12 +10,16 @@ using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using ProjectPalladium;
 using ProjectPalladium.Animation;
+using System.Collections.Generic;
 
 
 namespace ProjectPalladium
 {
     public class Game1 : Game
     {
+
+
+        public static Game1 instance;
 
         
 
@@ -32,11 +36,15 @@ namespace ProjectPalladium
         public static Inventory inventory;
 
         public const float scale = 10f;
-
+        public static int targetFPS = 144;
         public static Point NativeResolution = new Point(512 * (int) scale, 288 * (int) scale);
         public static Point UINativeResolution = new Point(1360 * 2, 768 * 2);
 
-        
+        private List<float> frameTimes = new List<float>();
+        private const float windowSizeSeconds = 1.0f;
+        private float elapsedTime = 0.0f;
+        private float averageFPS = 0.0f;
+
         public Map map;
 
         public static Player player;
@@ -60,7 +68,6 @@ namespace ProjectPalladium
         private static UIManager _uiManager;
         public static UIManager UIManager { get { return _uiManager; } }
         public static GameManager gameManager;
-
         public static ScreenShader shader;
 
         public static float LAYER_CONSTANT = 0.00001f;
@@ -75,7 +82,13 @@ namespace ProjectPalladium
         }
         public Game1()
         {
+            instance = this;
+
             _graphics = new GraphicsDeviceManager(this);
+
+            IsFixedTimeStep = true;
+            TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0f / targetFPS);
+            _graphics.SynchronizeWithVerticalRetrace = false;
 
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
@@ -84,6 +97,7 @@ namespace ProjectPalladium
             contentManager = new ContentManager(base.Content.ServiceProvider, base.Content.RootDirectory);
             IsMouseVisible = true;
 
+            
             // start with native resolution
             _graphics.PreferredBackBufferHeight = NativeResolution.Y;
             _graphics.PreferredBackBufferWidth = NativeResolution.X;
@@ -91,6 +105,11 @@ namespace ProjectPalladium
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
 
+        }
+        
+        public void ToggleMouseShowing(bool x)
+        {
+            IsMouseVisible = x;
         }
 
         //update the prefferedBackBuffer variables when the window is changed
@@ -100,7 +119,31 @@ namespace ProjectPalladium
             _uiCanvas.SetDestinationRectangle();
         }
 
+        private void DoFrameRateCalculation(GameTime gameTime)
+        {
+            // Calculate frame time in seconds
+            float frameTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            // Add frame time to the list
+            frameTimes.Add(frameTime);
+
+            // Update elapsed time
+            elapsedTime += frameTime;
+
+            // Remove frame times that are outside the one-second window
+            while (elapsedTime > windowSizeSeconds && frameTimes.Count > 0)
+            {
+                elapsedTime -= frameTimes[0];
+                frameTimes.RemoveAt(0);
+            }
+
+            // Calculate average FPS
+            if (elapsedTime > 0 && frameTimes.Count > 0)
+            {
+                averageFPS = MathF.Round(frameTimes.Count / elapsedTime, 3);
+                DebugParams.elapsedMillis = averageFPS;
+            }
+        }
         protected override void OnExiting(object sender, EventArgs args)
         {
             base.OnExiting(sender, args);
@@ -134,7 +177,7 @@ namespace ProjectPalladium
         protected override void Initialize()
         {
             
-
+            
             base.Initialize();
 
             graphics.HardwareModeSwitch = false;
@@ -164,7 +207,7 @@ namespace ProjectPalladium
             // init player object
             Vector2 playerPos = new Vector2(100, 100);
             player = new Player(new Animation.AnimatedSprite(16, 32, "mageanims", "mage"), playerPos, "Player", map,
-            new Rectangle((int)playerPos.X, (int)playerPos.Y, (int) (16 * Game1.scale), (int)(16 * Game1.scale)));
+            new Vector2(-8, 0) * Game1.scale, new Vector2(16,16) * Game1.scale);
 
             player.sprite.Owner = player;
 
@@ -202,7 +245,7 @@ namespace ProjectPalladium
             if (Input.GetKeyDown(Keys.F3)) { DebugParams.showObjectColliders = !DebugParams.showObjectColliders; }
             if (Input.GetKeyDown(Keys.F4)) { DebugParams.showFootTile = !DebugParams.showFootTile; }
             if (Input.GetKeyDown(Keys.F5)) { DebugParams.showProjectileColliders = !DebugParams.showProjectileColliders; }
-
+            // DebugParams.elapsedMillis = (int)gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (Input.GetKeyDown(Keys.F6)) { 
                 graphics.ToggleFullScreen(); _canvas.SetDestinationRectangle(); _uiCanvas.SetDestinationRectangle();}
@@ -239,6 +282,8 @@ namespace ProjectPalladium
 
         protected override void Draw(GameTime gameTime)
         {
+            DoFrameRateCalculation(gameTime);
+            
             // Clear the back buffer with the background color
             GraphicsDevice.Clear(Color.CornflowerBlue);
 

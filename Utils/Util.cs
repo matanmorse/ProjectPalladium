@@ -15,6 +15,7 @@ namespace ProjectPalladium.Utils
         public static int tileSize = 16;
         public static Vector2 OneTileDown = new Vector2(0, 1);
         public static Vector2 OneTileDownGameWorld = LocalPosToGlobalPos(OneTileDown);
+        static Texture2D pixel = new Texture2D(Game1.instance.GraphicsDevice, 1, 1);
 
         public struct Circle
         {
@@ -87,10 +88,9 @@ namespace ProjectPalladium.Utils
 
         public static void DrawLine(SpriteBatch b, Vector2 start, Vector2 end, Color color)
         {
-            int thickness = 10;
+            int thickness = 5;
 
             // Create a 1x1 white texture
-            Texture2D pixel = new Texture2D(b.GraphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
 
             Vector2 edge = end - start;
@@ -101,23 +101,22 @@ namespace ProjectPalladium.Utils
                 null,
                 color,
                 angle,
-                Vector2.Zero,
+                new Vector2(0f, 0.5f), // origin at center of line
                 SpriteEffects.None,
                 1f);    
         }
 
         public static void DrawRectangle(Rectangle rect, SpriteBatch b)
         {
-            Color color = Color.Red;
-            Texture2D _texture = new Texture2D(b.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            _texture.SetData(new[] { Color.DeepPink });
+            Color color = Color.White;
+            pixel.SetData(new[] { Color.White });
 
             int thickness = 2;
 
-            b.Draw(_texture, new Vector2(rect.Left, rect.Top ), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
-            b.Draw(_texture, new Vector2(rect.Left , rect.Top ), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
-            b.Draw(_texture, new Vector2(rect.Left + rect.Size.X, rect.Top ), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
-            b.Draw(_texture, new Vector2(rect.Left , rect.Top + rect.Size.Y -1), new Rectangle(0, 0, rect.Size.X + thickness, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(pixel, new Vector2(rect.Left, rect.Top ), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            b.Draw(pixel, new Vector2(rect.Left , rect.Top ), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(pixel, new Vector2(rect.Left + rect.Size.X, rect.Top ), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(pixel, new Vector2(rect.Left , rect.Top + rect.Size.Y -1), new Rectangle(0, 0, rect.Size.X + thickness, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
 
         }
         public static Point ScalePoint(Point pt)

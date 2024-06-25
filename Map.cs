@@ -171,6 +171,10 @@ namespace ProjectPalladium
                 if (c.boundingBox == boundingBox) continue; // dont collide with ourself
                 CheckSingleCollision(c.boundingBox, boundingBox, intersections);
             }
+            if (boundingBox != player.boundingBox)
+            {
+                CheckSingleCollision(boundingBox, player.boundingBox, intersections);
+            }
             return intersections;
         }
 
@@ -352,39 +356,24 @@ namespace ProjectPalladium
             }
         }
 
-        public bool AddNPC(string name, Vector2 pos)
-        {
-            Rectangle boundingBox = new Rectangle(
-                     (int)pos.X - ((int)(16 * Game1.scale) / 2),
-                    (int)pos.Y,
-                    (int)(16 * Game1.scale),
-                    (int)(16 * Game1.scale));
-
-            SceneManager.CurScene.Characters.Add(
-                new NPC(
-                    new AnimatedSprite(16, 32, name + "anims", name), 
-                    pos,
-                    name,
-                    SceneManager.CurScene.Map,boundingBox
-                ));
-
-            return true;
-        }
+    
 
         public bool AddEnemy(string name, Vector2 pos)
         {
             Rectangle boundingBox = new Rectangle(
-                    (int)pos.X - ((int)(16 * Game1.scale) / 2),
+                    (int)pos.X, 
                    (int)pos.Y,
                    (int)(16 * Game1.scale),
                    (int)(16 * Game1.scale));
 
             SceneManager.CurScene.Characters.Add(
                 new Enemy(
-                    new AnimatedSprite(16, 32, name + "anims", name),
+                    new AnimatedSprite(16, 16, name + "anims", name),
                     pos,
                     name,
-                    SceneManager.CurScene.Map, boundingBox
+                    SceneManager.CurScene.Map,
+                    new Vector2(-8, -8) * Game1.scale,
+                    new Vector2(16, 16) * Game1.scale
                 ));
 
             return true;

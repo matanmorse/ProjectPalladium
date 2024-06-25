@@ -1,0 +1,20 @@
+﻿{
+  "name": "slime",
+  "animations": {
+    "idle": {
+      "startframe": 0,
+      "numframes": 3,
+      "intervals": [ 1600, 600, 200, 400 ]
+    },
+    "walk": {
+      "startframe": 4,
+      "numframes": 3,
+      "intervals": [ 800, 300, 100, 200 ]
+    },
+    "die": {
+      "startframe": 8,
+      "numframes": 6,
+      "intervals":  [300,400,300,100,100,100,600]
+    }
+  }
+}

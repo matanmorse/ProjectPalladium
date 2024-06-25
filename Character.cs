@@ -27,13 +27,15 @@ namespace ProjectPalladium
             }
         }
 
+        private Rectangle currentIntersection;
+
         public Rectangle boundingBox;
         public float layer = Game1.layers.player;
         public AnimatedSprite sprite;
         public Vector2 pos;
         public Vector2 prevpos;
 
-        public float speed = 1.25f * Game1.scale;
+        public float speed = 1.35f * Game1.scale / (Game1.targetFPS / 40);
         private Vector2 velocity;
 
         private List<Projectile> projectiles = new List<Projectile>(); // list of projectiles belonging to this character
@@ -54,6 +56,7 @@ namespace ProjectPalladium
             }
         }
 
+        private Vector2 bBoxOffset;
         private int edgex;
         private int edgey;
 
@@ -70,13 +73,14 @@ namespace ProjectPalladium
         }
 
 
-        public Character(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox)
+        public Character(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Vector2 bBoxOffset, Vector2 bBoxSize)
         {
             this.sprite = sprite;
             this.pos = pos;
             this.name = name;
             currentMap = startingMap;
-            this.boundingBox = boundingBox;
+            this.bBoxOffset = bBoxOffset;
+            this.boundingBox = new Rectangle(pos.ToPoint(), bBoxSize.ToPoint());
             sprite.Owner = this;
 
             Initialize();
@@ -106,9 +110,12 @@ namespace ProjectPalladium
 
         public virtual void Draw(SpriteBatch b)
         {
-            
-            if (DebugParams.showCharacterColliders) { Util.DrawRectangle(boundingBox, b); }
-            foreach(Projectile p in projectiles) { p.Draw(b); }
+            if (currentIntersection != null)
+            {
+                Util.DrawRectangle(currentIntersection,b);
+            }
+            if (DebugParams.showCharacterColliders) { Util.DrawRectangle(boundingBox,b); }
+           foreach(Projectile p in projectiles) { p.Draw(b); }
             sprite.Draw(b, pos, tintColor, flipped, layerDepth: layer);
         }
         public void setMovingUp(bool b)
@@ -137,7 +144,7 @@ namespace ProjectPalladium
         {
         
             pos += velocity * speed;
-            boundingBox.Location = new Point((int)pos.X - (sprite.scaledWidth / 2), (int)pos.Y);
+            boundingBox.Location = (pos + bBoxOffset).ToPoint();
 
             if (pos.X - sprite.scaledWidth / 2 < 0) pos.X = sprite.scaledWidth / 2;
             if (pos.X > edgex) pos.X = edgex;
@@ -219,7 +226,7 @@ namespace ProjectPalladium
             if (depth > 100) return;
 
             // update bounding box location
-            boundingBox.Location = new Point((int)pos.X - (sprite.scaledWidth / 2), (int)pos.Y);
+            boundingBox.Location = (pos + bBoxOffset).ToPoint();
 
             // check if this set of resolutions put us in collision with another object, if so resolve it
             List<Rectangle> stillColliding = currentMap.CheckCollisions(boundingBox);
@@ -230,25 +237,28 @@ namespace ProjectPalladium
         // resolves a single collision
         public void ResolveCollision(Rectangle intersection)
         {
-            // distances to the outside of the bounding box
-            int distx = intersection.Size.X;
-            int disty = intersection.Size.Y;
+            int distx = intersection.Width;
+            int disty = intersection.Height;
+
+            bool moveToSide = distx < disty;
 
 
-            bool moveToSide = distx < disty ? true : false;
             if (moveToSide)
             {
-                pos.X = pos.X < intersection.Left ? intersection.Left - boundingBox.Width / 2 : intersection.Right + boundingBox.Width / 2;
+                boundingBox.X = boundingBox.X < intersection.Left ? intersection.Left - boundingBox.Width : intersection.Right;
             }
             else
             {
-                pos.Y = pos.Y < intersection.Top ? intersection.Top - boundingBox.Height : intersection.Bottom;
+                boundingBox.Y = boundingBox.Y < intersection.Top ? intersection.Top - boundingBox.Height: intersection.Bottom;
             }
+            pos = boundingBox.Location.ToVector2() - bBoxOffset;
+
+            // boundingBox.Location = (pos + bBoxOffset).ToPoint();
         }
 
         public void AddProjectile(string name, Vector2 vel, float rotation)
         {
-            projectiles.Add(new Projectile(name, this, 40f, pos, vel, rotation));
+            projectiles.Add(new Projectile(name, this, 15f, pos, vel, rotation));
         }
 
         public bool RemoveProjectile(Projectile p)

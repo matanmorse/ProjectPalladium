@@ -136,7 +136,8 @@ namespace ProjectPalladium
         public void Draw(SpriteBatch b, float layerDepth = Game1.layers.tile)
         {
             showColliders = DebugParams.showTileColliders;
-            if (showColliders) { foreach (Rectangle r in colliders) { Util.DrawRectangle(r, b); } }
+            
+            if (showColliders) { foreach (Rectangle r in colliders) { if ( (Game1.player.pos - r.Location.ToVector2()).Length() < 2500) Util.DrawRectangle(r, b); } }
 
             for (int i = 0; i < _mapTileSize.X; i++)
             {

@@ -9,8 +9,8 @@ namespace ProjectPalladium
 {
     public class Projectile 
     {
-        public int knockbackFactor = 100;
-        public int baseDamage = 1;
+        public int knockbackFactor = 5;
+        public int baseDamage = 3;
         public Vector2 origin;
         public Renderable sprite;
         public Vector2 velocity;

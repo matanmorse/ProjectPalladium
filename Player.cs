@@ -26,6 +26,7 @@ namespace ProjectPalladium
         // mana + spellcasting info
         public const int MAX_MANA = 100;
         public int mana = MAX_MANA;
+        public bool castingAttackSpell; // do we need to show the target indicator
 
         public Vector2 lerpingCamera;
 
@@ -38,8 +39,8 @@ namespace ProjectPalladium
                 _activeItem = value;
             }
         } 
-        public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) :
-            base(sprite, pos, name, startingMap, boundingBox)
+        public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Vector2 bBoxOffset, Vector2 bBoxSize) :
+            base(sprite, pos, name, startingMap, bBoxOffset, bBoxSize)
         {
             feet = Util.GetNearestTile(pos) + new Point(0, 1);
             currentMap.player = this;
@@ -126,7 +127,11 @@ namespace ProjectPalladium
             // debug code for adding and removing items
             if (Input.GetKeyDown(Keys.O))
             {
-                currentMap.AddEnemy("mage", new Vector2(100, 100) * Game1.scale);
+                currentMap.AddEnemy("slime", new Vector2(100, 100) * Game1.scale);
+            }
+            if (Input.GetKeyDown(Keys.M))
+            {
+                mana = MAX_MANA;
             }
 
 
@@ -160,7 +165,7 @@ namespace ProjectPalladium
         public override void Update(GameTime gameTime)
         {
           
-            lerpingCamera = Vector2.Lerp(lerpingCamera, pos , 0.3f);
+            lerpingCamera = Vector2.Lerp(lerpingCamera, pos , 0.1f);
             base.Update(gameTime);
             feet = Util.GetNearestTile(pos) + new Point(0, 1);
 

@@ -12,7 +12,7 @@ namespace ProjectPalladium.Characters
     public class NPC : Character
     {
         int t = 0;
-        public enum Direction
+        private enum Direction
         {
             up,
             down,
@@ -28,9 +28,9 @@ namespace ProjectPalladium.Characters
             { Direction.right, new Point(1, 0) },
         };
 
-        public NPC(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Rectangle boundingBox) : base(sprite, pos, name, startingMap, boundingBox)
+        public NPC(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Vector2 bBoxOffset, Vector2 bBoxSize) : base(sprite, pos, name, startingMap, bBoxOffset, bBoxSize)
         {
-            speed = 0.75f * Game1.scale;
+            speed = 2f;
         }
 
         public override void Update(GameTime gameTime)
@@ -38,13 +38,14 @@ namespace ProjectPalladium.Characters
 
             base.Update(gameTime);
 
-            Idle();
-            
+
+            FindLocomotionAnimation();
+
             movePos();
 
         }
 
-        private void Idle()
+        protected void Idle()
         {
             if (movementLocked) { return; }
             if (t < 50)
@@ -68,7 +69,6 @@ namespace ProjectPalladium.Characters
                 t = 0;
             }
             t++;
-            FindLocomotionAnimation();
 
         }
         private void Move(Direction dir)
@@ -95,9 +95,13 @@ namespace ProjectPalladium.Characters
             }
         }
 
-        public void FindLocomotionAnimation()
+        protected virtual void FindLocomotionAnimation()
         {
-            if (Velocity.X != 0)
+            if (movementLocked) return;
+
+            
+
+            if (Math.Abs(Velocity.X) >= Math.Abs(Velocity.Y)) 
             {
                 sprite.changeAnimation("walk-side");
             }
