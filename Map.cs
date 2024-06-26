@@ -336,6 +336,8 @@ namespace ProjectPalladium
         //}
         public void Update(GameTime gameTime)
         {
+            Enemy.UpdateStaticItems();
+
             foreach (Building building in buildings) building.Update(gameTime);
             foreach (GameObject obj in gameObjects) obj.Update(gameTime);
             foreach (Trigger t in triggers) t.CheckEnter();
@@ -343,6 +345,7 @@ namespace ProjectPalladium
             CheckBehindObjects();
 
             DoStagedChanges();
+
         }
 
         public void Draw(SpriteBatch b)

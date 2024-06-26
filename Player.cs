@@ -127,7 +127,7 @@ namespace ProjectPalladium
             // debug code for adding and removing items
             if (Input.GetKeyDown(Keys.O))
             {
-                currentMap.AddEnemy("slime", new Vector2(100, 100) * Game1.scale);
+                currentMap.AddEnemy("slime", pos);
             }
             if (Input.GetKeyDown(Keys.M))
             {

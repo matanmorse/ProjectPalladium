@@ -106,6 +106,11 @@ namespace ProjectPalladium.Utils
                 1f);    
         }
 
+        // cross product of 2d vectors
+        public static float Cross(Vector2 v1, Vector2 v2)
+        {
+            return (v1.X * v2.Y) - (v1.Y * v2.X);
+        }
         public static void DrawRectangle(Rectangle rect, SpriteBatch b)
         {
             Color color = Color.White;
