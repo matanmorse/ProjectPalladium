@@ -12,18 +12,19 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
+using Animation = ProjectPalladium.Animation.Animation;
 namespace ProjectPalladium.Characters
 {
     public class Enemy : NPC
     {
-        public int health = 10;
-        private bool invincible;
-        private bool dying;
         public Mode mode;
         private Direction movingDir;
         private Vector2 smoothedDirection = Vector2.Zero;
         private static Vector2 centerOfPlayersHitbox = Game1.player.boundingBox.Center.ToVector2();
+
+        private Attack currentAttack; // what attack is currently being performed?
+
+        private Vector2 oldPlayerPos;
 
         private static List<Danger> dangers = new List<Danger>();
 
@@ -88,6 +89,32 @@ namespace ProjectPalladium.Characters
             }
         }
 
+        private Dictionary<string, Attack> Attacks = new Dictionary<string, Attack>();
+
+        public struct Attack
+        {
+            public static Attack None = new Attack();
+
+            public delegate void Action();
+            public Action action; // function invoked after charging
+            public float chargeTime; // how long does the enenmy charge the attack for before attacking
+            public float duration; // how long after charging is the enemy in "attack" mode
+            public float lagTime; // how long after this attack before enemy can attack again
+            public Animation.Animation animation; // animation for this attack
+            public int damage;
+            public Attack(Action action, float chargeTime, float duration, float lagTime, int damage, Animation.Animation anim=null)
+            {
+                this.damage = damage;
+                this.action = action;
+                this.chargeTime = chargeTime;
+                this.duration = duration;
+                this.lagTime = lagTime;
+                this.animation = anim;
+            }
+
+
+        }
+
 
         // unit vectors in 8 cardinal directions
         public static Dictionary<Direction, Vector2> UnitDirections = new Dictionary<Direction, Vector2>()
@@ -113,7 +140,8 @@ namespace ProjectPalladium.Characters
         {
             mode = Mode.Idle;
 
-            if (dangers.Count == 0) { AddTilemapDangers(); }   
+            Attacks.Add("jump", new Attack(Jump, 250f, 500f, 5000f, 3, sprite.Animations["idle"]));
+
         }
 
 
@@ -126,15 +154,12 @@ namespace ProjectPalladium.Characters
             // NOTE: Any collision logic for purposes of combat MUST occur before the movement step, because after collision resolution concludes
             // no characters will collide with each other
             base.Update(gameTime);
-            // boundingBox.Location = new Point((int)pos.X - sprite.scaledWidth / 2, (int) (pos.Y - sprite.scaledHeight / 2));
         }
 
         public static void UpdateStaticItems()
         {
-            
+            if (dangers.Count == 0) { AddTilemapDangers(); }
             centerOfPlayersHitbox = Game1.player.boundingBox.Center.ToVector2();
-
-            
         }
 
         public static void AddTilemapDangers()
@@ -223,32 +248,61 @@ namespace ProjectPalladium.Characters
 
                 case (Mode.Pursue):
                     Move(); break;
-                case (Mode.Attack):
-                    StartAttack(); break;
+                case (Mode.Attack ):
+                    if (canAttack)
+                    {
+                        StartAttack(Attacks["jump"]);
+                    }
+                    if (CollidingWithPlayer())
+                    {
+                        Game1.player.GetHit(currentAttack);
+                    }
+                    
+                    break;
             }
 
         }
 
-        private void StartAttack()
+        private void StartAttack(Attack atk)
         {
+            
             if (!canAttack) return;
+            Velocity = Vector2.Zero;
+            oldPlayerPos = SceneManager.CurScene.Map.player.boundingBox.Center.ToVector2();
             movementLocked = true;
+            canAttack = false;
+
+            currentAttack = atk;
+            if (atk.animation != null)
+            {
+                sprite.changeAnimation(atk.animation.Name);
+            }
+
+            // this is done at the end of charging
             GameManager.TimerManager.AddTimer(() =>
             {
                 movementLocked = false;
-                canAttack = false;
-                Attack();
-            }, 1000f);
+                atk.action.Invoke();
+            }, atk.chargeTime);
 
-            GameManager.TimerManager.AddTimer(() => mode = Mode.Pursue, 1500f);
-            GameManager.TimerManager.AddTimer(() => canAttack = true, 7500f);
+
+            // this is done at the end of the attack duration
+            GameManager.TimerManager.AddTimer(() => 
+            {
+                mode = Mode.Pursue;
+                currentAttack = Attack.None;
+            }
+            , atk.chargeTime + atk.duration);
+
+            // this is done when the enemy can attack again
+            GameManager.TimerManager.AddTimer(() => canAttack = true, atk.chargeTime + atk.lagTime);
         }
         
-        private void Attack()
+        private void Jump()
         {
 
             float attackSpeed = 5f;
-            Vector2 toPlayerVector = Vector2.Normalize(centerOfPlayersHitbox - pos);
+            Vector2 toPlayerVector = Vector2.Normalize(oldPlayerPos - pos);
             Velocity = toPlayerVector * attackSpeed;
 
 
@@ -284,38 +338,8 @@ namespace ProjectPalladium.Characters
             return SceneManager.CurScene.CheckCharacterCollisions(this); 
         }
 
-        /* Remove this enemy from the game >:) */
-        public void Kill()
-        {
-            dying = true;
-            Velocity = Vector2.Zero;
-            movementLocked = true;
-            sprite.PlayAnimationOnce("die", SendRemoveMapCall);
-        }
-
-        public void SendRemoveMapCall() {
-            SceneManager.CurScene.Map.RemoveCharacter(this);
-            dying = false;
-        }
-        public void GetHit(int damage)
-        {
-            if (invincible || dying) return;
-
-            DoHitEffect();
-            health -= damage;
-
-            if (health <= 0) { Kill(); return; }
-
-            sprite.AddTimer(() =>
-            {
-                invincible = true;
-            },
-            () =>
-            {
-                invincible = false;
-            }, 100f);
-            
-        }
+       
+      
 
         public void GetHit(Projectile p)
         {
@@ -334,16 +358,13 @@ namespace ProjectPalladium.Characters
 
         }
 
-        private void DoHitEffect()
-        {
-            tintColor = Color.Red;
-            sprite.AddTimer(() =>
-            {
-                tintColor = Color.White;
-            }
-            , 150f);
-        }
+     
 
+        private bool CollidingWithPlayer()
+        {
+            Rectangle slightlyBiggerBounds = new Rectangle(boundingBox.Location - new Point(1), boundingBox.Size + new Point(2));
+            return slightlyBiggerBounds.Intersects(Game1.player.boundingBox);
+        }
         public override void Draw(SpriteBatch b)
         {
             base.Draw(b);

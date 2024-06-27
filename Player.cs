@@ -46,9 +46,14 @@ namespace ProjectPalladium
             currentMap.player = this;
             uiManager = Game1.UIManager;
             inventory = uiManager.inventoryUI.Inventory;
-
+            invincFrames = 1000f;
         }
 
+        protected override void Kill()
+        {
+            Debug.WriteLine("player is dead");
+            Game1.player = null;
+        }
         public void handleMovement()
         {
 

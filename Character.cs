@@ -7,6 +7,7 @@ using ProjectPalladium.Characters;
 using ProjectPalladium.Utils;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 
 namespace ProjectPalladium
 {
@@ -15,6 +16,13 @@ namespace ProjectPalladium
     {
         protected Map currentMap;
         public Color tintColor = Color.White;
+
+        public int health = 10;
+        protected bool invincible;
+        protected bool dying;
+
+        protected float invincFrames = 100f; // how long is this character invincible for after getting hit?
+
         public Map CurrentMap{ get { return currentMap; } set { currentMap = value; } }
         protected bool movementLocked;
         protected bool gettingKnockedBack;
@@ -24,7 +32,6 @@ namespace ProjectPalladium
             get { return movementLocked; } 
             set
             {
-                
                 movementLocked = value;
                 }
         }
@@ -271,6 +278,58 @@ namespace ProjectPalladium
             }
             return false;
         }
+
+        public void GetHit(Enemy.Attack atk)
+        {
+            if (invincible || dying) return;
+
+            Debug.WriteLine(name + " got hit for " + atk.damage + " damage.");
+            GetHit(atk.damage);
+        }
+
+        public void GetHit(int damage)
+        {
+            if (invincible || dying) return;
+
+            DoHitEffect();
+            health -= damage;
+
+            if (health <= 0) { Kill(); return; }
+
+            sprite.AddTimer(() =>
+            {
+                invincible = true;
+            },
+            () =>
+            {
+                invincible = false;
+            }, invincFrames);
+        }
+
+        /* Remove this enemy from the game >:) */
+        protected virtual void Kill()
+        {
+            dying = true;
+            Velocity = Vector2.Zero;
+            movementLocked = true;
+            sprite.PlayAnimationOnce("die", SendRemoveMapCall);
+        }
+
+        public void SendRemoveMapCall()
+        {
+            SceneManager.CurScene.Map.RemoveCharacter(this);
+            dying = false;
+        }
+        protected void DoHitEffect()
+        {
+            tintColor = Color.Red;
+            sprite.AddTimer(() =>
+            {
+                tintColor = Color.White;
+            }
+            , 150f);
+        }
+
         public override string ToString()   
         {
             return "Name: " + name;
