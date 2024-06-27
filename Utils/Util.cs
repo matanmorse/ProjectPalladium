@@ -75,7 +75,7 @@ namespace ProjectPalladium.Utils
                 }
             }
 
-            public bool Intersects(Rectangle r)
+            public bool Intersects(Rectangle r, bool includeTotalIntersection = true)
             {
                 // find the closest point on the rectangle to the center of the circle
                 Vector2 closestPoint = new Vector2(Math.Clamp(x, r.X, r.X + r.Width), Math.Clamp(y, r.Y, r.Y + r.Height)); 
@@ -84,6 +84,7 @@ namespace ProjectPalladium.Utils
 
                 // using euclidian distance formula, if distance to closest point is larger than radius-squared of the circle, the two do not intersect
                 if (distFromClosestPointSquared <= (radius * radius)) return true;
+                if ((!includeTotalIntersection)) return distFromClosestPointSquared <= (radius * radius);
 
                 // if not direct intersection, check if rectangle is completely within circle
                 // Check if the circle is within the left and right bounds of the rectangle

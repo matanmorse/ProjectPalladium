@@ -112,31 +112,30 @@ namespace ProjectPalladium
             return null; // null means no intersections
         }
 
-        // collisions excluding owner
-        public Object checkCollisions(Circle c, Object owner)
+        // check collisions for projectiles
+        public Object checkCollisions(Projectile p)
         {
             foreach (Tilemap t in collidingTilemaps)
             {
                 foreach (Rectangle r in t.colliders) 
                 {
-                    if ((Object) r == owner) continue;
-                    if (c.Intersects(r)) return r; 
+                    if (p.hitbox.Intersects(r, includeTotalIntersection: false)) return r; 
                 }
             }
             foreach (Character character in SceneManager.CurScene.Characters)
             {
-                if ((Object)character == owner) continue;
-                if (c.Intersects(character.boundingBox)) return character;
+                if (character == p.owner) continue;
+                if (p.hitbox.Intersects(character.boundingBox, includeTotalIntersection: false)) return character;
             }
             foreach (Building b in buildings)
             {
-                if ((Object)b == owner) continue;
-                if (c.Intersects(b.bounds)) return b;
+                if (b == p.owner) continue;
+                if (p.hitbox.Intersects(b.bounds, includeTotalIntersection: false)) return b;
             }
             foreach (GameObject g in gameObjects)
             {
-                if ((Object)g == owner) continue;
-                if (c.Intersects(g.bounds)) return g;
+                if (g == p.owner) continue;
+                if (p.hitbox.Intersects(g.bounds, includeTotalIntersection: false)) return g;
             }
             return null; // null means no intersections
         }
@@ -371,7 +370,7 @@ namespace ProjectPalladium
                     pos,
                     name,
                     SceneManager.CurScene.Map,
-                    new Vector2(-4, -4) * Game1.scale,
+                    new Vector2(-6, -6) * Game1.scale,
                     new Vector2(10, 10) * Game1.scale
                 ));
 

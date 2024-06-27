@@ -26,6 +26,8 @@ namespace ProjectPalladium.Characters
         private Vector2 smoothedDirection = Vector2.Zero;
         private static Vector2 centerOfPlayersHitbox = Game1.player.boundingBox.Center.ToVector2();
 
+        Danger thisDanger; // the danger for this entity for other entities
+
         private Attack currentAttack; // what attack is currently being performed?
 
         private Vector2 oldPlayerPos;
@@ -57,15 +59,27 @@ namespace ProjectPalladium.Characters
         {
             public DecayType decayType;
             public float weight;
-            public Vector2 location;
+
+            private float x;
+            private float y;
+
+            public Vector2 location {
+                get { return new Vector2(x, y); }
+                set { x = value.X; y = value.Y; maxInfluenceArea.Pos = new Point((int)x, (int)y); }
+            }
+
+
             public float maxInfluenceRadius;
             public Circle maxInfluenceArea;
             public Danger(DecayType decayType, float weight, Vector2 location, float maxInfluenceRadius)
             {
                 this.maxInfluenceRadius = maxInfluenceRadius * Game1.scale;
                 this.maxInfluenceArea = new Circle(location, (int)this.maxInfluenceRadius);
+
                 this.decayType = decayType;
-                this.location = location;
+                this.x = location.X;
+                this.y = location.Y;
+
                 this.weight = weight;
             }
 
@@ -98,6 +112,11 @@ namespace ProjectPalladium.Characters
 
                 Vector2 awayVector = owner.boundingBox.Center.ToVector2() - location;
                 return Vector2.Dot(awayVector, UnitDirections[dir]) * weight * distWeight;
+            }
+
+            public bool Equals(Danger other)
+            {
+                return (other.location == location);
             }
         }
 
@@ -152,6 +171,10 @@ namespace ProjectPalladium.Characters
         {
             mode = Mode.Idle;
 
+            this.thisDanger = new Danger(DecayType.InverseLinear, 0.1f, this.boundingBox.Center.ToVector2(), this.boundingBox.Width / Game1.scale);
+            dangers.Add(this.thisDanger);
+
+
             Attacks.Add("jump", new Attack(Jump, 250f, 500f, 5000f, 0, sprite.Animations["idle"]));
 
         }
@@ -159,13 +182,19 @@ namespace ProjectPalladium.Characters
 
         public override void Update(GameTime gameTime)
         {
-            
+
+            int myDangerIndex = dangers.FindIndex(x => x.location == this.boundingBox.Center.ToVector2());
+            thisDanger = dangers[myDangerIndex];
+
             if (health < 0) SendRemoveMapCall();
             DoModeActions();
             
             // NOTE: Any collision logic for purposes of combat MUST occur before the movement step, because after collision resolution concludes
             // no characters will collide with each other
             base.Update(gameTime);
+
+            thisDanger.location = boundingBox.Center.ToVector2();
+            dangers[myDangerIndex] = thisDanger;
         }
 
         public static void UpdateStaticItems()
@@ -188,6 +217,7 @@ namespace ProjectPalladium.Characters
             }
         }
 
+        
         public static void AddDanger(DecayType dType, float weight, Vector2 pos, float maxInfluenceRadius)
         {
             Debug.WriteLine("adding danger " + dangers.Count);
@@ -231,6 +261,7 @@ namespace ProjectPalladium.Characters
                 float awayFromPlayer = Vector2.Dot(awayFromPlayerVector, UnitDirections[dir]) * exponentialDistanceWeight; // less weight
                 foreach(Danger d in dangers)
                 {
+                    if (d.Equals(thisDanger)) continue; // don't do danger calculations on ourself
 
                     interest += d.CalculateInterest(this, dir);
                 }

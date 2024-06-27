@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Characters;
 using ProjectPalladium.Utils;
 using System;
+using System.Diagnostics;
 using Circle = ProjectPalladium.Utils.Util.Circle;
 
 namespace ProjectPalladium
@@ -49,9 +50,11 @@ namespace ProjectPalladium
             distanceTraveled = pos - startPos;
             if (distanceTraveled.Length() > MAX_DISTANCE) { Destroy(); return; }
 
-            Object hit = SceneManager.CurScene.Map.checkCollisions(hitbox, owner);
+            Object hit = SceneManager.CurScene.Map.checkCollisions(this);
             if (hit != null)
             {
+                Debug.WriteLine(hit);
+                Debug.WriteLine(Game1.player.boundingBox);
                 if (hit is Enemy)
                 {
                     (hit as Enemy).GetHit(this);
