@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ProjectPalladium.Animation;
+using ProjectPalladium.Buildings;
 using ProjectPalladium.UI;
 using ProjectPalladium.Utils;
 using System;
@@ -50,6 +51,7 @@ namespace ProjectPalladium.Characters
         public enum DecayType { 
             InverseExponent,
             InverseSquare,
+            InverseLinear
         }
         public struct Danger
         {
@@ -71,7 +73,7 @@ namespace ProjectPalladium.Characters
             public float CalculateInterest(Enemy owner, Direction dir)
             {
                 if (!(maxInfluenceArea.Intersects(owner.boundingBox))) return 0f;
-
+           
                 float distToDanger = (location - owner.boundingBox.Center.ToVector2()).Length();
                 // calculate the distanceweight
                 float distWeight;
@@ -86,6 +88,11 @@ namespace ProjectPalladium.Characters
                     float a = 3f;
                     distToDanger /= Game1.scale * 2;
                     distWeight = a / (distToDanger * distToDanger);
+                }
+                else if (decayType == DecayType.InverseLinear)
+                {
+                    float a = 0.95f;
+                    distWeight = a / distToDanger;
                 }
                 else distWeight = 1f;
 
@@ -169,8 +176,16 @@ namespace ProjectPalladium.Characters
 
         public static void AddDangers()
         {
-            // AddTilemapDangers();
-            AddGameObjectDangers();
+            AddTilemapDangers();
+            AddBuildingDangers();
+        }
+
+        public static void AddBuildingDangers()
+        {
+            foreach (Building b in SceneManager.CurScene.Map.buildings)
+            {
+                AddDanger(DecayType.InverseLinear, 1f, b.bounds.Center.ToVector2(), (Math.Max(b.bounds.Width, b.bounds.Height) - (10 * Game1.scale)) / Game1.scale);
+            }
         }
 
         public static void AddDanger(DecayType dType, float weight, Vector2 pos, float maxInfluenceRadius)
@@ -178,18 +193,11 @@ namespace ProjectPalladium.Characters
             Debug.WriteLine("adding danger " + dangers.Count);
             dangers.Add(new Danger(dType, weight, pos, maxInfluenceRadius));
         }
-        public static void AddGameObjectDangers()
+        public static void RemoveDanger(GameObject g)
         {
-            foreach (GameObject g in SceneManager.CurScene.Map.gameObjects)
-            {
-                if (g.bounds == null) continue;
-
-                AddDanger(DecayType.InverseSquare,
-                0.3f, 
-                g.globalPos + new Vector2(g.bounds.Width / 2, g.bounds.Height), 
-                Math.Max(g.bounds.Width, g.bounds.Height) / Game1.scale);
-            }
+            dangers.Remove(dangers.Find(x => x.location == g.bounds.Center.ToVector2()));
         }
+      
         public static void AddTilemapDangers()
         {
             foreach (Tilemap t in SceneManager.CurScene.Map.collidingTilemaps)

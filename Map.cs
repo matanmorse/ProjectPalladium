@@ -401,7 +401,7 @@ namespace ProjectPalladium
             gameObjects.Add(newObj);
 
             // add this to the list of enemy dangers
-            Enemy.AddDanger(Enemy.DecayType.InverseSquare, 0.1f, Util.LocalPosToGlobalPos(tile) + new Vector2(scaledTileSize / 2),
+            Enemy.AddDanger(Enemy.DecayType.InverseSquare, 0.1f, newObj.bounds.Center.ToVector2(),
                 (Math.Max(newObj.bounds.Width, newObj.bounds.Height) + (5 * Game1.scale)) / Game1.scale);
 
             return true;
@@ -434,6 +434,7 @@ namespace ProjectPalladium
                 foreach (GameObject obj in objectsToRemove)
                 {
                     gameObjects.Remove(obj);
+                    Enemy.RemoveDanger(obj);
                 }
                 objectsToRemove.Clear();
             }

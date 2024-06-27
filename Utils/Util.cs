@@ -7,6 +7,7 @@ using System.Reflection.Metadata.Ecma335;
 using ProjectPalladium;
 using System.Transactions;
 using System;
+using static ProjectPalladium.Utils.Util;
 namespace ProjectPalladium.Utils
 {
     public class Util
@@ -82,7 +83,19 @@ namespace ProjectPalladium.Utils
                 float distFromClosestPointSquared = (pos.ToVector2() - closestPoint).LengthSquared();
 
                 // using euclidian distance formula, if distance to closest point is larger than radius-squared of the circle, the two do not intersect
-                return distFromClosestPointSquared <= (radius * radius);
+                if (distFromClosestPointSquared <= (radius * radius)) return true;
+
+                // if not direct intersection, check if rectangle is completely within circle
+                // Check if the circle is within the left and right bounds of the rectangle
+                bool withinLeftAndRight = (pos.X - radius >= r.Location.X) &&
+                (pos.X + radius <= r.Location.X + r.Width);
+
+                // Check if the circle is within the top and bottom bounds of the rectangle
+                bool withinTopAndBottom = (pos.Y - radius >= r.Location.Y) &&
+                (r.Center.Y + radius <= r.Location.Y + r.Height);
+
+                return withinLeftAndRight && withinTopAndBottom;
+
             }
         }
 
