@@ -171,7 +171,7 @@ namespace ProjectPalladium.Characters
         {
             mode = Mode.Idle;
 
-            this.thisDanger = new Danger(DecayType.InverseLinear, 0.1f, this.boundingBox.Center.ToVector2(), this.boundingBox.Width / Game1.scale);
+            this.thisDanger = new Danger(DecayType.InverseSquare, 0.3f, this.boundingBox.Center.ToVector2(), (this.boundingBox.Width + (2 * Game1.scale) ) / Game1.scale);
             dangers.Add(this.thisDanger);
 
 
@@ -184,7 +184,10 @@ namespace ProjectPalladium.Characters
         {
 
             int myDangerIndex = dangers.FindIndex(x => x.location == this.boundingBox.Center.ToVector2());
-            thisDanger = dangers[myDangerIndex];
+            if (myDangerIndex != -1)
+            {
+                thisDanger = dangers[myDangerIndex];
+            }
 
             if (health < 0) SendRemoveMapCall();
             DoModeActions();
@@ -194,7 +197,11 @@ namespace ProjectPalladium.Characters
             base.Update(gameTime);
 
             thisDanger.location = boundingBox.Center.ToVector2();
-            dangers[myDangerIndex] = thisDanger;
+
+            if (myDangerIndex != -1)
+            {
+                dangers[myDangerIndex] = thisDanger;
+            }
         }
 
         public static void UpdateStaticItems()
@@ -227,7 +234,11 @@ namespace ProjectPalladium.Characters
         {
             dangers.Remove(dangers.Find(x => x.location == g.bounds.Center.ToVector2()));
         }
-      
+        public void RemoveDanger()
+        {
+            dangers.Remove(dangers.Find(x => x.location == thisDanger.location));
+        }
+
         public static void AddTilemapDangers()
         {
             foreach (Tilemap t in SceneManager.CurScene.Map.collidingTilemaps)
@@ -424,6 +435,11 @@ namespace ProjectPalladium.Characters
 
         }
 
+        protected override void Kill()
+        {
+            base.Kill();
+            RemoveDanger();
+        }
      
 
         private bool CollidingWithPlayer()
@@ -431,15 +447,23 @@ namespace ProjectPalladium.Characters
             Rectangle slightlyBiggerBounds = new Rectangle(boundingBox.Location - new Point(1), boundingBox.Size + new Point(2));
             return slightlyBiggerBounds.Intersects(Game1.player.boundingBox);
         }
+
+        public static void DrawStatic(SpriteBatch b)
+        {
+            if (DebugParams.showCharacterColliders)
+            {
+                foreach (Danger d in dangers)
+                {
+                    if ((d.location - Game1.player.pos).Length() < 1000)
+                        d.maxInfluenceArea.DrawCircle(b);
+                }
+            }
+        }
         public override void Draw(SpriteBatch b)
         {
             base.Draw(b);
-            foreach (Danger d in dangers)
-            {
-                if ((d.location - Game1.player.pos).Length() < 1000 && DebugParams.showTileColliders)
-                    d.maxInfluenceArea.DrawCircle(b);
-            }
-
+            
+            // debug, draw gizmos for brain
             if (DebugParams.showCharacterColliders)
             {
                 foreach (Direction dir in Enum.GetValues(typeof(Direction)))

@@ -370,7 +370,7 @@ namespace ProjectPalladium
                     pos,
                     name,
                     SceneManager.CurScene.Map,
-                    new Vector2(-6, -6) * Game1.scale,
+                    new Vector2(-5, -5) * Game1.scale,
                     new Vector2(10, 10) * Game1.scale
                 ));
 

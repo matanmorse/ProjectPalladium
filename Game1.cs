@@ -11,6 +11,7 @@ using System.Runtime.ExceptionServices;
 using ProjectPalladium;
 using ProjectPalladium.Animation;
 using System.Collections.Generic;
+using ProjectPalladium.Characters;
 
 
 namespace ProjectPalladium
@@ -291,6 +292,7 @@ namespace ProjectPalladium
             _canvas.Activate();
             _spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp, null, null, null, translation);
             SceneManager.Draw(_spriteBatch);
+            Enemy.DrawStatic(_spriteBatch);
             _spriteBatch.End();
 
             

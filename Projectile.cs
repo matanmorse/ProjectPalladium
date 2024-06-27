@@ -48,7 +48,7 @@ namespace ProjectPalladium
         public void Update(GameTime gameTime)
         {
             distanceTraveled = pos - startPos;
-            if (distanceTraveled.Length() > MAX_DISTANCE) { Destroy(); return; }
+            if (distanceTraveled.Length() > MAX_DISTANCE) { Destroy(); return   ; }
 
             Object hit = SceneManager.CurScene.Map.checkCollisions(this);
             if (hit != null)
