@@ -216,6 +216,7 @@ namespace ProjectPalladium.Characters
             AddBuildingDangers();
         }
 
+       
         public static void AddBuildingDangers()
         {
             foreach (Building b in SceneManager.CurScene.Map.buildings)
@@ -237,6 +238,10 @@ namespace ProjectPalladium.Characters
         public void RemoveDanger()
         {
             dangers.Remove(dangers.Find(x => x.location == thisDanger.location));
+        }
+        public static void RemoveAllDangers()
+        {
+            dangers.Clear();
         }
 
         public static void AddTilemapDangers()

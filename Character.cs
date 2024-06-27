@@ -32,6 +32,11 @@ namespace ProjectPalladium
             get { return movementLocked; } 
             set
             {
+                if (dying)
+                {
+                    movementLocked = true; return;
+                }
+
                 movementLocked = value;
                 }
         }
@@ -312,6 +317,7 @@ namespace ProjectPalladium
             dying = true;
             Velocity = Vector2.Zero;
             movementLocked = true;
+            boundingBox = Rectangle.Empty;
             sprite.PlayAnimationOnce("die", SendRemoveMapCall);
         }
 

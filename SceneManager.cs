@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Buildings;
+using ProjectPalladium.Characters;
 using System;
 using System.Diagnostics;
 
@@ -26,6 +27,8 @@ namespace ProjectPalladium
             curScene.Map.player.lerpingCamera = curScene.Player.pos; // avoid camera movement when changing scenes, less motion sick
 
             // curScene.Map.OnLoad();
+
+            Enemy.RemoveAllDangers();
         }
 
         // load scene at non-default spawn position
