@@ -211,6 +211,7 @@ namespace ProjectPalladium.Animation
         }
         public void Draw(SpriteBatch b, Vector2 pos, bool flipped=false, float layerDepth = 1f)
         {
+            if (spriteTexture == null) { return; }
             pos = new Vector2(MathF.Floor(pos.X), MathF.Floor(pos.Y));
             if (_animation == null) { return; }
             if (flipped)
@@ -224,6 +225,7 @@ namespace ProjectPalladium.Animation
         }
         public void Draw(SpriteBatch b, Vector2 pos, Color color, bool flipped = false, float layerDepth = 1f)
         {
+            if (spriteTexture == null) { return; }
             pos = new Vector2(MathF.Floor(pos.X), MathF.Floor(pos.Y));
             if (_animation == null) { return; }
             if (flipped)

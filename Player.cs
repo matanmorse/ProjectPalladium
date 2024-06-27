@@ -19,6 +19,7 @@ namespace ProjectPalladium
         private Item _activeItem;
         public bool holdingTool;
 
+        public bool dead;
 
         public bool usingItemLocked = false;
         public Point feet; // lmao
@@ -52,7 +53,9 @@ namespace ProjectPalladium
         protected override void Kill()
         {
             Debug.WriteLine("player is dead");
-            Game1.player = null;
+            dead = true;
+            sprite.spriteTexture = null;
+            movementLocked = true;
         }
         public void handleMovement()
         {
@@ -169,7 +172,8 @@ namespace ProjectPalladium
 
         public override void Update(GameTime gameTime)
         {
-          
+            if (dead) return; // duh
+
             lerpingCamera = Vector2.Lerp(lerpingCamera, pos , 0.1f);
             base.Update(gameTime);
             feet = Util.GetNearestTile(pos) + new Point(0, 1);

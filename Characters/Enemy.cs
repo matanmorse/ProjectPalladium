@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using ProjectPalladium.Animation;
 using ProjectPalladium.UI;
 using ProjectPalladium.Utils;
@@ -13,6 +14,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Animation = ProjectPalladium.Animation.Animation;
+using Circle = ProjectPalladium.Utils.Util.Circle;
+
 namespace ProjectPalladium.Characters
 {
     public class Enemy : NPC
@@ -54,20 +57,22 @@ namespace ProjectPalladium.Characters
             public float weight;
             public Vector2 location;
             public float maxInfluenceRadius;
-
+            public Circle maxInfluenceArea;
             public Danger(DecayType decayType, float weight, Vector2 location, float maxInfluenceRadius)
             {
                 this.maxInfluenceRadius = maxInfluenceRadius * Game1.scale;
+                this.maxInfluenceArea = new Circle(location, (int)this.maxInfluenceRadius);
                 this.decayType = decayType;
                 this.location = location;
                 this.weight = weight;
             }
 
             // calculate the interest for this danger given a location,direction being considered, and distance
-            public float CalculateInterest(float distToDanger, Vector2 otherLocation, Direction dir)
+            public float CalculateInterest(Enemy owner, Direction dir)
             {
-                if (distToDanger > maxInfluenceRadius) return 0f;
+                if (!(maxInfluenceArea.Intersects(owner.boundingBox))) return 0f;
 
+                float distToDanger = (location - owner.boundingBox.Center.ToVector2()).Length();
                 // calculate the distanceweight
                 float distWeight;
                 if (decayType == DecayType.InverseExponent)
@@ -76,7 +81,7 @@ namespace ProjectPalladium.Characters
                     float a = 10f;
                     distWeight = a / (MathF.Exp(k * distToDanger));
                 }
-                if (decayType == DecayType.InverseSquare)
+                else if (decayType == DecayType.InverseSquare)
                 {
                     float a = 3f;
                     distToDanger /= Game1.scale * 2;
@@ -84,7 +89,7 @@ namespace ProjectPalladium.Characters
                 }
                 else distWeight = 1f;
 
-                Vector2 awayVector = otherLocation - location;
+                Vector2 awayVector = owner.boundingBox.Center.ToVector2() - location;
                 return Vector2.Dot(awayVector, UnitDirections[dir]) * weight * distWeight;
             }
         }
@@ -140,14 +145,14 @@ namespace ProjectPalladium.Characters
         {
             mode = Mode.Idle;
 
-            Attacks.Add("jump", new Attack(Jump, 250f, 500f, 5000f, 3, sprite.Animations["idle"]));
+            Attacks.Add("jump", new Attack(Jump, 250f, 500f, 5000f, 0, sprite.Animations["idle"]));
 
         }
 
 
         public override void Update(GameTime gameTime)
         {
-
+            
             if (health < 0) SendRemoveMapCall();
             DoModeActions();
             
@@ -158,10 +163,33 @@ namespace ProjectPalladium.Characters
 
         public static void UpdateStaticItems()
         {
-            if (dangers.Count == 0) { AddTilemapDangers(); }
+            if (dangers.Count == 0) { AddDangers(); }
             centerOfPlayersHitbox = Game1.player.boundingBox.Center.ToVector2();
         }
 
+        public static void AddDangers()
+        {
+            // AddTilemapDangers();
+            AddGameObjectDangers();
+        }
+
+        public static void AddDanger(DecayType dType, float weight, Vector2 pos, float maxInfluenceRadius)
+        {
+            Debug.WriteLine("adding danger " + dangers.Count);
+            dangers.Add(new Danger(dType, weight, pos, maxInfluenceRadius));
+        }
+        public static void AddGameObjectDangers()
+        {
+            foreach (GameObject g in SceneManager.CurScene.Map.gameObjects)
+            {
+                if (g.bounds == null) continue;
+
+                AddDanger(DecayType.InverseSquare,
+                0.3f, 
+                g.globalPos + new Vector2(g.bounds.Width / 2, g.bounds.Height), 
+                Math.Max(g.bounds.Width, g.bounds.Height) / Game1.scale);
+            }
+        }
         public static void AddTilemapDangers()
         {
             foreach (Tilemap t in SceneManager.CurScene.Map.collidingTilemaps)
@@ -195,8 +223,8 @@ namespace ProjectPalladium.Characters
                 float awayFromPlayer = Vector2.Dot(awayFromPlayerVector, UnitDirections[dir]) * exponentialDistanceWeight; // less weight
                 foreach(Danger d in dangers)
                 {
-                    float distToDanger = (d.location - centerOfHitbox).Length();
-                    interest += d.CalculateInterest(distToDanger, centerOfHitbox, dir);
+
+                    interest += d.CalculateInterest(this, dir);
                 }
                 if (distToPlayer < 50 * Game1.scale)
                 {
@@ -225,8 +253,6 @@ namespace ProjectPalladium.Characters
 
             int highestIndex = Array.IndexOf(interests, interests.Max());
             movingDir = (Direction)highestIndex;
-
-            // Debug.WriteLine(movingDir + " " + interests[highestIndex]);
 
             // apply direction smoothing
             float smoothingFactor = 0.03f;
@@ -300,18 +326,19 @@ namespace ProjectPalladium.Characters
         
         private void Jump()
         {
-
+            Vector2 posAtStart = pos;
             float attackSpeed = 5f;
             Vector2 toPlayerVector = Vector2.Normalize(oldPlayerPos - pos);
             Velocity = toPlayerVector * attackSpeed;
 
-
+            GameManager.TimerManager.AddTimer(() => Velocity = Vector2.Normalize(posAtStart - pos) * attackSpeed, currentAttack.duration / 2);
         }
         protected void FindMode()
         {
+            if (Game1.player.dead) { mode = Mode.Idle; return; }
             if (mode == Mode.Attack) { return;  }
             float distToPlayer = (SceneManager.CurScene.Player.pos - pos).Length();
-            if (distToPlayer < 300 * Game1.scale) { mode = Mode.Pursue; }
+            if (distToPlayer < 200 * Game1.scale) { mode = Mode.Pursue; }
 
             else { mode = Mode.Idle; }
         }
@@ -370,8 +397,8 @@ namespace ProjectPalladium.Characters
             base.Draw(b);
             foreach (Danger d in dangers)
             {
-                if ( (d.location - Game1.player.pos).Length() < 1000 && DebugParams.showTileColliders) 
-                new Util.Circle(d.location, (int)d.maxInfluenceRadius).DrawCircle(b);
+                if ((d.location - Game1.player.pos).Length() < 1000 && DebugParams.showTileColliders)
+                    d.maxInfluenceArea.DrawCircle(b);
             }
 
             if (DebugParams.showCharacterColliders)

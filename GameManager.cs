@@ -14,6 +14,8 @@ namespace ProjectPalladium
     public class GameManager
     {
         // generic Timer Manager
+
+        public static List<Timer> timersToAdd = new List<Timer>();
         public class TimerManager
         {
             public static List<Timer> timers = new List<Timer>();
@@ -25,6 +27,11 @@ namespace ProjectPalladium
                     timer.Update(gameTime);
                 }
                 Timer.TimerUpdates(timers);
+                foreach (Timer t in timersToAdd)
+                {
+                    timers.Add(t);
+                }
+                timersToAdd.Clear();
             }
 
             public static void AddTimer(Timer.Callback onStart, Timer.Callback callback, float interval)
@@ -35,7 +42,7 @@ namespace ProjectPalladium
 
             public static void AddTimer(Timer.Callback callback, float interval)
             {
-                timers.Add(new Timer(0f, interval, callback, timers));
+                timersToAdd.Add(new Timer(0f, interval, callback, timers));
             }
         }
 

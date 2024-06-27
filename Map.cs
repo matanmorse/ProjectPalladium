@@ -397,7 +397,13 @@ namespace ProjectPalladium
             if (tile.ToPoint() == player.feet) return false; // shouldn't be able to place buildings under us
 
             string textureName = itemName.Replace(" ", "").ToLower() + "placed";
-            gameObjects.Add(new PlaceableGameObject(itemName, tile, textureName));
+            PlaceableGameObject newObj = new PlaceableGameObject(itemName, tile, textureName);
+            gameObjects.Add(newObj);
+
+            // add this to the list of enemy dangers
+            Enemy.AddDanger(Enemy.DecayType.InverseSquare, 0.1f, Util.LocalPosToGlobalPos(tile) + new Vector2(scaledTileSize / 2),
+                (Math.Max(newObj.bounds.Width, newObj.bounds.Height) + (5 * Game1.scale)) / Game1.scale);
+
             return true;
         }
 
