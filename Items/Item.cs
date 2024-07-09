@@ -9,6 +9,7 @@ using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 using ProjectPalladium.Tools;
+using ProjectPalladium.Stations;
 
 namespace ProjectPalladium.Items
 {
@@ -20,12 +21,13 @@ namespace ProjectPalladium.Items
         public int quantity;
         public string description;
         public int stackSize;
+        public bool potionIngredient;
 
         public static Item none = new Item(-1, "", "", -1, "", -1);
 
 
 
-        public Item(int id, string name, string textureName, int quantity, string description, int stacksize)
+        public Item(int id, string name, string textureName, int quantity, string description, int stacksize, bool potionIngredient=false)
         {
             this.id = id;
             this.name = name;
@@ -33,13 +35,15 @@ namespace ProjectPalladium.Items
             this.quantity = quantity;
             this.description = description;
             this.stackSize = stacksize;
+            this.potionIngredient = potionIngredient;
         }
         private static Dictionary<String, Item> Items = new Dictionary<String, Item>()
         {
             { "wand", new Wand(0, "wand", "wand", "a wand") },
-            { "ectoplasmic gem", new Item(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", 99)},
+            { "ectoplasmic gem", new Item(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", 99, potionIngredient:true)},
             { "mana melon seed", new Seed(2, "Mana Melon Seed", "manamelonseed", 1, "some mana melon seeds", 99, "manamelonplant") },
-            { "scrying orb", new Placeable(3, "Scrying Orb", "scryingorb", 1, "An orb for scrying.")}
+            { "scrying orb", new Placeable(3, "Scrying Orb", "scryingorb", 1, "An orb for scrying.")},
+            { "cauldron", new Placeable(4, "Cauldron", "cauldron", 1, "A cauldron for brewing potions.", worldObjectType:typeof(Cauldron)) }
         
         };
 

@@ -1,0 +1,9 @@
+﻿{
+  "name": "Cauldron",
+  "colliders": {
+    "move": {
+      "size": [ 28, 10 ],
+      "location": [ 2, 22 ]
+    }
+  }
+}

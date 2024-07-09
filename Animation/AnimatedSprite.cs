@@ -66,7 +66,9 @@ namespace ProjectPalladium.Animation
             get { return animationLocked; }
             set
             {
+                
                 this.animationLocked = value;
+                if (owner == null) return;
                 owner.MovementLocked = value; 
             }
         }
@@ -94,8 +96,22 @@ namespace ProjectPalladium.Animation
             origin = new Vector2(spriteWidth / 2, spriteHeight / 2);
             initSprite(registryName);
             LoadTexture(textureName);
+            LoadContent();
         }
 
+        public AnimatedSprite(int spriteWidth, int spriteHeight, string textureName, string registryName, Vector2 origin)
+        {
+            this.spriteWidth = spriteWidth;
+            this.spriteHeight = spriteHeight;
+
+            scaledWidth = (int)(spriteWidth * Game1.scale);
+            scaledHeight = (int)(spriteHeight * Game1.scale);
+
+            this.origin = origin;
+            initSprite(registryName);
+            LoadTexture(textureName);
+            LoadContent();
+        }
         public void AddTimer(Timer.Callback callback, float time )
         {
             timers.Add(new Timer(0f, time, callback, timers));

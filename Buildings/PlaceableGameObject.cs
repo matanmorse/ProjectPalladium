@@ -12,7 +12,7 @@ namespace ProjectPalladium.Buildings
 {
     public class PlaceableGameObject : GameObject
     {
-        private Button button;
+        protected Button button;
         public PlaceableGameObject(string name, Vector2 pos, string textureName = "") : base(name, pos, textureName)
         {
             button = new Button(null, Remove, null, bounds.Location,bounds.Size);
@@ -25,7 +25,7 @@ namespace ProjectPalladium.Buildings
         }
 
         /* When the player picks up the object */
-        public void Remove()
+        public virtual void Remove()
         {
             Map curMap = SceneManager.CurScene.Map;
             if (curMap.RemoveGameObject(this))

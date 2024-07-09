@@ -10,6 +10,7 @@ using ProjectPalladium.Utils;
 using ProjectPalladium.Plants;
 using ProjectPalladium.Tools;
 using TimerManager = ProjectPalladium.GameManager.TimerManager;
+using ProjectPalladium.Stations;
 namespace ProjectPalladium.Spells
 {
     public class Spell
@@ -29,7 +30,8 @@ namespace ProjectPalladium.Spells
             {"tillearth", new Spell("Till Earth", "Tills some earth", School.Transmutation, "LL", 10, TillEarth) },
             {"iceblast", new Spell("Ice blast", "Blasts some ice", School.Evocation, "RR", 10, IceBlast) },
             {"growth", new Spell("Growth", "Grows a plant",School.Transmutation, "LLUR" , 10,Growth) },
-            {"chronoshift", new Spell("Chrono Shift", "Advance Time", School.Chronomancy, "DDRUUL", 10, ChronoShift) }
+            {"chronoshift", new Spell("Chrono Shift", "Advance Time", School.Chronomancy, "DDRUUL", 10, ChronoShift) },
+            {"animatecauldron", new Spell("Animate Cauldron", "Bring a cauldron to life",  School.Conjuration, "DDD", 10, AnimateCauldron) }
         };
 
         public enum School
@@ -37,7 +39,8 @@ namespace ProjectPalladium.Spells
             None,
             Evocation,
             Transmutation,
-            Chronomancy
+            Chronomancy,
+            Conjuration,
         }
         public Spell(string name, string description, School school, string spellPath, int manaCost, SpellHandler onCast)
         {
@@ -49,6 +52,7 @@ namespace ProjectPalladium.Spells
             this.onCast = onCast;
         }
 
+        
         public static void OnCastEvocationSpell()
         {
             SceneManager.CurScene.Player.castingAttackSpell = false;
@@ -89,7 +93,23 @@ namespace ProjectPalladium.Spells
         
 
 
-       
+        public static void AnimateCauldron()
+        {
+            foreach (GameObject obj in SceneManager.CurScene.Map.gameObjects)
+            {
+                if (!(obj is Cauldron)) continue;
+
+                // get center of cauldron, and if player is within range try to start brewing
+                Cauldron cauld = obj as Cauldron;
+                Point tileOfCenterOfObj = Util.GlobalPosToLocalPos(
+                    obj.globalPos
+                    + new Vector2(cauld.animatedSprite.scaledWidth, cauld.animatedSprite.spriteHeight) / 2
+                    ).ToPoint();
+                if (!(Util.IsTileWithinOneTileOfPlayer(tileOfCenterOfObj))) continue;
+
+                cauld.TryBrew();
+            }
+        }
         public static void ChronoShift()
         {
             for (int i = 0; i < 5; i++)

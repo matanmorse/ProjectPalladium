@@ -10,6 +10,8 @@ using ProjectPalladium.Buildings;
 using System.Text.Json;
 using ProjectPalladium.UI;
 using System.Diagnostics;
+using ProjectPalladium.Stations;
+using ProjectPalladium.Animation;
 namespace ProjectPalladium
 {
     public class GameObject
@@ -68,8 +70,17 @@ namespace ProjectPalladium
         public string GetJsonString(string jsonName)
         {
             jsonName = jsonName.ToLower().Replace(" ", "");
+            string subFolder;
 
-            string subFolder = this.GetType().Name.ToLower() + "s/";
+            if (this is Station)
+            {
+                subFolder = "stations/";
+            }
+            else
+            {
+                subFolder = this.GetType().Name.ToLower() + "s/";
+            }
+
             string registryPath = "Content/" + subFolder + jsonName + ".json";
             string jsonString = System.IO.File.ReadAllText(registryPath);
             return jsonString;
@@ -85,9 +96,11 @@ namespace ProjectPalladium
                 ColliderDetails bounds = info.colliders["move"];
                 this.bounds = Util.makeRectFromPoints(bounds, globalPos);
             }
-            ColliderDetails walkBehind = info.colliders["behind"];
-
-            this.walkBehind = Util.makeRectFromPoints(walkBehind, globalPos);
+            if (info.colliders.ContainsKey("behind"))
+            {
+                ColliderDetails walkBehind = info.colliders["behind"];
+                this.walkBehind = Util.makeRectFromPoints(walkBehind, globalPos);
+            }
 
         }
 

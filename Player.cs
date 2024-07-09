@@ -158,7 +158,6 @@ namespace ProjectPalladium
 
             if (Input.GetRightMouseClicked())
             {
-                sprite.AddTimer(() => Debug.WriteLine("ding!"), 1000f);
                 HandleRightClicks();
             }
         }

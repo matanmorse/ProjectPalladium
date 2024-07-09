@@ -20,11 +20,12 @@ namespace ProjectPalladium
                 inventory.Add(Item.none);
             }
             inventory[3] = Item.GetItemFromRegistry("wand");
-            inventory[4] = Item.GetItemFromRegistry("mana melon seed");
+            inventory[4] = Item.GetItemFromRegistry("ectoplasmic gem");
             inventory[4].quantity = 5;
-            inventory[5] = Item.GetItemFromRegistry("scrying orb");
-            inventory[5].quantity = 6;
-            
+            inventory[5] = Item.GetItemFromRegistry("cauldron");
+            inventory[6] = Item.GetItemFromRegistry("scrying orb");
+
+
         }
         public int Size()
         {
@@ -80,6 +81,7 @@ namespace ProjectPalladium
             inventory[index] = Item.none;
             ui.UpdateInventory();
         }
+       
 
         public void RemoveItemAtIndex(int index, int quantity)
         {

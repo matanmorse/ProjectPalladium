@@ -16,6 +16,7 @@ using ProjectPalladium.Characters;
 using Circle = ProjectPalladium.Utils.Util.Circle;
 using Trigger = ProjectPalladium.Utils.Trigger;
 using System.Buffers;
+using System.Xml.Linq;
 
 
 namespace ProjectPalladium
@@ -390,13 +391,25 @@ namespace ProjectPalladium
             return true;
         }
 
-        public bool AddGameObject(string itemName, Vector2 tile)
+        public bool AddGameObject(string itemName, Vector2 tile, Type worldObjectType)
         {
             if (FindGameObjectAtTile(tile.ToPoint()) != null) return false;
             if (tile.ToPoint() == player.feet) return false; // shouldn't be able to place buildings under us
 
+            // create placeable object of dynamic type
+            // depending on the type, the constructor will need to have different parameters
             string textureName = itemName.Replace(" ", "").ToLower() + "placed";
-            PlaceableGameObject newObj = new PlaceableGameObject(itemName, tile, textureName);
+            object[] parameters;
+            if ( worldObjectType == typeof(PlaceableGameObject))
+            {
+                 parameters = new object[] { itemName, tile, textureName };
+            }
+            else
+            {
+                 parameters = new object[] { itemName, tile };
+            }
+
+            var newObj = Activator.CreateInstance(worldObjectType, parameters) as PlaceableGameObject;
             gameObjects.Add(newObj);
 
             // add this to the list of enemy dangers

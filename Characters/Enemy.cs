@@ -228,7 +228,6 @@ namespace ProjectPalladium.Characters
         
         public static void AddDanger(DecayType dType, float weight, Vector2 pos, float maxInfluenceRadius)
         {
-            Debug.WriteLine("adding danger " + dangers.Count);
             dangers.Add(new Danger(dType, weight, pos, maxInfluenceRadius));
         }
         public static void RemoveDanger(GameObject g)

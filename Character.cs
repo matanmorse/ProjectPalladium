@@ -102,8 +102,6 @@ namespace ProjectPalladium
 
         public virtual void Initialize()
         {
-            // load sprite data
-            sprite.LoadContent();
             setBounds(currentMap.tileMapSize, 16);
         }
 

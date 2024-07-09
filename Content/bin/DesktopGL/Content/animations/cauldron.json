@@ -1,0 +1,16 @@
+﻿{
+  "name": "cauldron",
+  "animations": {
+    "idle": {
+      "startframe": 0,
+      "numframes": 0,
+      "intervals": [ 10000 ]
+    },
+    "brew": {
+      "startframe": 1,
+      "numframes": 4,
+      "intervals": [ 200,200,200,200,800 ]
+    }
+    
+  }
+}
