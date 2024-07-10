@@ -99,14 +99,14 @@ namespace ProjectPalladium.Spells
             {
                 if (!(obj is Cauldron)) continue;
 
-                // get center of cauldron, and if player is within range try to start brewing
-                Cauldron cauld = obj as Cauldron;
-                Point tileOfCenterOfObj = Util.GlobalPosToLocalPos(
-                    obj.globalPos
-                    + new Vector2(cauld.animatedSprite.scaledWidth, cauld.animatedSprite.spriteHeight) / 2
-                    ).ToPoint();
-                if (!(Util.IsTileWithinOneTileOfPlayer(tileOfCenterOfObj))) continue;
+                int rectRange = 50;
 
+                Player p = Game1.player;
+                Cauldron cauld = obj as Cauldron;
+
+                // if player is within range, start brewing
+                Rectangle areaOfEffect = Util.MakeRangeRect(p.boundingBox.Center, rectRange);
+                if (!(areaOfEffect.Intersects(cauld.bounds))) return;
                 cauld.TryBrew();
             }
         }

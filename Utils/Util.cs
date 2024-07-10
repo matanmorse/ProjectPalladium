@@ -260,6 +260,11 @@ namespace ProjectPalladium.Utils
             return index + 1; // otherwise the true index is one more than the position because of tmx fuckery
         }
 
-     
+        // return a rectangle of a certain size centered on the point
+        public static Rectangle MakeRangeRect(Point pos, int range)
+        {
+            Point size = new Point(range) * new Point((int)Game1.scale);
+            return new Rectangle((int)(pos.X - size.X / 2), (int)(pos.Y - size.Y / 2), size.X, size.Y);
+        }
     }
 }

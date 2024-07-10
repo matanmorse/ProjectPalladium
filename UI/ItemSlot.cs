@@ -87,7 +87,9 @@ namespace ProjectPalladium.UI
         {
             ApplyEffects(b);
 
-            base.Draw(b);
+            // draw item centered
+            Vector2 origin = ((item.sprite.size.ToVector2()) / 2);
+            item.Draw(b, drawPos.ToVector2(), scale, origin);
             
             if (item.quantity > 1) { itemCount.Draw(b, item.quantity.ToString()); }
 

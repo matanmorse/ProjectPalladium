@@ -21,8 +21,9 @@ namespace ProjectPalladium
             }
             inventory[3] = Item.GetItemFromRegistry("wand");
             inventory[4] = Item.GetItemFromRegistry("ectoplasmic gem");
-            inventory[4].quantity = 5;
+            inventory[4].quantity = 20;
             inventory[5] = Item.GetItemFromRegistry("cauldron");
+            inventory[5].quantity = 2;
             inventory[6] = Item.GetItemFromRegistry("scrying orb");
 
 

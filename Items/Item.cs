@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ProjectPalladium.Tools;
 using ProjectPalladium.Stations;
+using Microsoft.Xna.Framework;
 
 namespace ProjectPalladium.Items
 {
@@ -23,6 +24,7 @@ namespace ProjectPalladium.Items
         public int stackSize;
         public bool potionIngredient;
 
+        public Renderable sprite;
         public static Item none = new Item(-1, "", "", -1, "", -1);
 
 
@@ -36,6 +38,7 @@ namespace ProjectPalladium.Items
             this.description = description;
             this.stackSize = stacksize;
             this.potionIngredient = potionIngredient;
+            this.sprite = new Renderable(textureName);
         }
         private static Dictionary<String, Item> Items = new Dictionary<String, Item>()
         {
@@ -97,6 +100,11 @@ namespace ProjectPalladium.Items
         public virtual void Update() {}
 
         public virtual void Use() {}
+
+        public virtual void Draw(SpriteBatch b, Vector2 pos, float scale, Vector2 origin)
+        {
+            sprite.Draw(b, pos, layer: Game1.layers.UI, scale: scale, origin:origin);
+        }
     };
  
 

@@ -30,9 +30,6 @@ namespace ProjectPalladium
         public bool castingAttackSpell; // do we need to show the target indicator
 
         public Vector2 lerpingCamera;
-
-
-
         public Item ActiveItem { get { return _activeItem; } 
             
             set {
@@ -190,7 +187,6 @@ namespace ProjectPalladium
 
         public override void Draw(SpriteBatch b)
         {
-            
             if (holdingTool) { (ActiveItem as Tool).Draw(b); }
             base.Draw(b);
         }
