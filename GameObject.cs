@@ -31,7 +31,7 @@ namespace ProjectPalladium
             get { return localPos; }
         }
 
-        protected string name;
+        public string name;
 
 
         protected bool playerBehind;

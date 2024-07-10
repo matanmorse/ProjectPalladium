@@ -100,6 +100,7 @@ namespace ProjectPalladium.Utils
             }
         }
 
+
         public static void DrawLine(SpriteBatch b, Vector2 start, Vector2 end, Color color)
         {
             int thickness = 5;

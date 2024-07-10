@@ -41,7 +41,6 @@ namespace ProjectPalladium
                 }
         }
 
-        private Rectangle currentIntersection;
 
         public Rectangle boundingBox;
         public float layer = Game1.layers.player;
@@ -122,10 +121,7 @@ namespace ProjectPalladium
 
         public virtual void Draw(SpriteBatch b)
         {
-            if (currentIntersection != null)
-            {
-                Util.DrawRectangle(currentIntersection,b);
-            }
+           
             if (DebugParams.showCharacterColliders) { Util.DrawRectangle(boundingBox,b); }
            foreach(Projectile p in projectiles) { p.Draw(b); }
             sprite.Draw(b, pos, tintColor, flipped, layerDepth: layer);

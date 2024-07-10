@@ -29,7 +29,6 @@ namespace ProjectPalladium.Plants
         }
         public int totalGrowthStages;
 
-        public string name;
 
 
         private const int GROWTH_INTERVAL = 30; // in-game minutes between growth stages

@@ -17,6 +17,7 @@ using Circle = ProjectPalladium.Utils.Util.Circle;
 using Trigger = ProjectPalladium.Utils.Trigger;
 using System.Buffers;
 using System.Xml.Linq;
+using ProjectPalladium.Stations;
 
 
 namespace ProjectPalladium
@@ -256,6 +257,11 @@ namespace ProjectPalladium
                     Plant p = g as Plant;
                     p.UpdateOnGameTime();
                 }
+                if (g is Station)
+                {
+                    Station st = g as Station;
+                    st.UpdateOnGameTime();
+                }
             }
         }
         
@@ -437,7 +443,7 @@ namespace ProjectPalladium
         {
             if (c == null) return false;
             charactersToRemove.Push(c); return true;
-            return false; // character does not exist
+            
         }
         private void DoStagedChanges()
         {

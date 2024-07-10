@@ -13,6 +13,16 @@ namespace ProjectPalladium.Stations
     {
         new public AnimatedSprite animatedSprite;
 
+        private bool completed = false;
+        public bool Completed
+        {
+            get { return completed; }
+            set
+            {
+                completed = value;
+            }
+        }
+
         public Station(string name, Vector2 pos, string registryName, string textureName = "") : base(name, pos, textureName)
         {
             animatedSprite = new AnimatedSprite(32, 32, textureName, registryName, Vector2.Zero);
@@ -23,6 +33,11 @@ namespace ProjectPalladium.Stations
         {
             base.Update(gameTime);
             animatedSprite.Update(gameTime);
+        }
+
+        public virtual void UpdateOnGameTime()
+        {
+
         }
     }
 }

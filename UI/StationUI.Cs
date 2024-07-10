@@ -12,6 +12,7 @@ using ProjectPalladium.Stations;
 using System.ComponentModel;
 using System.Security.Cryptography.X509Certificates;
 using ProjectPalladium.Animation;
+using System.Xml.XPath;
 
 namespace ProjectPalladium.UI
 {
@@ -45,7 +46,7 @@ namespace ProjectPalladium.UI
             public void Draw(SpriteBatch b)
             {
                 stationItemSlot.Draw(b, pos, layer: Game1.layers.UI - 0.01f, scale: StationUIScale);
-                sprite.Draw(b, pos, layer: Game1.layers.UI, scale: StationUIScale);
+                item.Draw(b, pos, scale: StationUIScale, origin:Vector2.Zero);
 
             }
 
@@ -89,10 +90,18 @@ namespace ProjectPalladium.UI
 
         public void Draw(SpriteBatch b)
         {
-            foreach (StationItemSlot sprite in items)
+            if (parent.Completed)
             {
-                sprite.Draw(b);
+                items[1].Draw(b); // only draw the center item slot when completed
             }
+            else // otherwise draw all item slots
+            {
+                foreach (StationItemSlot sprite in items)
+                {
+                    sprite.Draw(b);
+                }
+            }
+          
         }
     }
 }

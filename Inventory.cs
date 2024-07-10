@@ -24,8 +24,13 @@ namespace ProjectPalladium
             inventory[4].quantity = 20;
             inventory[5] = Item.GetItemFromRegistry("cauldron");
             inventory[5].quantity = 2;
-            inventory[6] = Item.GetItemFromRegistry("scrying orb");
-            inventory[7] = new Potion("Potion", "A potion");
+            inventory[6] = Item.GetItemFromRegistry("magmarock");
+            inventory[6].quantity = 30;
+            inventory[7] = Item.GetItemFromRegistry("giantstoe");
+            inventory[7].quantity = 30;
+
+            
+            
 
         }
         public int Size()
@@ -36,6 +41,7 @@ namespace ProjectPalladium
         // TODO: Implement item stacking
         public bool AddItem(Item item, int amount)
         {
+            Debug.WriteLine("adding " + item);
             int firstEmptyInv = FindItem(Item.none);
             if (firstEmptyInv == -1) { return false; } // the player's inventory is full
 
@@ -50,6 +56,7 @@ namespace ProjectPalladium
 
             if (index == -1) // player does not have a non-full stack
             {
+                Debug.WriteLine("does not have item yet");
                 Item newItem = item.Clone();
                 newItem.quantity = amount;
                 inventory[firstEmptyInv] = newItem;
@@ -110,7 +117,7 @@ namespace ProjectPalladium
             }
             return inventory.FindIndex(index, new Predicate<Item>(i =>
             {
-                return i.name == item.name;
+                return i == item;
             }));
         }
 
