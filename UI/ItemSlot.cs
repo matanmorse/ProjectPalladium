@@ -68,7 +68,7 @@ namespace ProjectPalladium.UI
 
         private void ApplyEffects(SpriteBatch b)
         {
-            if (button.mouseOver && !button.clickState)
+            if (button.mouseOver && (!button.clickState || parent is InventoryUI))
             {
                 scale = parent.scale + 0.5f;
             }
