@@ -41,7 +41,7 @@ namespace ProjectPalladium.Items
             RestoreHealth,
         }
 
-        public Item(int id, string name, string textureName, int quantity, string description, int stacksize, bool potionIngredient=false, PotionEffects[] effects=null)
+        public Item(int id, string name, string textureName, int quantity, string description, int stacksize, bool potionIngredient=false)
         {
             this.id = id;
             this.name = name;
@@ -50,20 +50,19 @@ namespace ProjectPalladium.Items
             this.description = description;
             this.stackSize = stacksize;
             this.potionIngredient = potionIngredient;
-            this.potionEffects = effects;
             this.sprite = new Renderable(textureName);
         }
         private static Dictionary<String, Item> Items = new Dictionary<String, Item>()
         {
             { "wand", new Wand(0, "wand", "wand", "a wand") },
 
-            { "ectoplasmic gem", new Item(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", 99, potionIngredient:true,
+            { "ectoplasmic gem", new Ingredient(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", 99, potionIngredient:true,
                 effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreMana, PotionEffects.FortifyHealth, PotionEffects.RestoreHealth}
                 )},
-            { "giantstoe", new Item(5, "Giants' Toe", "giantstoe", 1, "a magma rock", 99, potionIngredient:true,
+            { "giantstoe", new Ingredient(5, "Giants' Toe", "giantstoe", 1, "a magma rock", 99, potionIngredient:true,
                 effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreMana, PotionEffects.FortifyHealth, PotionEffects.RestoreHealth}
                 )},
-            { "magmarock", new Item(7, "Magma Rock", "magmarock", 1, "a giant's toe", 99, potionIngredient:true,
+            { "magmarock", new Ingredient(7, "Magma Rock", "magmarock", 1, "a giant's toe", 99, potionIngredient:true,
                 effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreMana, PotionEffects.FortifyHealth, PotionEffects.RestoreHealth}
                 )},
 
@@ -137,9 +136,9 @@ namespace ProjectPalladium.Items
 
         public virtual void Use() {}
 
-        public virtual void Draw(SpriteBatch b, Vector2 pos, float scale, Vector2 origin)
+        public virtual void Draw(SpriteBatch b, Vector2 pos, float scale, Vector2 origin, float layer=0.91f)
         {
-            sprite.Draw(b, pos, layer: Game1.layers.UI, scale: scale, origin:origin);
+            sprite.Draw(b, pos, layer: layer, scale: scale, origin:origin);
         }
     };
  

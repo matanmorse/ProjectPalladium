@@ -30,7 +30,7 @@ namespace ProjectPalladium.Utils
             this.pos = pos;
         }
 
-        public virtual void Draw(SpriteBatch b, string text)
+        public virtual void Draw(SpriteBatch b, string text, float layer = 0.92f)
         {
             if (text == null) return;
             if (!showing) return;
@@ -45,7 +45,7 @@ namespace ProjectPalladium.Utils
                 case Origin.center: origin = size / 2; break;
             }
 
-            b.DrawString(font, text, pos, Color.Black, 0f, origin, 1f, SpriteEffects.None, 1f);
+            b.DrawString(font, text, pos, Color.Black, 0f, origin, 1f, SpriteEffects.None, layerDepth:layer);
         }
         
     }

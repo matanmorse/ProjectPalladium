@@ -79,7 +79,7 @@ namespace ProjectPalladium
             public const float tile = 0f;
             public const float player = 0.1f;
             public const float rectangles = 1f;
-            public const float UI = 0.95f;
+            public const float UI = 0.9f;
             public const float buildings = 0.1f;
         }
         public Game1()
@@ -300,7 +300,7 @@ namespace ProjectPalladium
             
             // Render the UI elements to the _uiCanvas
             _uiCanvas.Activate();
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp, null, null, null, null);
             _uiManager.Draw(_spriteBatch);
             _spriteBatch.End();
 

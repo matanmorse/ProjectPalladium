@@ -29,6 +29,7 @@ namespace ProjectPalladium.UI
             } }
         private Rectangle bounds = new Rectangle();
         private TextRenderer itemCount;
+        private TextRenderer itemInfo; 
 
         public event Action<ItemSlot> OnSlotClicked;
        
@@ -62,7 +63,7 @@ namespace ProjectPalladium.UI
             // initialize the item count text
             Vector2 ItemCountTextPos = new Vector2(globalPos.X + (bounds.Width / 2), globalPos.Y + (bounds.Height / 2));
             this.itemCount = new TextRenderer(ItemCountTextPos);
-            
+            this.itemInfo = new TextRenderer(globalPos.ToVector2(), originType:TextRenderer.Origin.center);
         }
 
         private void ApplyEffects(SpriteBatch b)
@@ -90,10 +91,14 @@ namespace ProjectPalladium.UI
 
             // draw item centered
             origin = ((item.sprite.size.ToVector2()) / 2);
+            
             item.Draw(b, drawPos.ToVector2(), scale, origin);
             
             if (item.quantity > 1) { itemCount.Draw(b, item.quantity.ToString()); }
-
+            if (parent is InventoryUI && button.mouseOver)
+            {
+                itemInfo.Draw(b, item.description, layer:0.96f);
+            }
         }
     }
 }

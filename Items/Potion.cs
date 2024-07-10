@@ -84,11 +84,11 @@ namespace ProjectPalladium.Items
         {
             return (this.contentColor == other.contentColor); 
         }
-        public override void Draw(SpriteBatch b, Vector2 pos, float scale, Vector2 origin)
+        public override void Draw(SpriteBatch b, Vector2 pos, float scale, Vector2 origin, float layer = 0.91f)
         {
             
             bottleSprite.Draw(b, pos, layer: Game1.layers.UI, scale:scale, origin:origin);
-            contentSprite.Draw(b, pos, color: contentColor, layer: Game1.layers.UI, scale: scale, origin: origin);
+            contentSprite.Draw(b, pos, color: contentColor, layer: Game1.layers.UI +0.01f, scale: scale, origin: origin);
         }
     }
 }

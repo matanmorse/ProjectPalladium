@@ -44,26 +44,26 @@ namespace ProjectPalladium.Utils
             sourceRect = new Rectangle(new Point(0, 0), size);
         }
 
-        public void Draw(SpriteBatch b, Vector2 pos, float opacity = 1f, float layer = 0f, float scale = Game1.scale)
+        public void Draw(SpriteBatch b, Vector2 pos, float opacity = 1f, float layer = 1f, float scale = Game1.scale)
         {
             if (Texture == null) return;
             b.Draw(_texture, pos, sourceRect, Color.White * opacity, rotation, Vector2.Zero, scale, SpriteEffects.None, layer);
         }
 
         // draw renderable with custom origin
-        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, float layer = 0f, float opacity = 1f, float scale = Game1.scale)
+        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, float layer = 1f, float opacity = 1f, float scale = Game1.scale)
         {
             if (Texture == null) return;
             b.Draw(_texture, pos, sourceRect, Color.White * opacity, rotation, origin, scale, SpriteEffects.None, layer);
         }
 
         // draw renderable with color tint
-        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, Color color, float layer = 0f, float opacity = 1f, float scale = Game1.scale)
+        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, Color color, float layer = 1f, float opacity = 1f, float scale = Game1.scale)
         {
             if (Texture == null) return;
             b.Draw(_texture, pos, sourceRect, color * opacity, rotation, origin, scale, SpriteEffects.None, layer);
         }
-        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, float rotation, float layer = 0f, float opacity = 1f, float scale = Game1.scale)
+        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, float rotation, float layer = 1f, float opacity = 1f, float scale = Game1.scale)
         {
             b.Draw(_texture, pos, sourceRect, Color.White * opacity, rotation, origin, scale, SpriteEffects.None, layer);
         }
