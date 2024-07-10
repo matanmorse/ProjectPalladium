@@ -21,6 +21,7 @@ namespace ProjectPalladium.UI
         public int index;
         private readonly Point TOOLBAR_TOP_LEFT;
         private Item item;
+        Vector2 origin; // origin of the current item
         public Item Item { get { return this.item; } set {
 
                 this.item = value; this.name = this.item.name;
@@ -88,7 +89,7 @@ namespace ProjectPalladium.UI
             ApplyEffects(b);
 
             // draw item centered
-            Vector2 origin = ((item.sprite.size.ToVector2()) / 2);
+            origin = ((item.sprite.size.ToVector2()) / 2);
             item.Draw(b, drawPos.ToVector2(), scale, origin);
             
             if (item.quantity > 1) { itemCount.Draw(b, item.quantity.ToString()); }

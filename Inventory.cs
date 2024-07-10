@@ -25,7 +25,7 @@ namespace ProjectPalladium
             inventory[5] = Item.GetItemFromRegistry("cauldron");
             inventory[5].quantity = 2;
             inventory[6] = Item.GetItemFromRegistry("scrying orb");
-
+            inventory[7] = new Potion("Potion", "A potion");
 
         }
         public int Size()

@@ -12,6 +12,7 @@ using ProjectPalladium;
 using ProjectPalladium.Animation;
 using System.Collections.Generic;
 using ProjectPalladium.Characters;
+using ProjectPalladium.Items;
 
 
 namespace ProjectPalladium
@@ -231,6 +232,7 @@ namespace ProjectPalladium
             graphicsDevice = GraphicsDevice;
             _canvas = new Canvas(GraphicsDevice, screenWidth, screenHeight, "gameworld");
             _uiCanvas = new Canvas(graphicsDevice, UINativeResolution.X, UINativeResolution.Y,"ui");
+
         }
 
         protected override void Update(GameTime gameTime)

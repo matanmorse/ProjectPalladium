@@ -40,6 +40,13 @@ namespace ProjectPalladium.UI
 
         public void Draw(SpriteBatch b)
         {
+            // handle potions and other items with multiple sprites
+            if (item is Potion)
+            {
+                Potion potion = item as Potion;
+                potion.contentSprite.Draw(b, pos, color: potion.contentColor, opacity: alpha, origin: Util.GetCenterOrigin(sprite), scale: scale);
+            }
+
             sprite.Draw(b, pos, opacity: alpha, origin:Util.GetCenterOrigin(sprite), scale:scale);
             if (item.quantity > 1) { itemCount.Draw(b, item.quantity.ToString()); }
         }

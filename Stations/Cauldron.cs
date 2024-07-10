@@ -53,8 +53,6 @@ namespace ProjectPalladium.Stations
             Item currentItem = Game1.player.ActiveItem;
             if (currentItem == null || currentItem == Item.none || !currentItem.potionIngredient) return;
 
-            Debug.WriteLine("adding ingredient");
-
             int firstEmptyIndex = Array.FindIndex(heldItems, x => x == Item.none); // find first empty item
             if (firstEmptyIndex == -1) return; // cauldron is full
 

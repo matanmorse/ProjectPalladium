@@ -66,9 +66,10 @@ namespace ProjectPalladium.UI
         {
             this.parent = parent;
 
-            StationUIScale = Game1.scale * 0.75f; // station UI is 3/4 of normal UI
+            StationUIScale = Game1.scale * 0.5f; // station UI is 3/4 of normal UI
 
-            Vector2 ITEMDISPLAY_START_OFFSET = new Vector2(0, -6) * StationUI.StationUIScale;
+            float bottomOfStation = (parent.sprite.size.Y * Game1.scale) - (8 * StationUIScale);
+            Vector2 ITEMDISPLAY_START_OFFSET = new Vector2(0, bottomOfStation);
             this.pos = parent.globalPos + ITEMDISPLAY_START_OFFSET;
 
             // set up display to be centered on the center of the station with correct number of slots

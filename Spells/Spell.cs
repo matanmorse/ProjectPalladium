@@ -89,8 +89,8 @@ namespace ProjectPalladium.Spells
                     i * 500f);
             }
         }
-    
-        
+
+
 
 
         public static void AnimateCauldron()
@@ -106,7 +106,9 @@ namespace ProjectPalladium.Spells
 
                 // if player is within range, start brewing
                 Rectangle areaOfEffect = Util.MakeRangeRect(p.boundingBox.Center, rectRange);
-                if (!(areaOfEffect.Intersects(cauld.bounds))) return;
+                if (!(areaOfEffect.Intersects(cauld.bounds)) || cauld.Brewing) continue;
+               
+
                 cauld.TryBrew();
             }
         }

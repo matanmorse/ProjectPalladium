@@ -15,6 +15,8 @@ namespace ProjectPalladium.Utils
 
         private Vector2 zero = Vector2.Zero;
 
+        private readonly Color DEFAULT_COLOR = Color.White;
+
         public string textureName;
         public float rotation;
 
@@ -55,6 +57,12 @@ namespace ProjectPalladium.Utils
             b.Draw(_texture, pos, sourceRect, Color.White * opacity, rotation, origin, scale, SpriteEffects.None, layer);
         }
 
+        // draw renderable with color tint
+        public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, Color color, float layer = 0f, float opacity = 1f, float scale = Game1.scale)
+        {
+            if (Texture == null) return;
+            b.Draw(_texture, pos, sourceRect, color * opacity, rotation, origin, scale, SpriteEffects.None, layer);
+        }
         public void Draw(SpriteBatch b, Vector2 pos, Vector2 origin, float rotation, float layer = 0f, float opacity = 1f, float scale = Game1.scale)
         {
             b.Draw(_texture, pos, sourceRect, Color.White * opacity, rotation, origin, scale, SpriteEffects.None, layer);

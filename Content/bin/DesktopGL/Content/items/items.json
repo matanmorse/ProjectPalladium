@@ -1,0 +1,49 @@
+﻿{
+  "items": {
+    "ectoplasmic gem": {
+      "id": 1,
+      "name": "Ectoplasmic Gem",
+      "texturename": "ectoplasmicgem",
+      "desc": "A gem",
+      "stacksize": 99,
+      "brewable": true
+    }
+  },
+
+  "wands": {
+    "wand": {
+      "id": 0,
+      "name": "wand",
+      "texturename": "wand",
+      "desc": "a wand"
+    }
+  },
+
+  "seeds": {
+    "mana melon seed": {
+      "id": 2,
+      "name": "Mana Melon Seed",
+      "texturename": "manamelonseed",
+      "desc": "some mana melon seeds",
+      "stacksize": 99,
+      "plant": "manamelonplant",
+      "brewable": false
+    }
+  },
+  "placeables": {
+    "scrying orb": {
+      "id": 3,
+      "name": "Scrying Orb",
+      "texturename": "scryingorb",
+      "desc": "An orb for scrying"
+    },
+    "cauldron": {
+      "id": 4,
+      "name": "Cauldron",
+      "texturename": "cauldron",
+      "desc": "A cauldron",
+      "worldobjecttype": "Cauldron"
+    }
+  }
+}
+  

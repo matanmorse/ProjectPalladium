@@ -1,0 +1,13 @@
+﻿{
+  "seeds": {
+    "mana melon seed": {
+      "id": 2,
+      "name": "Mana Melon Seed",
+      "texturename": "manamelonseed",
+      "desc": "some mana melon seeds",
+      "stacksize": 99,
+      "plant": "manamelonplant",
+      "brewable": false
+    }
+  }
+}
