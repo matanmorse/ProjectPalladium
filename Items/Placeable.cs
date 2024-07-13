@@ -39,7 +39,7 @@ namespace ProjectPalladium.Items
             if (SceneManager.CurScene.Map.AddGameObject(name, clickedTile.ToVector2(), worldObjectType))
             {
                 int thisIndex = Game1.player.inventory.FindExactItemStack(this);
-                Game1.player.inventory.RemoveItemAtIndex(thisIndex, 1);
+                Game1.player.inventory.RemoveCurrentItem(1);
                 UIManager.toolbar.Reset();
             }
 

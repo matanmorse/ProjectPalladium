@@ -75,7 +75,7 @@ namespace ProjectPalladium.UI
             else
             {
                 scale = parent.scale;
-                if (button != null && item != Item.none) if (item.IsSameItemStack(Game1.player.ActiveItem) && parent is Toolbar) { Util.DrawRectangle(button.bounds, b); }
+                if (button != null && item != Item.none) if (item.IsSameItemStack(Game1.player.ActiveItem) && parent is Toolbar && this.index == Game1.player.ActiveItemIndex) { Util.DrawRectangle(button.bounds, b); }
             }
         }
 

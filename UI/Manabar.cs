@@ -40,7 +40,7 @@ namespace ProjectPalladium.UI
             else if (player == null) { player = Game1.player; }
 
             // proportion of the bar that should be full
-            float interpolatedMana = (float) player.mana / Player.MAX_MANA;
+            float interpolatedMana = (float) player.Mana / Player.MAX_MANA;
             // calculate correct area based on current mana
             manaRectangle = new Rectangle(globalPos + topLeft + new Point(0, (int) Math.Abs(maxSize.Y * interpolatedMana - maxSize.Y)), new Point(maxSize.X, (int)(maxSize.Y * interpolatedMana)));
             

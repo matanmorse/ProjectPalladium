@@ -157,8 +157,8 @@ namespace ProjectPalladium.Spells
             Spell spell = spells[spellName];
 
             // check if player has enough mana
-            if (player.mana < spell.manaCost) { return false; }
-            player.mana -= spell.manaCost;
+            if (player.Mana < spell.manaCost) { return false; }
+            player.Mana -= spell.manaCost;
 
             // play the cast animiation, pass spell function to perform when animation is finished
             player.flipped = false; // ensure player is not flipped

@@ -88,6 +88,11 @@ namespace ProjectPalladium
             ui.UpdateInventory();
         }
        
+        public void RemoveCurrentItem(int quantity)
+        {
+            
+            RemoveItemAtIndex(Game1.player.ActiveItemIndex, quantity);
+        }
 
         public void RemoveItemAtIndex(int index, int quantity)
         {
@@ -150,7 +155,11 @@ namespace ProjectPalladium
 
             if (remainder <= 0) { 
                 inventory[index].quantity -= amount; 
-                if (inventory[index].quantity == 0) { inventory[index] = Item.none; ui.UpdateInventory();}
+                if (inventory[index].quantity == 0) { 
+                    if (inventory[index] == Game1.player.ActiveItem) { Game1.player.ActiveItem = Item.none; }
+                    inventory[index] = Item.none; 
+                    ui.UpdateInventory();
+                }
 
                 return true; } // the player has enough in this stack, so just remove it and move on
 

@@ -26,17 +26,39 @@ namespace ProjectPalladium
 
         // mana + spellcasting info
         public const int MAX_MANA = 100;
-        public int mana = MAX_MANA;
+        private int mana = MAX_MANA;
+
+        public int Mana
+        {
+            get { return mana; }
+            set
+            {
+                if (value > MAX_MANA) mana = MAX_MANA;
+                else mana = value;
+            }
+        }
         public bool castingAttackSpell; // do we need to show the target indicator
 
         public Vector2 lerpingCamera;
         public Item ActiveItem { get { return _activeItem; } 
             
             set {
+                if (value == Item.none || value == null) ActiveItemIndex = -1;
                 usingItemLocked = true;
                 _activeItem = value;
             }
-        } 
+        }
+
+        private int activeItemIndex; // inventory index of active item
+        public int ActiveItemIndex
+        {
+            get { return activeItemIndex; }
+            set 
+            {
+                Debug.WriteLine(value);
+                activeItemIndex = value; 
+            }
+        }
         public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Vector2 bBoxOffset, Vector2 bBoxSize) :
             base(sprite, pos, name, startingMap, bBoxOffset, bBoxSize)
         {

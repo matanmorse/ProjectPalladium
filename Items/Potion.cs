@@ -1,15 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPalladium.Effects;
 using ProjectPalladium.Utils;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 using PotionEffects = ProjectPalladium.Items.Ingredient.PotionEffects;
 namespace ProjectPalladium.Items
 {
@@ -18,8 +11,11 @@ namespace ProjectPalladium.Items
         
         public struct ApplicableEffect
         {
+            
             public static readonly ApplicableEffect None = new ApplicableEffect();
             public PotionEffects effect;
+            public IPotionEffect effectStrategy;
+
             public float strength; // multiplier to base effect
             public int duration; // seconds the potion is active for
 
@@ -28,6 +24,21 @@ namespace ProjectPalladium.Items
                 this.effect = effect;
                 this.strength = strength;
                 this.duration = duration;
+
+                if (effectStrategies.ContainsKey(effect))
+                {
+                    this.effectStrategy = effectStrategies[effect];
+                }
+                else
+                {
+                    this.effectStrategy = null;
+                }
+            }
+
+            public void Apply()
+            {
+                if (effectStrategy == null) return;
+                effectStrategy.ApplyEffect(strength, duration);
             }
 
             public bool Equals(ApplicableEffect other)
@@ -59,28 +70,35 @@ namespace ProjectPalladium.Items
                 {PotionEffects.FortifyEvocation, 60 },
             };
 
-
+       
         public Renderable bottleSprite = new Renderable("potionbottle");
         public Renderable contentSprite = new Renderable("potioncontents");
+
         public static int POTION_ID = 6;
         public static int POTION_STACKSIZE = 5;
+        const int NUM_EFFECTS = 4; // max number of effects
+
         public Color contentColor;
         private Item[] ingredients;
-        const int NUM_EFFECTS = 4; // max number of effects
-        public const int BASE_DURATION = 60;
         private ApplicableEffect[] effects;
+
+
+        private static Dictionary<PotionEffects, IPotionEffect> effectStrategies = new Dictionary<PotionEffects, IPotionEffect>()
+        {
+            { PotionEffects.RestoreMana, new RestoreManaEffect() },
+        };
+
         public Potion(Item[] ingredients) 
-            : base(POTION_ID, "", "potionbottle", 1, "", POTION_STACKSIZE)
+        : base(POTION_ID, "", "potionbottle", 1, "", POTION_STACKSIZE)
         {
             this.name = "Potion";
             this.ingredients = ingredients;
             this.effects = CalculateEffects();
             contentColor = CalculateColor();
-
+                
             sprite = bottleSprite; // for logic purposes
 
-            Debug.Write(this);
-
+            this.description = this.ToString();
         }
 
         private ApplicableEffect[] CalculateEffects()
@@ -185,9 +203,20 @@ namespace ProjectPalladium.Items
             Color totalAverageColor = new Color(tRed/nColors, tGreen/nColors, tBlue/nColors);
             return totalAverageColor;
         }
+
+        public override void Use()
+        {
+            foreach(ApplicableEffect effect in effects)
+            {
+                effect.Apply();
+            }
+            Game1.player.inventory.RemoveCurrentItem(1);
+        }
+
+
         public bool Equals(Potion other)
         {
-            return (this.contentColor == other.contentColor); 
+            return (this.contentColor == other.contentColor && this.quantity == other.quantity); 
         }
         public override void Draw(SpriteBatch b, Vector2 pos, float scale, Vector2 origin, float layer = 0.91f)
         {

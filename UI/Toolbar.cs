@@ -33,18 +33,25 @@ namespace ProjectPalladium.UI
         private void SlotClicked(ItemSlot slot)
         {
             if (Game1.player.ActiveItem != Item.none && Game1.player.ActiveItem != null) 
-            { children[inv.FindItem(Game1.player.ActiveItem)].button.clickState = false ; }
+            { children[Game1.player.ActiveItemIndex].button.clickState = false ; }
 
             if (slot.button.clickState) { 
-                Game1.player.ActiveItem = slot.Item;
+                SetActiveItem(slot);
+                
                 Game1.player.holdingTool = slot.Item is Tool;
             }
             else { 
+
                 Game1.player.ActiveItem = Item.none;
                 Game1.player.holdingTool = false;
             }
         }
 
+        private void SetActiveItem(ItemSlot slot)
+        {
+            Game1.player.ActiveItem = slot.Item;
+            Game1.player.ActiveItemIndex = slot.index;
+        }
 
         public bool ReplaceItemSlot(Item item, int index)
         {
