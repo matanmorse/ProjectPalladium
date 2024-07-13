@@ -4,7 +4,9 @@ using ProjectPalladium.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +15,10 @@ namespace ProjectPalladium.Items
 {
     public class Potion : Item
     {
-
+        
         public struct ApplicableEffect
         {
+            public static readonly ApplicableEffect None = new ApplicableEffect();
             public PotionEffects effect;
             public float strength; // multiplier to base effect
             public int duration; // seconds the potion is active for
@@ -26,7 +29,36 @@ namespace ProjectPalladium.Items
                 this.strength = strength;
                 this.duration = duration;
             }
+
+            public bool Equals(ApplicableEffect other)
+            {
+                return (other.effect == this.effect && other.duration == this.duration && other.strength == this.strength);
+            }
+            public override string ToString()
+            {
+                if (this.Equals(ApplicableEffect.None)) return "None";
+                string result = "Effect: " + effect + "\n Strength: " + strength;
+                if (duration > 0) result += "\n Duration: " + duration;
+                return result;
+            }
         }
+
+        public static Dictionary<PotionEffects, int> baseValues = new Dictionary<PotionEffects, int>()
+            {
+                {PotionEffects.RestoreMana, 10 },
+                {PotionEffects.RestoreHealth, 10 },
+                {PotionEffects.FortifyHealth, 5 },
+                {PotionEffects.FortifyEvocation, 5 },
+            };
+
+        public static Dictionary<PotionEffects, int> baseDurations = new Dictionary<PotionEffects, int>()
+            {
+                {PotionEffects.RestoreMana, 0 },
+                {PotionEffects.RestoreHealth, 0 },
+                {PotionEffects.FortifyHealth, 60 },
+                {PotionEffects.FortifyEvocation, 60 },
+            };
+
 
         public Renderable bottleSprite = new Renderable("potionbottle");
         public Renderable contentSprite = new Renderable("potioncontents");
@@ -35,7 +67,8 @@ namespace ProjectPalladium.Items
         public Color contentColor;
         private Item[] ingredients;
         const int NUM_EFFECTS = 4; // max number of effects
-        private PotionEffects[] effects;
+        public const int BASE_DURATION = 60;
+        private ApplicableEffect[] effects;
         public Potion(Item[] ingredients) 
             : base(POTION_ID, "", "potionbottle", 1, "", POTION_STACKSIZE)
         {
@@ -46,27 +79,37 @@ namespace ProjectPalladium.Items
 
             sprite = bottleSprite; // for logic purposes
 
+            Debug.Write(this);
+
         }
 
-        private PotionEffects[] CalculateEffects()
+        private ApplicableEffect[] CalculateEffects()
         {
-            PotionEffects[] result = new PotionEffects[NUM_EFFECTS];
-            Dictionary<PotionEffects, int> counts = new Dictionary<PotionEffects, int>(); 
+            ApplicableEffect[] result = new ApplicableEffect[NUM_EFFECTS];
+            Dictionary<PotionEffects, int> counts = new Dictionary<PotionEffects, int>();
+            Dictionary<PotionEffects, float> strengths = new Dictionary<PotionEffects, float>(); // associated strengths for each effect
+            Dictionary<PotionEffects, float> durations = new Dictionary<PotionEffects, float>(); // associated durations for each effect
 
             // first, count number of occurances of each potion effect
             for (int i = 0; i < ingredients.Length; i++)
             {
                 Ingredient item = ingredients[i] as Ingredient;
+                if (item.potionEffects == null) continue; // shouldn't happen, but just in case
+
                 for (int j = 0; j < item.potionEffects.Length; j++)
                 {
                     PotionEffects effect = item.potionEffects[j];
                     if (!(counts.ContainsKey(effect)))
                     {
                         counts.Add(effect, 1);
+                        strengths.Add(effect, item.potionStrength);
+                        durations.Add(effect, item.durationStrength);
                     }
                     else
                     {
                         counts[effect]++;
+                        strengths[effect] += item.potionStrength;
+                        durations[effect] += item.durationStrength;
                     }
                 }
             }
@@ -74,19 +117,18 @@ namespace ProjectPalladium.Items
             int index = 0;
             foreach (PotionEffects key in counts.Keys)
             {
-
+    
                 if (key == PotionEffects.None) continue;
                 if (counts[key] >= 2) // if more than two occurances, this is a potion effect
                 {
-                    Debug.WriteLine("Effect found: " + key + " " + counts[key]);
-                    result[index] = key;
+                    result[index] = new ApplicableEffect(key,  baseValues[key] * strengths[key], (int)(baseDurations[key] * durations[key]));
                     index++;
                 }
             }
             // ensure no null items in effects array
             while (index < NUM_EFFECTS)
             {
-                result[index] = PotionEffects.None;
+                result[index] = ApplicableEffect.None;
                 index++;
             }
             return result;
@@ -152,6 +194,19 @@ namespace ProjectPalladium.Items
             
             bottleSprite.Draw(b, pos, layer: 0.95f, scale:scale, origin:origin);
             contentSprite.Draw(b, pos, color: contentColor, layer: Game1.layers.UI +0.01f, scale: scale, origin: origin);
+        }
+
+        public override string ToString()
+        {
+            string result = "Potion";
+            int i = 1;
+            foreach (ApplicableEffect eff in effects)
+            {
+                if (eff.Equals(ApplicableEffect.None)) continue;
+                result += "\n" + i + "\n" + eff.ToString();
+                i++;
+            }
+            return result;
         }
     }
 }

@@ -47,14 +47,17 @@ namespace ProjectPalladium.Items
         {
             { "wand", new Wand(0, "wand", "wand", "a wand") },
 
-            { "ectoplasmic gem", new Ingredient(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", 99, potionIngredient:true,
-                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.None, PotionEffects.RestoreMana, PotionEffects.None }
+            { "ectoplasmic gem", new Ingredient(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", potionIngredient:true,
+                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.None, PotionEffects.RestoreMana, PotionEffects.None },
+                potionStrength:0.25f, potionDuration:0.25f
                 )},
-            { "giantstoe", new Ingredient(5, "Giants' Toe", "giantstoe", 1, "a magma rock", 99, potionIngredient:true,
-                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreHealth, PotionEffects.None, PotionEffects.None }
+            { "giantstoe", new Ingredient(5, "Giants' Toe", "giantstoe", 1, "a magma rock", potionIngredient:true,
+                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreHealth, PotionEffects.None, PotionEffects.None },
+                potionStrength:0.35f, potionDuration:0.25f
                 )},
-            { "magmarock", new Ingredient(7, "Magma Rock", "magmarock", 1, "a giant's toe", 99, potionIngredient:true,
-                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreMana, PotionEffects.None, PotionEffects.None }
+            { "magmarock", new Ingredient(7, "Magma Rock", "magmarock", 1, "a giant's toe", potionIngredient:true,
+                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreMana, PotionEffects.None, PotionEffects.None },
+                potionStrength:0.5f, potionDuration:0.25f
                 )},
 
             { "mana melon seed", new Seed(2, "Mana Melon Seed", "manamelonseed", 1, "some mana melon seeds", 99, "manamelonplant") },

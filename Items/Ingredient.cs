@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace ProjectPalladium.Items
         // optional items, for potion ingredients
         public static int NUM_EFFECTS = 4;
         public PotionEffects[] potionEffects = new PotionEffects[NUM_EFFECTS];
-
+        public const int STACKSIZE = 99; // all ingredients stack to 99
         public enum PotionEffects
         {
             None,
@@ -24,11 +25,13 @@ namespace ProjectPalladium.Items
             RestoreHealth,
         }
 
-        public int strength; // modifier for potion effects
-        public Ingredient(int id, string name, string textureName, int quantity, string description, int stacksize, bool potionIngredient = false, PotionEffects[] effects = null)
-            : base(id, name, textureName, quantity, description, stacksize, potionIngredient)
+        public float potionStrength; // modifier for potion effects
+        public float durationStrength; // modifier for potion duration
+        public Ingredient(int id, string name, string textureName, int quantity, string description, bool potionIngredient = false, float potionStrength = 0f, float potionDuration=0f, PotionEffects[] effects = null)
+            : base(id, name, textureName, quantity, description, STACKSIZE, potionIngredient)
         {
-            
+            this.durationStrength = potionDuration;
+            this.potionStrength = potionStrength;
             this.potionEffects = effects;
         }
 
