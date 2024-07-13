@@ -41,7 +41,6 @@ namespace ProjectPalladium
         // TODO: Implement item stacking
         public bool AddItem(Item item, int amount)
         {
-            Debug.WriteLine("adding " + item);
             int firstEmptyInv = FindItem(Item.none);
             if (firstEmptyInv == -1) { return false; } // the player's inventory is full
 
@@ -56,7 +55,6 @@ namespace ProjectPalladium
 
             if (index == -1) // player does not have a non-full stack
             {
-                Debug.WriteLine("does not have item yet");
                 Item newItem = item.Clone();
                 newItem.quantity = amount;
                 inventory[firstEmptyInv] = newItem;

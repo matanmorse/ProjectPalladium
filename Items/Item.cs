@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using ProjectPalladium.Tools;
 using ProjectPalladium.Stations;
 using Microsoft.Xna.Framework;
-
+using PotionEffects = ProjectPalladium.Items.Ingredient.PotionEffects;
 namespace ProjectPalladium.Items
 {
     public class Item
@@ -24,22 +24,13 @@ namespace ProjectPalladium.Items
         public int stackSize;
         public bool potionIngredient;
 
-        // optional items, for potion ingredients
-        public static int NUM_EFFECTS = 4;
-        public PotionEffects[] potionEffects = new PotionEffects[NUM_EFFECTS];
         
         public Renderable sprite;
         public static Item none = new Item(-1, "", "", -1, "", -1);
 
 
 
-        public enum PotionEffects
-        {
-            FortifyHealth,
-            RestoreMana,
-            FortifyEvocation,
-            RestoreHealth,
-        }
+        
 
         public Item(int id, string name, string textureName, int quantity, string description, int stacksize, bool potionIngredient=false)
         {
@@ -57,13 +48,13 @@ namespace ProjectPalladium.Items
             { "wand", new Wand(0, "wand", "wand", "a wand") },
 
             { "ectoplasmic gem", new Ingredient(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", 99, potionIngredient:true,
-                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreMana, PotionEffects.FortifyHealth, PotionEffects.RestoreHealth}
+                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.None, PotionEffects.RestoreMana, PotionEffects.None }
                 )},
             { "giantstoe", new Ingredient(5, "Giants' Toe", "giantstoe", 1, "a magma rock", 99, potionIngredient:true,
-                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreMana, PotionEffects.FortifyHealth, PotionEffects.RestoreHealth}
+                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreHealth, PotionEffects.None, PotionEffects.None }
                 )},
             { "magmarock", new Ingredient(7, "Magma Rock", "magmarock", 1, "a giant's toe", 99, potionIngredient:true,
-                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreMana, PotionEffects.FortifyHealth, PotionEffects.RestoreHealth}
+                effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreMana, PotionEffects.None, PotionEffects.None }
                 )},
 
             { "mana melon seed", new Seed(2, "Mana Melon Seed", "manamelonseed", 1, "some mana melon seeds", 99, "manamelonplant") },

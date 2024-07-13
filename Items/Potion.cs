@@ -8,26 +8,89 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
-
+using PotionEffects = ProjectPalladium.Items.Ingredient.PotionEffects;
 namespace ProjectPalladium.Items
 {
     public class Potion : Item
     {
+
+        public struct ApplicableEffect
+        {
+            public PotionEffects effect;
+            public float strength; // multiplier to base effect
+            public int duration; // seconds the potion is active for
+
+            public ApplicableEffect(PotionEffects effect, float strength, int duration)
+            {
+                this.effect = effect;
+                this.strength = strength;
+                this.duration = duration;
+            }
+        }
+
         public Renderable bottleSprite = new Renderable("potionbottle");
         public Renderable contentSprite = new Renderable("potioncontents");
         public static int POTION_ID = 6;
         public static int POTION_STACKSIZE = 5;
         public Color contentColor;
-        Item[] ingredients;
+        private Item[] ingredients;
+        const int NUM_EFFECTS = 4; // max number of effects
+        private PotionEffects[] effects;
         public Potion(Item[] ingredients) 
             : base(POTION_ID, "", "potionbottle", 1, "", POTION_STACKSIZE)
         {
             this.name = "Potion";
             this.ingredients = ingredients;
+            this.effects = CalculateEffects();
             contentColor = CalculateColor();
+
             sprite = bottleSprite; // for logic purposes
+
         }
 
+        private PotionEffects[] CalculateEffects()
+        {
+            PotionEffects[] result = new PotionEffects[NUM_EFFECTS];
+            Dictionary<PotionEffects, int> counts = new Dictionary<PotionEffects, int>(); 
+
+            // first, count number of occurances of each potion effect
+            for (int i = 0; i < ingredients.Length; i++)
+            {
+                Ingredient item = ingredients[i] as Ingredient;
+                for (int j = 0; j < item.potionEffects.Length; j++)
+                {
+                    PotionEffects effect = item.potionEffects[j];
+                    if (!(counts.ContainsKey(effect)))
+                    {
+                        counts.Add(effect, 1);
+                    }
+                    else
+                    {
+                        counts[effect]++;
+                    }
+                }
+            }
+
+            int index = 0;
+            foreach (PotionEffects key in counts.Keys)
+            {
+
+                if (key == PotionEffects.None) continue;
+                if (counts[key] >= 2) // if more than two occurances, this is a potion effect
+                {
+                    Debug.WriteLine("Effect found: " + key + " " + counts[key]);
+                    result[index] = key;
+                    index++;
+                }
+            }
+            // ensure no null items in effects array
+            while (index < NUM_EFFECTS)
+            {
+                result[index] = PotionEffects.None;
+                index++;
+            }
+            return result;
+        }
         private Color CalculateColor()
         {
             Color[] averageColors = new Color[ingredients.Length];
