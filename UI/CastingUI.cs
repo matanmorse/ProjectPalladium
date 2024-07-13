@@ -77,7 +77,7 @@ namespace ProjectPalladium.UI
             aimElement.showing = Game1.player.castingAttackSpell;
             if (aimElement.showing) { aimElement.LocalPos = Input.nativeMousePos; }
 
-            if (ui.inventoryUI.showing) { return; }
+            if (UIManager.inventoryUI.showing) { return; }
 
             base.Update();
             if (ui.Player == null) { return; }

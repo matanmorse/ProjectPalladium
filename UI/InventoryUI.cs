@@ -115,6 +115,9 @@ namespace ProjectPalladium.UI
         {
             Input.Update();
             base.ToggleShowing();
+
+            Game1.player.usingItemLocked = showing;
+
             foreach(UIElement child in children)
             {
                 if (child.GetType() != typeof(ItemSlot)) continue;

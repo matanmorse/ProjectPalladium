@@ -19,6 +19,7 @@ namespace ProjectPalladium
         private Item _activeItem;
         public bool holdingTool;
 
+
         public bool dead;
 
         public bool usingItemLocked = false;
@@ -55,7 +56,6 @@ namespace ProjectPalladium
             get { return activeItemIndex; }
             set 
             {
-                Debug.WriteLine(value);
                 activeItemIndex = value; 
             }
         }
@@ -65,7 +65,7 @@ namespace ProjectPalladium
             feet = Util.GetNearestTile(pos) + new Point(0, 1);
             currentMap.player = this;
             uiManager = Game1.UIManager;
-            inventory = uiManager.inventoryUI.Inventory;
+            inventory = UIManager.inventoryUI.Inventory;
             invincFrames = 1000f;
         }
 
@@ -147,7 +147,8 @@ namespace ProjectPalladium
             
             if (Input.GetKeyDown(Keys.E))
             {
-                uiManager.inventoryUI.ToggleShowing();
+                UIManager.inventoryUI.ToggleShowing();
+
             }
 
 
@@ -165,7 +166,7 @@ namespace ProjectPalladium
             if (_activeItem != null && _activeItem != Item.none && Input.GetLeftMouseClicked())
             {
                
-                if (!usingItemLocked)
+                if (!usingItemLocked && !UIManager.inventoryUI.showing)
                 {
                     _activeItem.Use();
                 }
