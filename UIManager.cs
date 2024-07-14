@@ -21,6 +21,7 @@ namespace ProjectPalladium
         public static Toolbar toolbar;
         public CastingUI castingUI;
         public static TextRenderer debugText;
+        public static DialogBox dialogBox; 
 
         public static float inventoryScale = 5f;
         public static float toolbarscale = 6f;
@@ -76,6 +77,7 @@ namespace ProjectPalladium
             // setup debug menu
             debugText = new TextRenderer(new Vector2(Game1.UINativeResolution.X - (int)(100 * defaultUIScale), (int)(50 * defaultUIScale)), originType:TextRenderer.Origin.topLeft);
             debugText.showing = false;
+
         }
         public void SetPlayer(Player player) { this.player = player; }
         public void Update()

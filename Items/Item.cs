@@ -47,17 +47,17 @@ namespace ProjectPalladium.Items
         }
         private static Dictionary<String, Item> Items = new Dictionary<String, Item>()
         {
-            { "wand", new Wand(0, "wand", "wand", "a wand") },
+            { "wand", new Wand(0, "wand", "wand", "A basic wand. It gets the job done.") },
 
-            { "ectoplasmic gem", new Ingredient(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "a gem", potionIngredient:true,
+            { "ectoplasmic gem", new Ingredient(1, "Ectoplasmic Gem", "ectoplasmicgem", 1, "A solidified mass of energy", potionIngredient:true,
                 effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.None, PotionEffects.RestoreMana, PotionEffects.None },
                 potionStrength:0.25f, potionDuration:0.25f
                 )},
-            { "giantstoe", new Ingredient(5, "Giants' Toe", "giantstoe", 1, "a magma rock", potionIngredient:true,
+            { "giantstoe", new Ingredient(5, "Giants' Toe", "giantstoe", 1, "A toe of a fallen giant", potionIngredient:true,
                 effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreHealth, PotionEffects.None, PotionEffects.None },
                 potionStrength:0.35f, potionDuration:0.25f
                 )},
-            { "magmarock", new Ingredient(7, "Magma Rock", "magmarock", 1, "a giant's toe", potionIngredient:true,
+            { "magmarock", new Ingredient(7, "Magma Rock", "magmarock", 1, "Said to be from the heart of some ancient infernal being, the magma rock is a powerful potion ingredient brimming with arcane energy.", potionIngredient:true,
                 effects: new PotionEffects[]{PotionEffects.FortifyEvocation, PotionEffects.RestoreMana, PotionEffects.None, PotionEffects.None },
                 potionStrength:0.5f, potionDuration:0.25f
                 )},

@@ -30,7 +30,7 @@ namespace ProjectPalladium.Utils
             this.pos = pos;
         }
 
-        public virtual void Draw(SpriteBatch b, string text, float layer = 0.96f)
+        public virtual void Draw(SpriteBatch b, string text, float layer = 0.948f)
         {
             if (text == null) return;
             if (!showing) return;

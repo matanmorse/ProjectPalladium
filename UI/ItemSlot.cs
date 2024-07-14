@@ -122,7 +122,7 @@ namespace ProjectPalladium.UI
             item.Draw(b, drawPos.ToVector2(), scale, origin);
             
             if (item.quantity > 1) { itemCount.Draw(b, item.quantity.ToString()); }
-            if (parent is InventoryUI && button.mouseOver && itemInfo != null)
+            if (parent is InventoryUI && button.mouseOver && itemInfo != null && UIManager.inventoryUI.ghostItem == null)
             {
                 itemInfo.Draw(b);
             }

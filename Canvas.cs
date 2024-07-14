@@ -13,7 +13,7 @@ namespace ProjectPalladium
         public string name;
         public RenderTarget2D RenderTarget { get { return _renderTarget; }  set { _renderTarget = value; } }
         private readonly GraphicsDevice _graphicsDevice;
-        private Rectangle _destinationRectangle;
+        public Rectangle _destinationRectangle;
         public float scale = 1f;
 
         public Canvas(GraphicsDevice graphicsDevice, int width, int height, string name)
@@ -68,6 +68,11 @@ namespace ProjectPalladium
             b.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
             b.Draw(_renderTarget, _destinationRectangle, Color.White);
             b.End();
+        }
+
+        public void DrawInMiddleOfSpriteBatch(SpriteBatch b)
+        {
+            b.Draw(_renderTarget, _destinationRectangle, Color.White);
         }
     }
 }
