@@ -25,14 +25,19 @@ namespace ProjectPalladium.UI
         public Item Item { get { return this.item; } set {
 
                 this.item = value; this.name = this.item.name;
-                this.Sprite = new Renderable(item.textureName); 
-            } }
+                this.Sprite = new Renderable(item.textureName);
+
+                GenerateDialogBox();
+            }
+        }
         private Rectangle bounds = new Rectangle();
         private TextRenderer itemCount;
-        private TextRenderer itemInfo; 
+        private DialogBox itemInfo; 
 
         public event Action<ItemSlot> OnSlotClicked;
-       
+
+        // generating a dialog box for an item is an expensive operation, so we can cache
+        public static Dictionary<Item, DialogBox> cachedDialogBoxes = new Dictionary<Item, DialogBox>(); 
         public void onClick()
         {
             if (OnSlotClicked == null) return;
@@ -63,9 +68,11 @@ namespace ProjectPalladium.UI
             // initialize the item count text
             Vector2 ItemCountTextPos = new Vector2(globalPos.X + (bounds.Width / 2), globalPos.Y + (bounds.Height / 2));
             this.itemCount = new TextRenderer(ItemCountTextPos);
-            this.itemInfo = new TextRenderer(globalPos.ToVector2(), originType:TextRenderer.Origin.center);
+
+            GenerateDialogBox();
         }
 
+       
         private void ApplyEffects(SpriteBatch b)
         {
             if (button.mouseOver && (!button.clickState || parent is InventoryUI))
@@ -85,6 +92,26 @@ namespace ProjectPalladium.UI
             this.button.clickState = false;
 
         }
+
+        private void GenerateDialogBox()
+        {
+            if (parent is Toolbar) return;
+            if (item == Item.none) { this.itemInfo = null; return; }
+
+            // first, check if this is in the cache
+            if (cachedDialogBoxes.ContainsKey(item)) 
+            {
+                DialogBox cacheRetrievedBox = cachedDialogBoxes[item];
+                cacheRetrievedBox.SetPosition(globalPos);
+                this.itemInfo = cacheRetrievedBox;  return; 
+            }
+           
+            DialogBox newDialogBox = new DialogBox("Item Info", globalPos, item.description);
+            cachedDialogBoxes.Add(item, newDialogBox); // cache the dialog box
+            this.itemInfo = newDialogBox;
+            
+        }
+
         public override void Draw(SpriteBatch b) 
         {
             ApplyEffects(b);
@@ -95,9 +122,9 @@ namespace ProjectPalladium.UI
             item.Draw(b, drawPos.ToVector2(), scale, origin);
             
             if (item.quantity > 1) { itemCount.Draw(b, item.quantity.ToString()); }
-            if (parent is InventoryUI && button.mouseOver)
+            if (parent is InventoryUI && button.mouseOver && itemInfo != null)
             {
-                itemInfo.Draw(b, item.description, layer:0.96f);
+                itemInfo.Draw(b);
             }
         }
     }

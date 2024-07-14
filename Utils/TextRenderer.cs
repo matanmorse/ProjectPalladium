@@ -13,7 +13,7 @@ namespace ProjectPalladium.Utils
     public class TextRenderer
     {
         public bool showing = true;
-        private SpriteFont font;
+        public SpriteFont font;
         public Vector2 pos;
         private Origin originType;
         public enum Origin

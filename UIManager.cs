@@ -22,6 +22,9 @@ namespace ProjectPalladium
         public CastingUI castingUI;
         public static TextRenderer debugText;
 
+        public static float inventoryScale = 5f;
+        public static float toolbarscale = 6f;
+
         public enum UILayers
         {
             first,
@@ -39,11 +42,9 @@ namespace ProjectPalladium
         public void Initialize()
         {
             // inventory screen
-            float inventoryScale = 5f;
             inventoryUI = new InventoryUI("inventory", "inventory", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y / 2, rootElement, originType: center, scale:inventoryScale);
 
             // toolbar
-            float toolbarscale = 6f;
             toolbar = new Toolbar("toolbar", "toolbar", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y - (int) (10 * toolbarscale) , rootElement, originType: center, scale:toolbarscale);
             toolbar.inv = inventoryUI.Inventory;
             Debug.WriteLine(toolbar.globalPos);
