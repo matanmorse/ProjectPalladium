@@ -1,14 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Effects;
+using ProjectPalladium.UI;
 using ProjectPalladium.Utils;
 using System.Collections.Generic;
+using System.Diagnostics;
 using PotionEffects = ProjectPalladium.Items.Ingredient.PotionEffects;
 namespace ProjectPalladium.Items
 {
     public class Potion : Item
     {
-        
         public struct ApplicableEffect
         {
             
@@ -70,7 +71,8 @@ namespace ProjectPalladium.Items
                 {PotionEffects.FortifyEvocation, 60 },
             };
 
-       
+        private bool justasked;
+
         public Renderable bottleSprite = new Renderable("potionbottle");
         public Renderable contentSprite = new Renderable("potioncontents");
 
@@ -206,13 +208,34 @@ namespace ProjectPalladium.Items
 
         public override void Use()
         {
-            foreach(ApplicableEffect effect in effects)
+            TryWithConfirmationScreen();
+        }
+
+        private void TryWithConfirmationScreen()
+        {
+            if (!justasked)
+            {
+                UIManager.dialogBox.AskChoice("Drink potion?", "Yes", "No", onChoice1: Drink, onChoice2:ChoiceDenied);
+            }
+            else
+            {
+                // prevent strangeness with asking and denying on the same game tick
+                justasked = false;
+            }
+        }
+
+        private void ChoiceDenied()
+        {
+            justasked = true;
+        }
+        private void Drink()
+        {
+            foreach (ApplicableEffect effect in effects)
             {
                 effect.Apply();
             }
             Game1.player.inventory.RemoveCurrentItem(1);
         }
-
 
         public bool Equals(Potion other)
         {
@@ -221,7 +244,7 @@ namespace ProjectPalladium.Items
         public override void Draw(SpriteBatch b, Vector2 pos, float scale, Vector2 origin, float layer = 0.91f)
         {
             
-            bottleSprite.Draw(b, pos, layer: Game1.layers.UI, scale:scale, origin:origin);
+            bottleSprite.Draw(b, pos, layer: Game1.layers.UI + 0.02f, scale:scale, origin:origin);
             contentSprite.Draw(b, pos, color: contentColor, layer: Game1.layers.UI +0.01f, scale: scale, origin: origin);
         }
 

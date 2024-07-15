@@ -107,8 +107,7 @@ namespace ProjectPalladium.Stations
             if (firstEmptyIndex == -1) return; // cauldron is full
 
             heldItems[firstEmptyIndex] = currentItem;
-            int index = Game1.player.inventory.FindExactItemStack(currentItem);
-            Game1.player.inventory.RemoveItemAtIndex(index, 1);
+            Game1.player.inventory.RemoveCurrentItem(1);
 
             UpdateUI();
         }

@@ -183,6 +183,7 @@ namespace ProjectPalladium
 
         public void SwapItems(int index2)
         {
+            
             Item tmp = inventory[index2].Clone();
             inventory[index2] = ui.ghostItem.item;
 

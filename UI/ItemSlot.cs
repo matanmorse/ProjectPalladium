@@ -75,14 +75,15 @@ namespace ProjectPalladium.UI
        
         private void ApplyEffects(SpriteBatch b)
         {
-            if (button.mouseOver && (!button.clickState || parent is InventoryUI))
+            if (!parent.active) return;
+            if (button.mouseOver && (!button.clickState || parent is InventoryUI) && !(index == Game1.player.ActiveItemIndex))
             {
                 scale = parent.scale + 0.5f;
             }
             else
             {
                 scale = parent.scale;
-                if (button != null && item != Item.none) if (item.IsSameItemStack(Game1.player.ActiveItem) && parent is Toolbar && this.index == Game1.player.ActiveItemIndex) { Util.DrawRectangle(button.bounds, b); }
+                if (button != null && item != Item.none) if (parent is Toolbar && this.index == Game1.player.ActiveItemIndex) { Util.DrawRectangle(button.bounds, b); }
             }
         }
 

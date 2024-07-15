@@ -18,20 +18,31 @@ namespace ProjectPalladium.UI
          Texture2D fillerTexture = new Texture2D(Game1.graphicsDevice, 1, 1);
         private TextRenderer textRenderer;
 
-        private const float defaultScale = 4f;
-        private const float maxWidth = 75 * defaultScale;
+        protected const float defaultScale = 4f;
+        private const float maxWidth = 100 * defaultScale;
 
         private Object owner;
 
         private Point itemSlotOffset = (new Point(10, 10) * new Point((int)UIManager.inventoryScale)); // use the inventory scale since we want to be at edge of itemslot
-        private Rectangle bounds;
+        protected Rectangle bounds;
+        public Point unpaddedSize;
         private Point size;
+        protected Point maxSize;
+        public Point Size
+        {
+            get { return size; }
+            set 
+            { 
+                size = value;
+                unpaddedSize = size - padding * new Point((int)defaultScale);
+            }
+        }
         public static Point padding = new Point(15,12);
         Point paddingOffset;
 
         private string text;
-        private string originalText; 
-
+        private string originalText;
+        public Vector2 textPos; // where all text should be drawn starting from
         private bool needsToDrawBox = true; 
 
         private static int cornerSize = 3;
@@ -59,7 +70,7 @@ namespace ProjectPalladium.UI
             this.originalText = text;
             this.text = text;
             paddingOffset = ScalePoint(new Point(7, 5));
-            Vector2 textPos = (pos + itemSlotOffset + paddingOffset).ToVector2();
+            textPos = (pos + itemSlotOffset + paddingOffset).ToVector2();
             this.textRenderer = new TextRenderer(textPos, TextRenderer.Origin.topLeft);
 
             this.bounds = CalculateBounds();
@@ -70,20 +81,28 @@ namespace ProjectPalladium.UI
         public void SetPosition(Point pos)
         {
             this.bounds.Location = pos + itemSlotOffset;
-            this.textRenderer.pos = (bounds.Location + paddingOffset).ToVector2 ();
+            this.textPos = (bounds.Location + paddingOffset).ToVector2();
+            this.textRenderer.pos = textPos;
         }
 
         // manually set a size for this dialog box (default is dynamic sizing)
         public void SetSize(Point size)
         {
-            this.size = size + ScalePoint(padding);
-            this.bounds.Size = this.size;
+            this.Size = size + ScalePoint(padding);
+            this.bounds.Size = this.Size;
+            this.maxSize = this.Size;
 
             // recalculate text
-            this.text = FormatText(originalText, (size - ScalePoint(padding)).ToVector2());
-            this.textRenderer.pos = (this.bounds.Location + paddingOffset).ToVector2();
+            this.text = FormatText(originalText);
+            this.textPos = (bounds.Location + paddingOffset).ToVector2();
+            this.textRenderer.pos = textPos;
         }
-        private string FormatText(string text, Vector2 maxSize)
+
+        public string FormatText(string text)
+        {
+            return FormatText(text, (size - ScalePoint(padding * new Point(2))).ToVector2());
+        }
+        public string FormatText(string text, Vector2 maxSize)
         {
             List<string> words = text.Split(" ").ToList();
             string resultString = "";
@@ -126,7 +145,7 @@ namespace ProjectPalladium.UI
         private Rectangle CalculateBounds()
         {
             this.text = FormatText(originalText, new Vector2(maxWidth, 0));
-            this.size = textRenderer.font.MeasureString(text).ToPoint() + ScalePoint(padding);
+            this.Size = textRenderer.font.MeasureString(text).ToPoint() + ScalePoint(padding);
 
             Rectangle newBounds;
             if (owner is ItemSlot)
@@ -146,22 +165,22 @@ namespace ProjectPalladium.UI
 
 
             // first, draw corners
-            b.Draw(backgroundTexture, bounds.Location.ToVector2(), topLeft, Color.White, 0f, Vector2.Zero, defaultScale, SpriteEffects.None, 0.955f);
-            b.Draw(backgroundTexture, bounds.Location.ToVector2() + new Vector2(0, bounds.Height), bottomLeft, Color.White, 0f, bottomLeftOrigin, defaultScale, SpriteEffects.None, 0.955f);
-            b.Draw(backgroundTexture, bounds.Location.ToVector2() + new Vector2(bounds.Width, bounds.Height), bottomRight, Color.White, 0f, bottomRightOrigin, defaultScale, SpriteEffects.None, 0.955f);
-            b.Draw(backgroundTexture, bounds.Location.ToVector2() + new Vector2(bounds.Width, 0), topRight, Color.White, 0f, topRightOrigin, defaultScale, SpriteEffects.None, 0.955f);
+            b.Draw(backgroundTexture, bounds.Location.ToVector2(), topLeft, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0.955f);
+            b.Draw(backgroundTexture, bounds.Location.ToVector2() + new Vector2(0, bounds.Height), bottomLeft, Color.White, 0f, bottomLeftOrigin, scale, SpriteEffects.None, 0.955f);
+            b.Draw(backgroundTexture, bounds.Location.ToVector2() + new Vector2(bounds.Width, bounds.Height), bottomRight, Color.White, 0f, bottomRightOrigin, scale, SpriteEffects.None, 0.955f);
+            b.Draw(backgroundTexture, bounds.Location.ToVector2() + new Vector2(bounds.Width, 0), topRight, Color.White, 0f, topRightOrigin, scale, SpriteEffects.None, 0.955f);
 
             // draw left and right edge
             int numSides = (int)(bounds.Height / (edgeSize * defaultScale)) - 1; // subtract number required for corners
             for (int i = 1; i < numSides + 1; i++)
             {
                 b.Draw(backgroundTexture, bounds.Location.ToVector2() + new Vector2(0, i * edgeSize * defaultScale), leftEdge, Color.White, 0f
-                    ,Vector2.Zero, defaultScale, SpriteEffects.None, 0.95f);
+                    ,Vector2.Zero, scale, SpriteEffects.None, 0.95f);
             }
             for (int i = 1; i < numSides + 1; i++)
             {
                 b.Draw(backgroundTexture, bounds.Location.ToVector2() + new Vector2(bounds.Width - edgeSize * defaultScale, i * edgeSize * defaultScale), leftEdge, Color.White, 0f
-                    , Vector2.Zero, defaultScale, SpriteEffects.None, 0.95f);
+                    , Vector2.Zero, scale, SpriteEffects.None, 0.95f);
             }
 
             // draw top and bottom edge
@@ -169,12 +188,12 @@ namespace ProjectPalladium.UI
             for (int i = 1; i < numTops + 1; i++)
             {
                 b.Draw(backgroundTexture, bounds.Location.ToVector2() + new Vector2(i * edgeSize * defaultScale,0), topEdge, Color.White, 0f
-                    , Vector2.Zero, defaultScale, SpriteEffects.None, 0.95f);
+                    , Vector2.Zero, scale, SpriteEffects.None, 0.95f);
             }
             for (int i = 1; i < numTops + 1; i++)
             {
                 b.Draw(backgroundTexture, bounds.Location.ToVector2() + new Vector2(i * edgeSize * defaultScale, bounds.Height - edgeSize * defaultScale), bottomEdge, Color.White, 0f
-                    , Vector2.Zero, defaultScale, SpriteEffects.None, 0.95f);
+                    , Vector2.Zero, scale, SpriteEffects.None, 0.95f);
             }
 
             // last, draw center
@@ -184,7 +203,7 @@ namespace ProjectPalladium.UI
         }
         public override void Draw(SpriteBatch b)
         {
-           
+            if (!showing) return;
             base.Draw(b);
             DrawDialogBox(b);
             textRenderer.Draw(b, text, layer:0.98f);

@@ -32,6 +32,7 @@ namespace ProjectPalladium.Utils
 
         public virtual void Draw(SpriteBatch b, string text, float layer = 0.948f)
         {
+
             if (text == null) return;
             if (!showing) return;
 

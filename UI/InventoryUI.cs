@@ -34,6 +34,8 @@ namespace ProjectPalladium.UI
             : base(name, textureName, localX, localY, parent, originType, scale, isRoot, isBox)
         {
             Initialize();
+
+            AddToRoot();
         }
 
         public void Initialize()
@@ -67,6 +69,20 @@ namespace ProjectPalladium.UI
             }
             
             else {  // we need to do some kind of swapping or combining
+                // if we're moving the active item, make sure to update active item index
+                if (ghostItem.item == Game1.player.ActiveItem) 
+                { 
+                    if (slot.index > Toolbar.toolBarSize) 
+                    { 
+                        Game1.player.ActiveItem = Item.none;
+                        Game1.player.holdingTool = false;
+                    
+                    } // the item is no longer in the toolbar, so no active item
+                    else
+                    {
+                        Game1.player.ActiveItemIndex = slot.index;
+                    }
+                }
                 if (itemInSlot == ghostItem.item && itemInSlot.quantity < itemInSlot.stackSize && ghostItem.item.quantity < ghostItem.item.stackSize)
                 {
                     inv.AddItem(ghostItem.item, ghostItem.item.quantity);
@@ -101,7 +117,7 @@ namespace ProjectPalladium.UI
             tmpItems = new List<UIElement>(children); // make copy of list of children
             updateItems = true;
 
-          
+            
             inv.SwapItems(index2);
             // voodoo magic 
             for (int i = 0; i < INV_SIZE; i++)

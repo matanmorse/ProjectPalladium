@@ -28,6 +28,8 @@ namespace ProjectPalladium.UI
             LocalPos = new Point((int)(10 * scale), Game1.UINativeResolution.Y - (int)((Sprite.size.Y + 7)* scale));
             topLeft = new Point(0, (int) (12 * scale));
             maxSize = new Point((int) (10 * scale), (int) (53 * scale));
+
+            AddToRoot();
         }
 
         public override void Initialize()

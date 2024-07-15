@@ -22,6 +22,8 @@ namespace ProjectPalladium.UI
             TIME_TEXT_OFFSET = (Sprite.size.ToVector2() * scale) / 2;
                 
             timeText = new TextRenderer(globalPos.ToVector2() + TIME_TEXT_OFFSET, TextRenderer.Origin.center, "timetext");
+
+            AddToRoot();
         }
 
         public override void Draw(SpriteBatch b)

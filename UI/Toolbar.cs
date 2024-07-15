@@ -13,7 +13,7 @@ namespace ProjectPalladium.UI
 {
     public class Toolbar : UIElement
     {
-        private const int toolBarSize = 10;
+        public const int toolBarSize = 10;
         public Inventory inv;
         public Toolbar(string name, string textureName, int localX, int localY, UIElement parent,
             OriginType originType = OriginType.def, bool isRoot = false, bool isBox = false, float scale = 1f) 
@@ -28,10 +28,18 @@ namespace ProjectPalladium.UI
                 slot.OnSlotClicked += SlotClicked;
                 children.Add(slot);
             }
+
+            AddToRoot();
         }
 
+        public void ResetItemSlot(int index)
+        {
+            if (index == -1) return;
+            (children[index] as ItemSlot).Reset();
+        }
         private void SlotClicked(ItemSlot slot)
         {
+            if (Game1.player.dialogueBoxOpen) return;
             if (Game1.player.ActiveItem != Item.none && Game1.player.ActiveItem != null) 
             { children[Game1.player.ActiveItemIndex].button.clickState = false ; }
 
@@ -39,6 +47,7 @@ namespace ProjectPalladium.UI
                 SetActiveItem(slot);
                 
                 Game1.player.holdingTool = slot.Item is Tool;
+
             }
             else { 
 

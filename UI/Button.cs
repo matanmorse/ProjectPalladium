@@ -28,7 +28,7 @@ namespace ProjectPalladium.UI
         public bool clickState = false;
 
         public bool UI; // is this a UI button or GameWorld button?
-        
+
         private UIElement owner;
         public Button(OnEnter onEnter, OnClick onClick, OnLeave onLeave, Point pos, Point size, UIElement owner, OnRightClick onRightClick=null)
         {
@@ -40,6 +40,11 @@ namespace ProjectPalladium.UI
             this.bounds = new Rectangle(pos, owner.ScalePoint(size));
             this.UI = true;
 
+        }
+
+        public void SetBounds(Point size)
+        {
+            this.bounds.Size = size;
         }
 
         public Button(OnEnter onEnter, OnClick onClick, OnLeave onLeave, Point pos, Point size, OnRightClick onRightClick = null)
@@ -55,6 +60,7 @@ namespace ProjectPalladium.UI
 
         public void Update()
         {
+            // list of conditions when we want the button to be inactive
             CheckEnter();
             CheckLeave();
             if (CheckLeftClick()) if (onClick != null) onClick();

@@ -9,6 +9,7 @@ using ProjectPalladium.Utils;
 using ProjectPalladium.Plants;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Tools;
+using ProjectPalladium.UI;
 namespace ProjectPalladium
 {
     public class Player : Character
@@ -21,8 +22,9 @@ namespace ProjectPalladium
 
 
         public bool dead;
-
         public bool usingItemLocked = false;
+        public bool dialogueBoxOpen;
+
         public Point feet; // lmao
 
         // mana + spellcasting info
@@ -56,6 +58,7 @@ namespace ProjectPalladium
             get { return activeItemIndex; }
             set 
             {
+                UIManager.toolbar.ResetItemSlot(activeItemIndex);
                 activeItemIndex = value; 
             }
         }
@@ -159,7 +162,7 @@ namespace ProjectPalladium
             }
             if (Input.GetKeyDown(Keys.M))
             {
-                mana = MAX_MANA;
+                Debug.WriteLine(activeItemIndex);
             }
 
 

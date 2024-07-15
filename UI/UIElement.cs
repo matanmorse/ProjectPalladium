@@ -26,7 +26,7 @@ namespace ProjectPalladium.UI
         protected Point localPos;
 
         protected static Player player = Game1.player;
-
+        public bool active = true; // are the buttons and any interactable objects on this element active?
         public Point LocalPos
         {
             get { return localPos; }
@@ -88,7 +88,7 @@ namespace ProjectPalladium.UI
         public virtual void Update()
         {
             if (!showing) return;
-            if (button != null) { button.Update(); }
+            if (button != null && active) { button.Update(); }
             if (needsUpdating)
             {
                 UpdateGlobalPos();
@@ -130,6 +130,12 @@ namespace ProjectPalladium.UI
 
         }
 
+        // make this element a child of the root child
+        protected void AddToRoot()
+        {
+            if (isRoot) return;
+            UIManager.rootElement.AddChild(this);
+        }
 
         public virtual void AddChild(string name, string textureName, int localX, int localY, OriginType originType = OriginType.def, float scale = 1f)
         {

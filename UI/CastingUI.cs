@@ -60,6 +60,8 @@ namespace ProjectPalladium.UI
             showing = false;
 
             aimElement.opacity = 0.7f;
+
+            AddToRoot();
          }
 
         public override void Draw(SpriteBatch b)
