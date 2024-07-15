@@ -131,7 +131,7 @@ namespace ProjectPalladium.Utils
             Color color = Color.White;
             pixel.SetData(new[] { Color.White });
 
-            int thickness = 2;
+            int thickness = 5;
 
             b.Draw(pixel, new Vector2(rect.Left, rect.Top ), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
             b.Draw(pixel, new Vector2(rect.Left , rect.Top ), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;

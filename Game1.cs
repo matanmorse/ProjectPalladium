@@ -26,7 +26,10 @@ namespace ProjectPalladium
         
 
         private static GraphicsDeviceManager _graphics;
-        public static GraphicsDeviceManager graphics { get { return _graphics; } }
+        public static GraphicsDeviceManager graphics 
+        { 
+            get { return _graphics; } 
+        }
 
         public static bool isFullscreen;
 
@@ -37,7 +40,7 @@ namespace ProjectPalladium
 
         public static Inventory inventory;
 
-        public const float scale = 10f;
+        public const float scale = 20f;
         public static int targetFPS = 144;
         public static Point NativeResolution = new Point(512 * (int) scale, 288 * (int) scale);
         public static Point UINativeResolution = new Point(1360 * 2, 768 * 2);

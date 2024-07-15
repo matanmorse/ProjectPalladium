@@ -21,13 +21,16 @@ namespace ProjectPalladium.UI
         private const float defaultScale = 4f;
         private const float maxWidth = 75 * defaultScale;
 
+        private Object owner;
+
         private Point itemSlotOffset = (new Point(10, 10) * new Point((int)UIManager.inventoryScale)); // use the inventory scale since we want to be at edge of itemslot
         private Rectangle bounds;
         private Point size;
-        private Point padding = new Point(15,12);
+        public static Point padding = new Point(15,12);
         Point paddingOffset;
 
         private string text;
+        private string originalText; 
 
         private bool needsToDrawBox = true; 
 
@@ -48,17 +51,18 @@ namespace ProjectPalladium.UI
         Vector2 bottomRightOrigin = new Vector2(cornerSize, cornerSize);
         Vector2 bottomLeftOrigin = new Vector2(0, cornerSize);
         Vector2 topRightOrigin = new Vector2(cornerSize, 0);
-        RenderTarget2D stichedBox;
-        public DialogBox(string name, Point pos, string text, OriginType originType =OriginType.def) 
+        public DialogBox(string name, Point pos, string text, Object owner, OriginType originType =OriginType.def) 
             : base(name, "", pos.X, pos.Y, UIManager.rootElement, originType, defaultScale, false, false, 0)
         {
+            this.owner = owner;
+
+            this.originalText = text;
             this.text = text;
             paddingOffset = ScalePoint(new Point(7, 5));
             Vector2 textPos = (pos + itemSlotOffset + paddingOffset).ToVector2();
             this.textRenderer = new TextRenderer(textPos, TextRenderer.Origin.topLeft);
 
             this.bounds = CalculateBounds();
-            this.stichedBox = new RenderTarget2D(Game1.graphicsDevice, bounds.Width, bounds.Height);
 
             fillerTexture.SetData(new[] { Color.White });
         }
@@ -69,15 +73,24 @@ namespace ProjectPalladium.UI
             this.textRenderer.pos = (bounds.Location + paddingOffset).ToVector2 ();
         }
 
-       
-        private Rectangle CalculateBounds()
+        // manually set a size for this dialog box (default is dynamic sizing)
+        public void SetSize(Point size)
+        {
+            this.size = size + ScalePoint(padding);
+            this.bounds.Size = this.size;
+
+            // recalculate text
+            this.text = FormatText(originalText, (size - ScalePoint(padding)).ToVector2());
+            this.textRenderer.pos = (this.bounds.Location + paddingOffset).ToVector2();
+        }
+        private string FormatText(string text, Vector2 maxSize)
         {
             List<string> words = text.Split(" ").ToList();
             string resultString = "";
-            float lineSize = 0f;
+            float lineSize = padding.X * defaultScale;
             string line = "";
 
-            if (textRenderer.font.MeasureString(text).X < maxWidth)
+            if (textRenderer.font.MeasureString(text).X < maxSize.X)
             {
                 resultString = text;
             }
@@ -89,13 +102,13 @@ namespace ProjectPalladium.UI
                     float wordSize = textRenderer.font.MeasureString(word).X;
                     lineSize += wordSize;
 
-                    if (lineSize > maxWidth)
+                    if (lineSize > maxSize.X)
                     {
                         // this line is done, add a newline
                         resultString += line + "\n";
 
                         // start new line with this word
-                        lineSize = wordSize;
+                        lineSize = wordSize + (padding.X * defaultScale);
                         line = word + " ";
                     }
                     else
@@ -107,11 +120,24 @@ namespace ProjectPalladium.UI
                 resultString += line.TrimEnd(); // Trim any trailing space
 
             }
+            return resultString;
+        }
 
+        private Rectangle CalculateBounds()
+        {
+            this.text = FormatText(originalText, new Vector2(maxWidth, 0));
+            this.size = textRenderer.font.MeasureString(text).ToPoint() + ScalePoint(padding);
 
-            this.text = resultString;
-            this.size = textRenderer.font.MeasureString(resultString).ToPoint() + ScalePoint(padding);
-            return new Rectangle(localPos + itemSlotOffset, size);
+            Rectangle newBounds;
+            if (owner is ItemSlot)
+            {
+                newBounds = new Rectangle(localPos + itemSlotOffset, size);
+            }
+            else
+            {
+                newBounds = new Rectangle(localPos, size);
+            }
+            return newBounds;
         }
 
 

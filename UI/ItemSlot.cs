@@ -106,7 +106,7 @@ namespace ProjectPalladium.UI
                 this.itemInfo = cacheRetrievedBox;  return; 
             }
            
-            DialogBox newDialogBox = new DialogBox("Item Info", globalPos, item.description);
+            DialogBox newDialogBox = new DialogBox("Item Info", globalPos, item.description, this);
             cachedDialogBoxes.Add(item, newDialogBox); // cache the dialog box
             this.itemInfo = newDialogBox;
             
