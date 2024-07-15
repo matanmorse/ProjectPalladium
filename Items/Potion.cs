@@ -213,7 +213,7 @@ namespace ProjectPalladium.Items
 
         private void TryWithConfirmationScreen()
         {
-            if (!justasked)
+            if (!Game1.player.DialogueBoxOpen)
             {
                 UIManager.dialogBox.AskChoice("Drink potion?", "Yes", "No", onChoice1: Drink, onChoice2:ChoiceDenied);
             }

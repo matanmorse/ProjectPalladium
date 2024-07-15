@@ -23,7 +23,17 @@ namespace ProjectPalladium
 
         public bool dead;
         public bool usingItemLocked = false;
-        public bool dialogueBoxOpen;
+        private bool dialogueBoxOpen;
+        public bool DialogueBoxOpen
+        {
+            get { return dialogueBoxOpen; }
+            set
+            {
+                dialogueBoxOpen = value;
+                movementLocked = value;
+                if (value) SetToIdle();
+            }
+        }
 
         public Point feet; // lmao
 
@@ -158,7 +168,7 @@ namespace ProjectPalladium
             // debug code for adding and removing items
             if (Input.GetKeyDown(Keys.O))
             {
-                currentMap.AddEnemy("slime", pos);
+                UIManager.dialogBox.AskChoice("choice", "yes", "no");
             }
             if (Input.GetKeyDown(Keys.M))
             {
@@ -166,12 +176,14 @@ namespace ProjectPalladium
             }
 
 
-            if (_activeItem != null && _activeItem != Item.none && Input.GetLeftMouseClicked())
+            if (_activeItem != null && _activeItem != Item.none)
             {
                
                 if (!usingItemLocked && !UIManager.inventoryUI.showing)
                 {
-                    _activeItem.Use();
+                    // some items are used with left click, all others with right click.
+                    if ((_activeItem is Tool || _activeItem is Placeable) && Input.GetLeftMouseClicked()) { _activeItem.Use(); }
+                    else if (Input.GetRightMouseClicked()) { _activeItem.Use(); }
                 }
                 else
                 {
@@ -195,6 +207,7 @@ namespace ProjectPalladium
         public override void Update(GameTime gameTime)
         {
             if (dead) return; // duh
+            if (dialogueBoxOpen) movementLocked = true;
 
             lerpingCamera = Vector2.Lerp(lerpingCamera, pos , 0.1f);
             base.Update(gameTime);

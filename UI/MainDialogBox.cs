@@ -17,29 +17,36 @@ namespace ProjectPalladium.UI
         private static Point dialogueBoxSize = new Point((int)(Game1.UINativeResolution.X * 0.5f), (int)(100 * defaultScale));
         private static Point dialogBoxPos = new Point(UIManager.toolbar.globalPos.X - ((dialogueBoxSize.X + (int)((DialogBox.padding.X - 1) * defaultScale)) / 2), (int)(340 * defaultScale) - dialogueBoxSize.Y);
 
-
+        private float animationTime = 0f;
+        private static float animationLength = 0.5f; // number of seconds the transition animation lasts
+        private static float animationSpeed = 1 / (animationLength * 60);
         // things that can potentially go in the dialog box
         ChoiceMenu choiceMenu;
-        public MainDialogBox(string name, string text) : base(name, dialogBoxPos, text, UIManager.rootElement, OriginType.def)
+        public MainDialogBox(string name, string text) : base(name, dialogBoxPos, text, UIManager.rootElement, OriginType.def, useCenterOrigin:true)
         {
-            scale = 0f;
+            animationTime = 0f;
             showing = false;
             SetSize(dialogueBoxSize);
+            finalSize = dialogueBoxSize;
             AddToRoot();
+
+            
+            pos = (bounds.Location + (bounds.Size / new Point(2))).ToVector2();
 
         }
 
         public void OpenDialogBox()
         {
-            Game1.player.dialogueBoxOpen = true;
+            SetSize(Point.Zero);
+            animationTime = 0f;
+            Game1.player.DialogueBoxOpen = true;
             UIManager.toolbar.active = false;
             this.showing = true;
         }
 
         public void CloseDialogBox()
         {
-            this.scale = 0f;
-            Game1.player.dialogueBoxOpen = false;
+            Game1.player.DialogueBoxOpen = false;
             UIManager.toolbar.active = true;
             this.showing = false;
             this.choiceMenu = null;
@@ -57,14 +64,13 @@ namespace ProjectPalladium.UI
 
         public override void Update()
         {
-            
-            if (showing) {
-                scale = Math.Clamp(scale + 0.1f, 0f, defaultScale);
-                bounds.Size = new Point(Math.Clamp(bounds.Size.X + 1, 0, maxSize.X), Math.Clamp(bounds.Size.Y + 1, 0, maxSize.Y));
-            }
-            if (!showing) return;
             base.Update();
-            if (choiceMenu != null)
+            if (!showing) return;
+
+            animationTime = Math.Clamp(animationTime + animationSpeed, 0f, 1f);                
+            SetSize(new Point((int)(finalSize.X * animationTime), (int)(finalSize.Y * animationTime)));
+
+            if (choiceMenu != null && animationTime == 1f)
             {
                 choiceMenu.Update();
             }
@@ -74,7 +80,7 @@ namespace ProjectPalladium.UI
             
             base.Draw(b);
             if (!showing) return;
-            if (choiceMenu != null)
+            if (choiceMenu != null && animationTime == 1f)
             {
                 choiceMenu.Draw(b);
             }

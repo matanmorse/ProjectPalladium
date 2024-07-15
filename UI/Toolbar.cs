@@ -39,7 +39,7 @@ namespace ProjectPalladium.UI
         }
         private void SlotClicked(ItemSlot slot)
         {
-            if (Game1.player.dialogueBoxOpen) return;
+            if (Game1.player.DialogueBoxOpen) return;
             if (Game1.player.ActiveItem != Item.none && Game1.player.ActiveItem != null) 
             { children[Game1.player.ActiveItemIndex].button.clickState = false ; }
 
