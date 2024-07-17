@@ -25,7 +25,7 @@ namespace ProjectPalladium.Stations
 
         public Station(string name, Vector2 pos, string registryName, string textureName = "") : base(name, pos, textureName)
         {
-            animatedSprite = new AnimatedSprite(32, 32, textureName, registryName, Vector2.Zero);
+            animatedSprite = new AnimatedSprite(32, 32, subfolder + textureName, registryName, Vector2.Zero);
 
         }
 

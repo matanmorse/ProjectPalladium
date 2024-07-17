@@ -131,12 +131,12 @@ namespace ProjectPalladium.Utils
             Color color = Color.White;
             pixel.SetData(new[] { Color.White });
 
-            int thickness = 5;
+            int thickness = 3;
 
-            b.Draw(pixel, new Vector2(rect.Left, rect.Top ), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
-            b.Draw(pixel, new Vector2(rect.Left , rect.Top ), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
-            b.Draw(pixel, new Vector2(rect.Left + rect.Size.X, rect.Top ), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
-            b.Draw(pixel, new Vector2(rect.Left , rect.Top + rect.Size.Y -1), new Rectangle(0, 0, rect.Size.X + thickness, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(pixel, new Point(rect.Left, rect.Top).ToVector2(), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            b.Draw(pixel, new Point(rect.Left, rect.Top).ToVector2(), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(pixel, new Point(rect.Left + rect.Size.X, rect.Top ).ToVector2(), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(pixel, new Point(rect.Left, rect.Top + rect.Size.Y - 1).ToVector2(), new Rectangle(0, 0, rect.Size.X + thickness, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
 
         }
         public static Point ScalePoint(Point pt)

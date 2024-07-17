@@ -26,7 +26,7 @@ namespace ProjectPalladium
             inventory[5].quantity = 2;
             inventory[6] = Item.GetItemFromRegistry("magmarock");
             inventory[6].quantity = 30;
-            inventory[7] = Item.GetItemFromRegistry("giantstoe");
+            inventory[7] = Item.GetItemFromRegistry("mana melon seed");
             inventory[7].quantity = 30;
 
             

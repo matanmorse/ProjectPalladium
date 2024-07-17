@@ -14,6 +14,7 @@ namespace ProjectPalladium
 {
     public class Tilemap
     {
+        private string subFolder = "tilemaps/";
         // is this layer for colliders or not
         public bool isCollideLayer;
 
@@ -85,6 +86,7 @@ namespace ProjectPalladium
         /* Create an index of tiles based on the tilemaps, corresponding to their id's */
         public List<Renderable> ExtractTiles(string fileName)
         {
+           
             tileMap = Game1.contentManager.Load<Texture2D>(fileName);
 
             List<Renderable> tiles = new List<Renderable>();

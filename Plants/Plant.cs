@@ -79,7 +79,7 @@ namespace ProjectPalladium.Plants
 
             this.timeOfLastGrowth = GameManager.time;
 
-            sprite = new Renderable(name);
+            sprite = new Renderable("plants/" + name);
             DeserializeJsonData(name);
         }
 

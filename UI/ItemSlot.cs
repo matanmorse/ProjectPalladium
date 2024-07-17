@@ -25,7 +25,7 @@ namespace ProjectPalladium.UI
         public Item Item { get { return this.item; } set {
 
                 this.item = value; this.name = this.item.name;
-                this.Sprite = new Renderable(item.textureName);
+                if (!(item == Item.none)) this.Sprite = new Renderable("items/" + item.textureName);
 
                 GenerateDialogBox();
             }
@@ -47,7 +47,7 @@ namespace ProjectPalladium.UI
         // the position of the item in the toolbar, from left to right
         public ItemSlot(string name, Item item, int localX, int localY, UIElement parent, Point position,
             OriginType originType = OriginType.def, bool isRoot = false, bool isBox = false, float scale = 1f) 
-            : base(name, item.textureName, localX, localY, parent, OriginType.center, isRoot:isRoot, isBox:isBox, scale:scale)
+            : base(name, "", localX, localY, parent, OriginType.center, isRoot:isRoot, isBox:isBox, scale:scale)
         {
             // position offsets
             TOOLBAR_TOP_LEFT = (parent.Sprite.size / new Point(-2, -2));
@@ -100,14 +100,14 @@ namespace ProjectPalladium.UI
             if (item == Item.none) { this.itemInfo = null; return; }
 
             // first, check if this is in the cache
-            if (cachedDialogBoxes.ContainsKey(item)) 
+            if (cachedDialogBoxes.ContainsKey(item))
             {
                 DialogBox cacheRetrievedBox = cachedDialogBoxes[item];
                 cacheRetrievedBox.SetPosition(globalPos);
-                this.itemInfo = cacheRetrievedBox;  return; 
+                this.itemInfo = cacheRetrievedBox; return;
             }
-           
-            DialogBox newDialogBox = new DialogBox("Item Info", globalPos, item.description, this);
+
+            DialogBox newDialogBox = new DialogBox("Item Info", globalPos, item.name + "\n" + item.description, this);
             cachedDialogBoxes.Add(item, newDialogBox); // cache the dialog box
             this.itemInfo = newDialogBox;
             
@@ -118,6 +118,7 @@ namespace ProjectPalladium.UI
             ApplyEffects(b);
 
             // draw item centered
+            if (item.sprite == null ) return;
             origin = ((item.sprite.size.ToVector2()) / 2);
             
             item.Draw(b, drawPos.ToVector2(), scale, origin);

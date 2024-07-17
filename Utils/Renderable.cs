@@ -29,7 +29,7 @@ namespace ProjectPalladium.Utils
             size = new Point(sourceRect.Width, sourceRect.Height);
         }
 
-        public Renderable(string textureName, float rotation = 0f)
+        public Renderable(string textureName, float rotation = 0f)  
         {
             this.rotation = rotation;
             this.textureName = textureName;
@@ -38,6 +38,7 @@ namespace ProjectPalladium.Utils
 
         public void LoadTexture(string textureName)
         {
+            
             if (textureName == null || textureName == "") { return; }
             _texture = Game1.contentManager.Load<Texture2D>(textureName);
             size = new Point(_texture.Width, _texture.Height);

@@ -12,6 +12,7 @@ using ProjectPalladium.UI;
 using System.Diagnostics;
 using ProjectPalladium.Stations;
 using ProjectPalladium.Animation;
+using ProjectPalladium.Plants;
 namespace ProjectPalladium
 {
     public class GameObject
@@ -21,6 +22,7 @@ namespace ProjectPalladium
         public Rectangle walkBehind;
         public Renderable sprite;
         public Vector2 globalPos;
+        protected string subfolder;
 
         public Point tileDimensions = Point.Zero;
 
@@ -37,7 +39,12 @@ namespace ProjectPalladium
         protected bool playerBehind;
         public GameObject(string name, Vector2 pos, string textureName="") {
             this.name = name;
-            sprite = new Renderable(textureName);
+            if (this is Building) subfolder = "buildings/";
+            else if (this is Plant) subfolder = "plants/";
+            else subfolder = "gameobjects/";
+
+            if (textureName == "") subfolder = "";
+            sprite = new Renderable(subfolder + textureName);
 
 
             if (sprite.Texture == null) { return;  }

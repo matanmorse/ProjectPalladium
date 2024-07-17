@@ -43,7 +43,9 @@ namespace ProjectPalladium.Items
             this.description = description;
             this.stackSize = stacksize;
             this.potionIngredient = potionIngredient;
-            this.sprite = new Renderable(textureName);
+
+            if (textureName == "") return;
+            this.sprite = new Renderable("items/" + textureName);
         }
         private static Dictionary<String, Item> Items = new Dictionary<String, Item>()
         {
@@ -64,7 +66,8 @@ namespace ProjectPalladium.Items
 
             { "mana melon seed", new Seed(2, "Mana Melon Seed", "manamelonseed", 1, "some mana melon seeds", 99, "manamelonplant") },
             { "scrying orb", new Placeable(3, "Scrying Orb", "scryingorb", 1, "An orb for scrying.")},
-            { "cauldron", new Placeable(4, "Cauldron", "cauldron", 1, "A cauldron for brewing potions.", worldObjectType:typeof(Cauldron)) }
+            { "cauldron", new Placeable(4, "Cauldron", "cauldron", 1, "A cauldron for brewing potions.", worldObjectType:typeof(Cauldron)) },
+            {"test", new Item(8, "Test", "test", 1, "a", 99) }
         
         };
 
@@ -134,6 +137,7 @@ namespace ProjectPalladium.Items
 
         public virtual void Draw(SpriteBatch b, Vector2 pos, float scale, Vector2 origin, float layer=0.91f)
         {
+            if (sprite == null) return;
             sprite.Draw(b, pos, layer: layer, scale: scale, origin:origin);
         }
     };
