@@ -14,6 +14,7 @@ namespace ProjectPalladium
 
     public class Character
     {
+        protected string subfolder = ""; // subfolder for character data
         protected Map currentMap;
         public Color tintColor = Color.White;
 
@@ -48,7 +49,7 @@ namespace ProjectPalladium
         public Vector2 pos;
         public Vector2 prevpos;
 
-        public float speed = 1.35f * Game1.scale / (Game1.targetFPS / 40);
+        public float speed = 1.1f * Game1.scale / (Game1.targetFPS / 40);
         private Vector2 velocity;
 
         private List<Projectile> projectiles = new List<Projectile>(); // list of projectiles belonging to this character

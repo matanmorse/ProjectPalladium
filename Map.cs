@@ -229,6 +229,8 @@ namespace ProjectPalladium
         /* Helper function to load all GameObjects from a tmx file */
         public void LoadGameObjects()
         {
+            if (map.ObjectLayers == null) return;
+
             ObjectLayer gameObjectLayer = map.ObjectLayers.FirstOrDefault(p => p.name == "gameobjects", null);
             if (gameObjectLayer == null) return;
 
@@ -268,6 +270,7 @@ namespace ProjectPalladium
         /* Loads triggers from tmx file */
         public void GetTriggers()
         {
+            if (map.ObjectLayers == null) return;
             ObjectLayer triggersLayer = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "triggers", null);
             if (triggersLayer == null || triggersLayer.objects == null) return;
 
@@ -302,6 +305,7 @@ namespace ProjectPalladium
         /* Loads Spawn point from TMX file */
         public void GetSpawnPoint()
         {
+            if (map.ObjectLayers == null) return;
             ObjectLayer spawnPoints = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "spawn", null);
             if (spawnPoints == null || spawnPoints.objects == null) {
                 Debug.Write("no default spawn pos");
@@ -311,10 +315,8 @@ namespace ProjectPalladium
 
             foreach (TiledObject spawnPointObj in spawnPoints.objects)
             {
-                Debug.WriteLine(spawnPointObj.y);
                 // if (spawnPointObj.properties.fi) continue;
                 Vector2 spawnPoint = new Vector2(spawnPointObj.x, spawnPointObj.y);
-                Debug.WriteLine(spawnPoint);
                 spawnLocation = spawnPoint;
             }
         }
@@ -322,6 +324,7 @@ namespace ProjectPalladium
         /* Loads buildings from TMX file */
         public void GetBuildings()
         {
+            if (map.ObjectLayers == null) return;
             ObjectLayer buildingLayer = map.ObjectLayers.FirstOrDefault(layer => layer.name.ToLower() == "buildings", null);
             //Checks if there is a building layer
             if (buildingLayer == null || buildingLayer.objects == null) { return; }
@@ -375,7 +378,7 @@ namespace ProjectPalladium
 
             SceneManager.CurScene.Characters.Add(
                 new Enemy(
-                    new AnimatedSprite(16, 16, name + "anims", name),
+                    new AnimatedSprite(16, 16, "enemies/" + name + "anims", name),
                     pos,
                     name,
                     SceneManager.CurScene.Map,

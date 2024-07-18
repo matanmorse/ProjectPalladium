@@ -134,6 +134,7 @@ namespace ProjectPalladium.Spells
 
             // by convention the first tile index 1 is the till tile
             map.tillLayer.SetTileData(playerPos, map.tillLayer.tileIndex[1]);
+            Debug.WriteLine(map.tillLayer.tileIndex[1].textureName);
         }
 
         public static void Growth()

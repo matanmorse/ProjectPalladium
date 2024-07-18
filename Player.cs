@@ -10,10 +10,12 @@ using ProjectPalladium.Plants;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Tools;
 using ProjectPalladium.UI;
+using System.Runtime.CompilerServices;
 namespace ProjectPalladium
 {
     public class Player : Character
     {
+        
         private UIManager uiManager;
         private Vector2 inputDir = Vector2.Zero;
         public Inventory inventory;
@@ -75,7 +77,8 @@ namespace ProjectPalladium
         public Player(AnimatedSprite sprite, Vector2 pos, string name, Map startingMap, Vector2 bBoxOffset, Vector2 bBoxSize) :
             base(sprite, pos, name, startingMap, bBoxOffset, bBoxSize)
         {
-            feet = Util.GetNearestTile(pos) + new Point(0, 1);
+            this.subfolder = "player/";
+            feet = Util.GetNearestTile(boundingBox.Center);
             currentMap.player = this;
             uiManager = Game1.UIManager;
             inventory = UIManager.inventoryUI.Inventory;
@@ -168,7 +171,7 @@ namespace ProjectPalladium
             // debug code for adding and removing items
             if (Input.GetKeyDown(Keys.O))
             {
-                UIManager.dialogBox.AskChoice("choice", "yes", "no");
+                SceneManager.CurScene.Map.AddEnemy("slime", pos);
             }
             if (Input.GetKeyDown(Keys.M))
             {
@@ -211,7 +214,7 @@ namespace ProjectPalladium
 
             lerpingCamera = Vector2.Lerp(lerpingCamera, pos , 0.1f);
             base.Update(gameTime);
-            feet = Util.GetNearestTile(pos) + new Point(0, 1);
+            feet = Util.GetNearestTile(boundingBox.Center);
 
             handleMovement();
             doInputCheck();

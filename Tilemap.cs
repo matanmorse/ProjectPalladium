@@ -43,7 +43,7 @@ namespace ProjectPalladium
         public Point MapTileSize { get { return _mapTileSize; } }
 
         public Texture2D tileMap;
-        public Tilemap(string tileData, Point MapTileSize, string name, bool collideLayer=false, bool isTillLayer=false, string imageName="grassanddirt")
+        public Tilemap(string tileData, Point MapTileSize, string name, bool collideLayer=false, bool isTillLayer=false, string imageName="tilemap")
         {
             layer = new Renderable[MapTileSize.X, MapTileSize.Y];
             this.name = name;
@@ -68,10 +68,8 @@ namespace ProjectPalladium
                 int x = i % _mapTileSize.X;
                 int y = i / _mapTileSize.X;
 
-                //Debug.WriteLine("tile: " + nums[i] + "at " + x + "," + y);
 
                 // based on the id of the tile, set the tile data in the layer
-
                 layer[x, y] = tileIndex[tiles[i]];
 
                 // if this layer contains colliders, add collider rects over all tiles in this layer
@@ -86,7 +84,7 @@ namespace ProjectPalladium
         /* Create an index of tiles based on the tilemaps, corresponding to their id's */
         public List<Renderable> ExtractTiles(string fileName)
         {
-           
+            if (fileName == "TilledDirt") { Debug.WriteLine("dirt"); }
             tileMap = Game1.contentManager.Load<Texture2D>(fileName);
 
             List<Renderable> tiles = new List<Renderable>();
