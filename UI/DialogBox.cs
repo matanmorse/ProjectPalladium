@@ -14,7 +14,8 @@ namespace ProjectPalladium.UI
 {
     public class DialogBox : UIElement
     {
-        private static Texture2D backgroundTexture = Game1.contentManager.Load<Texture2D>("dialogbox");
+        private static string subfolder = "ui/";
+        private static Texture2D backgroundTexture = Game1.contentManager.Load<Texture2D>(subfolder + "dialogbox");
          Texture2D fillerTexture = new Texture2D(Game1.graphicsDevice, 1, 1);
         private TextRenderer textRenderer;
 

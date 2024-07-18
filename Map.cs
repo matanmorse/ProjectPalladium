@@ -311,8 +311,10 @@ namespace ProjectPalladium
 
             foreach (TiledObject spawnPointObj in spawnPoints.objects)
             {
-                if (spawnPointObj.properties != null) continue;
+                Debug.WriteLine(spawnPointObj.y);
+                // if (spawnPointObj.properties.fi) continue;
                 Vector2 spawnPoint = new Vector2(spawnPointObj.x, spawnPointObj.y);
+                Debug.WriteLine(spawnPoint);
                 spawnLocation = spawnPoint;
             }
         }
@@ -577,8 +579,14 @@ namespace ProjectPalladium
                 {
                     if (spawnObject.properties == null) continue;
                     Property[] pList = spawnObject.properties.properties;
+                    string thisLinkID;
 
-                    string thisLinkID = pList.FirstOrDefault(prop => prop.name.ToLower() == "link").value;
+                    
+                        Property p = pList.FirstOrDefault(prop => prop.name.ToLower() == "link");
+                        if (p == null) continue;
+                        thisLinkID = pList.FirstOrDefault(prop => prop.name.ToLower() == "link").value;
+                    
+                    
                     if (thisLinkID == linkID) // it is the associated spawn object for this cst
                     {
                         spawnPos = new Vector2(spawnObject.x, spawnObject.y);

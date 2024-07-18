@@ -2,16 +2,16 @@
   "name": "Wizard Tower",
   "colliders": {
     "move": {
-      "size": [ 44, 32 ],
-      "location": [ 10, 86 ]
+      "size": [ 68, 21 ],
+      "location": [ 14, 124 ]
     },
     "behind": {
-      "size": [ 44, 96 ],
-      "location": [ 10, 0 ]
+      "size": [ 86, 112 ],
+      "location": [ 6, 18 ]
     },
     "door": {
-      "size": [ 18, 24 ],
-      "location": [ 23, 95 ]
+      "size": [ 22, 35 ],
+      "location": [ 37, 125 ]
     }
   }
 }

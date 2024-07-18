@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 
@@ -29,16 +30,28 @@ namespace ProjectPalladium.Utils
             size = new Point(sourceRect.Width, sourceRect.Height);
         }
 
-        public Renderable(string textureName, float rotation = 0f)  
+        public Renderable(string textureName, float rotation = 0f)
         {
             this.rotation = rotation;
             this.textureName = textureName;
             LoadTexture(textureName);
         }
 
+        public Renderable(string subfolder, string textureName, float rotation = 0f)
+        {
+            this.rotation = rotation;
+            this.textureName = textureName;
+            if (textureName == "" || textureName == null) {
+                LoadTexture(textureName);
+            }
+            else
+            {
+
+                    LoadTexture(subfolder + textureName);
+            }
+        }
         public void LoadTexture(string textureName)
         {
-            
             if (textureName == null || textureName == "") { return; }
             _texture = Game1.contentManager.Load<Texture2D>(textureName);
             size = new Point(_texture.Width, _texture.Height);

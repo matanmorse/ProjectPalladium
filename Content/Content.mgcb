@@ -181,18 +181,6 @@
 /processorParam:TextureFormat=Color
 /build:items/wand.png
 
-#begin plants/manamelonplant.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:plants/manamelonplant.png
-
 #begin player/mageanims.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -205,7 +193,14 @@
 /processorParam:TextureFormat=Color
 /build:player/mageanims.png
 
-#begin projectiles/iceblast.png
+#begin text.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:text.spritefont
+
+#begin tilemaps/grassanddirt.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -215,14 +210,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:projectiles/iceblast.png
-
-#begin text.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:text.spritefont
+/build:tilemaps/grassanddirt.png
 
 #begin tilemaps/TilledDirt.png
 /importer:TextureImporter
@@ -235,18 +223,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:tilemaps/TilledDirt.png
-
-#begin tilemaps/World of Solaria New Style DEMO.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:tilemaps/World of Solaria New Style DEMO.png;tilemaps/tilemap.png
 
 #begin timetext.spritefont
 /importer:FontDescriptionImporter

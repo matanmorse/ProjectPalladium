@@ -52,6 +52,7 @@ namespace ProjectPalladium.UI
         private bool isRoot;
         private bool isBox;
         public float rotation;
+        private string subfolder = "ui/";
 
         public Button button;
         public UIElement(string name, string textureName, int localX, int localY, UIElement parent, OriginType originType = OriginType.def, float scale = 1f, bool isRoot = false, bool isBox = false, float rotation = 0f)
@@ -65,7 +66,7 @@ namespace ProjectPalladium.UI
 
             this.isBox = isBox;
             this.parent = parent;
-            this.sprite = new Renderable(textureName, rotation:rotation);
+            this.sprite = new Renderable(subfolder, textureName, rotation:rotation);
             this.localPos = new Point(localX, localY);
             this.originType = originType;
             UpdateGlobalPos();

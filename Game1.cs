@@ -40,7 +40,7 @@ namespace ProjectPalladium
 
         public static Inventory inventory;
 
-        public const float scale = 20f;
+        public const float scale = 10f;
         public static int targetFPS = 144;
         public static Point NativeResolution = new Point(512 * (int) scale, 288 * (int) scale);
         public static Point UINativeResolution = new Point(1360 * 2, 768 * 2);
@@ -288,6 +288,7 @@ namespace ProjectPalladium
 
         protected override void Draw(GameTime gameTime)
         {
+            
             DoFrameRateCalculation(gameTime);
             
             // Clear the back buffer with the background color
