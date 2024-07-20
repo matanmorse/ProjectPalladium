@@ -44,10 +44,10 @@ namespace ProjectPalladium
             int diameter = radius * 2;
              texture = new Texture2D(Game1.graphicsDevice, diameter, diameter);
             Color[] colorData = new Color[diameter * diameter];
-            Color defaultColor = Color.Yellow;
+            Color defaultColor = Color.White;
             Vector2 center = new Vector2(radius, radius);
             float maxDistance = radius;
-            float maxIntensity = 0.2f;   
+            float maxIntensity = 1f;   
             for (int y = 0; y < diameter; y++)
             {
                 for (int x = 0; x < diameter; x++)

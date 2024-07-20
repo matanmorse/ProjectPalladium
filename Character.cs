@@ -71,8 +71,8 @@ namespace ProjectPalladium
         }
 
         private Vector2 bBoxOffset;
-        private int edgex;
-        private int edgey;
+        public int edgex;
+        public int edgey;
 
         public string name;
         public bool moveLeft, moveRight, moveUp, moveDown;

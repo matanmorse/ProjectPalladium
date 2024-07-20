@@ -81,6 +81,10 @@
   </object>
  </objectgroup>
  <objectgroup id="4" name="Spawn">
-  <object id="2" x="224" y="256"/>
+  <object id="2" x="224" y="256">
+   <properties>
+    <property name="name" value="spawnpoint"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

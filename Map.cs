@@ -280,7 +280,8 @@ namespace ProjectPalladium
                 Point size = new Point(trigger.width, trigger.height) * new Point((int)Game1.scale);
 
                 Rectangle bounds = new Rectangle(location, size);
-                Property[] pList = trigger.properties.properties; // don't even ask why i have to do this
+                Property[] pList = trigger.properties.properties; // don't even ask why i have to do the
+
                 string name = pList.First(prop => prop.name.ToLower() == "name").value;
                 if (name == "exit")
                 {
@@ -315,7 +316,9 @@ namespace ProjectPalladium
 
             foreach (TiledObject spawnPointObj in spawnPoints.objects)
             {
-                // if (spawnPointObj.properties.fi) continue;
+                if (spawnPointObj.properties == null) continue;
+                Property name = spawnPointObj.properties.properties.FirstOrDefault(x => x.name == "name", null);
+                if (name == null || name.value != "spawnpoint") continue;
                 Vector2 spawnPoint = new Vector2(spawnPointObj.x, spawnPointObj.y);
                 spawnLocation = spawnPoint;
             }
@@ -404,23 +407,29 @@ namespace ProjectPalladium
 
         public bool AddGameObject(string itemName, Vector2 tile, Type worldObjectType)
         {
-            if (FindGameObjectAtTile(tile.ToPoint()) != null) return false;
-            if (tile.ToPoint() == player.feet) return false; // shouldn't be able to place buildings under us
-
             // create placeable object of dynamic type
             // depending on the type, the constructor will need to have different parameters
             string textureName = itemName.Replace(" ", "").ToLower() + "placed";
             object[] parameters;
-            if ( worldObjectType == typeof(PlaceableGameObject))
+            if (worldObjectType == typeof(PlaceableGameObject))
             {
-                 parameters = new object[] { itemName, tile, textureName };
+                parameters = new object[] { itemName, tile, textureName };
             }
             else
             {
-                 parameters = new object[] { itemName, tile };
+                parameters = new object[] { itemName, tile };
             }
-
             var newObj = Activator.CreateInstance(worldObjectType, parameters) as PlaceableGameObject;
+
+            if (FindGameObjectAtTile(tile.ToPoint()) != null) return false;
+            if (tile.ToPoint() == player.feet) return false; // shouldn't be able to place buildings under us
+            if (CheckCollisions(newObj.bounds).Count != 0)
+            {
+                Debug.WriteLine("stopped from placing");
+                return false;
+            }
+           
+
             gameObjects.Add(newObj);
 
             // add this to the list of enemy dangers

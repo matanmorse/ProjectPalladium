@@ -30,6 +30,7 @@ namespace ProjectPalladium.Items
             if (Game1.player.boundingBox.Intersects(new Rectangle(clickedTile * new Point(Map.scaledTileSize), new Point(Map.scaledTileSize))))
             { return; }
 
+
             Vector2 position = clickedTile.ToVector2();
             string textureName = name.Replace(" ", "").ToLower() + "placed";
 
@@ -43,7 +44,6 @@ namespace ProjectPalladium.Items
                 UIManager.toolbar.Reset();
             }
 
-         
 
         }
     }

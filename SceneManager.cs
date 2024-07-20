@@ -28,6 +28,8 @@ namespace ProjectPalladium
 
             // curScene.Map.OnLoad();
 
+            Debug.WriteLine("setting bounds");
+            curScene.Map.player.setBounds(curScene.Map.tileMapSize, 16);
             Enemy.RemoveAllDangers();
         }
 

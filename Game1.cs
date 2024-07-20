@@ -78,6 +78,16 @@ namespace ProjectPalladium
 
         public static float LAYER_CONSTANT = 0.00001f;
 
+        private BlendState maxBrightnessBlendState = new BlendState()
+        {
+            ColorSourceBlend = Blend.One,
+            ColorDestinationBlend = Blend.One,
+            ColorBlendFunction = BlendFunction.Min,
+            AlphaSourceBlend = Blend.One,
+            AlphaDestinationBlend = Blend.One,
+            AlphaBlendFunction = BlendFunction.Min
+        };
+
         public static class layers
         {
             public const float tile = 0f;
@@ -163,7 +173,7 @@ namespace ProjectPalladium
             
             dx = MathHelper.Clamp(
                 dx, 
-                -(map.tileMapSize.X * Map.scaledTileSize) + screenWidth,
+                -(player.edgex) + screenWidth,
                 0);
 
             var dy = ((screenHeight / 2) - player.lerpingCamera.Y - (player.sprite.spriteHeight * scale) / 2);
@@ -172,7 +182,7 @@ namespace ProjectPalladium
 
             dy = MathHelper.Clamp(
                 dy,
-                -(map.tileMapSize.Y * Map.scaledTileSize) + screenHeight - (Map.scaledTileSize / 2),
+                -(player.edgey) + screenHeight - (Map.scaledTileSize / 2),
                 0);
 
            
@@ -298,16 +308,15 @@ namespace ProjectPalladium
 
             // Render the game world to the _canvas
             _canvas.Activate();
-            _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, translation);
-            Lightmap.Draw(_spriteBatch);
-            SceneManager.Draw(_spriteBatch);
 
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, translation);
+            SceneManager.Draw(_spriteBatch);
+            Lightmap.Draw(_spriteBatch);
             Enemy.DrawStatic(_spriteBatch);
             _spriteBatch.End();
 
-
             // apply game world shading effects
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(blendState:BlendState.NonPremultiplied);
             gameWorldShader.Draw(_spriteBatch);
             _spriteBatch.End();
 
