@@ -8,6 +8,7 @@ using ProjectPalladium;
 using System.Transactions;
 using System;
 using static ProjectPalladium.Utils.Util;
+using System.Runtime.CompilerServices;
 namespace ProjectPalladium.Utils
 {
     public class Util
@@ -17,6 +18,7 @@ namespace ProjectPalladium.Utils
         public static Vector2 OneTileDown = new Vector2(0, 1);
         public static Vector2 OneTileDownGameWorld = LocalPosToGlobalPos(OneTileDown);
         static Texture2D pixel = new Texture2D(Game1.instance.GraphicsDevice, 1, 1);
+        private static Color color = Color.White;
 
         public struct Circle
         {
@@ -128,16 +130,19 @@ namespace ProjectPalladium.Utils
         }
         public static void DrawRectangle(Rectangle rect, SpriteBatch b)
         {
-            Color color = Color.White;
             pixel.SetData(new[] { Color.White });
 
-            int thickness = 3;
+            int thickness = 4;
 
-            b.Draw(pixel, new Point(rect.Left, rect.Top).ToVector2(), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
-            b.Draw(pixel, new Point(rect.Left, rect.Top).ToVector2(), new Rectangle(0, 0, rect.Size.X, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
-            b.Draw(pixel, new Point(rect.Left + rect.Size.X, rect.Top ).ToVector2(), new Rectangle(0, 0, thickness, rect.Size.Y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
-            b.Draw(pixel, new Point(rect.Left, rect.Top + rect.Size.Y - 1).ToVector2(), new Rectangle(0, 0, rect.Size.X + thickness, thickness), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(pixel, new Point(rect.Left, rect.Top).ToVector2(), new Rectangle(0, 0, thickness, rect.Size.Y), color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            b.Draw(pixel, new Point(rect.Left, rect.Top).ToVector2(), new Rectangle(0, 0, rect.Size.X, thickness), color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(pixel, new Point(rect.Left + rect.Size.X, rect.Top ).ToVector2(), new Rectangle(0, 0, thickness, rect.Size.Y), color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+            b.Draw(pixel, new Point(rect.Left, rect.Top + rect.Size.Y - 1).ToVector2(), new Rectangle(0, 0, rect.Size.X + thickness, thickness), color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f); ;
+        }
 
+        public static void DrawRectangle(Rectangle rect, SpriteBatch b, Color color)
+        {
+            
         }
         public static Point ScalePoint(Point pt)
         {

@@ -38,12 +38,26 @@ namespace ProjectPalladium.Animation
         };
 
         public ScreenShader() {
+            currentEffect = effects["none"];
             overlayTexture.SetData(new[] { Color.White });
+            // this.alphaValue = 0.3f;
         }
-
+        
+        public void DoOpenInventoryShading()
+        {
+            if (currentEffect.name != "none") return; // this effect should not override other effects
+            if (UIManager.inventoryUI.showing)
+            {
+                alphaValue = 0.5f;
+            }
+            else
+            {
+                alphaValue = 0f;
+            }
+        }
         public void Update(GameTime gameTime)
         {
-            if (currentEffect.name == "none") return;
+            // if (currentEffect.name == "none") return;
             switch(currentEffect.name)
             {
                 case "scenetransition": DoSceneTransition(gameTime); break;

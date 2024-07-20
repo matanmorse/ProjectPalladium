@@ -52,7 +52,7 @@ namespace ProjectPalladium.UI
         private bool isRoot;
         private bool isBox;
         public float rotation;
-        private string subfolder = "ui/";
+        protected static string subfolder = "ui/";
 
         public Button button;
         public UIElement(string name, string textureName, int localX, int localY, UIElement parent, OriginType originType = OriginType.def, float scale = 1f, bool isRoot = false, bool isBox = false, float rotation = 0f)
@@ -160,7 +160,7 @@ namespace ProjectPalladium.UI
             {
                 if (this is ItemSlot) // ItemSlots have constant size but sprites are sometimes null, so include a special case
                 {
-                    button = new Button(onEnter, onClick, onLeave, globalPos - new Point(1, 1) - ScalePoint(new Point(8, 8)), size, this);
+                    button = new Button(onEnter, onClick, onLeave, globalPos - ScalePoint(new Point(9,9)), size, this);
                     return;
                 }
                 button = new Button(onEnter, onClick, onLeave, globalPos - new Point(1, 1) - ScalePoint(sprite.size / new Point(2)), size, this);

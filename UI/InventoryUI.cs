@@ -131,10 +131,13 @@ namespace ProjectPalladium.UI
         {
             Input.Update();
             base.ToggleShowing();
+            UIManager.toolbar.ToggleShowing();
+
+            Game1.gameWorldShader.DoOpenInventoryShading();
 
             Game1.player.usingItemLocked = showing;
-
-            foreach(UIElement child in children)
+            Game1.player.MovementLocked = showing;
+            foreach (UIElement child in children)
             {
                 if (child.GetType() != typeof(ItemSlot)) continue;
                 child.button.mouseOver = false;
@@ -142,6 +145,7 @@ namespace ProjectPalladium.UI
                 child.button.Update();
             }
 
+            GameManager.paused = showing;
         }
 
         public override void Update()

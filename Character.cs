@@ -28,9 +28,9 @@ namespace ProjectPalladium
         protected bool movementLocked;
         protected bool gettingKnockedBack;
 
-        public bool MovementLocked
+        public virtual bool MovementLocked
         {
-            get { return movementLocked; } 
+            get { return movementLocked; }
             set
             {
                 if (dying)
@@ -39,7 +39,7 @@ namespace ProjectPalladium
                 }
 
                 movementLocked = value;
-                }
+            }
         }
 
 

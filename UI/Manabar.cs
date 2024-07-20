@@ -7,13 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
+using ProjectPalladium.Utils;
 
 namespace ProjectPalladium.UI
 {
     public class Manabar : UIElement
     {
 
-
+        private Renderable bottleSprite = new Renderable(subfolder + "manabarbottle");
+        private Texture2D contentsTexture = Game1.contentManager.Load<Texture2D>(subfolder + "manabarcontents");
         public Point topLeft;
         public Point maxSize;
 
@@ -22,13 +24,14 @@ namespace ProjectPalladium.UI
         private Rectangle manaRectangle;
         private Texture2D ManaRect;
 
-        public Manabar(string name, string textureName, UIElement parent)
-        :base(name, textureName, 0,0, parent)
+        public Manabar()
+        :base("manabar", "", 0,0, UIManager.rootElement)
         {
-            LocalPos = new Point((int)(10 * scale), Game1.UINativeResolution.Y - (int)((Sprite.size.Y + 7)* scale));
-            topLeft = new Point(0, (int) (12 * scale));
-            maxSize = new Point((int) (10 * scale), (int) (53 * scale));
-
+            scale = UIManager.defaultUIScale + 1f;
+            Sprite = bottleSprite;
+            LocalPos = new Point((int)(2 * scale), Game1.UINativeResolution.Y - (int)((Sprite.size.Y + 2)* scale));
+            topLeft = new Point(4 * (int)scale, 9 * (int)scale);
+            maxSize = new Point((int) (10 * scale), (int) (55 * scale));
             AddToRoot();
         }
 
@@ -55,13 +58,9 @@ namespace ProjectPalladium.UI
 
         public override void Draw(SpriteBatch b)
         {
-            if (ManaRect == null)
-            {
-                ManaRect = new Texture2D(b.GraphicsDevice, 1, 1);
-                ManaRect.SetData(new[] { MANA_COLOR });
-            }
-            b.Draw(ManaRect, manaRectangle, Color.White);
+            if (!showing) return;
             base.Draw(b);
+            b.Draw(contentsTexture, manaRectangle, Color.White);
         }
 
     }

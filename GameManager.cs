@@ -13,8 +13,10 @@ namespace ProjectPalladium
 {
     public class GameManager
     {
-        // generic Timer Manager
 
+        public static bool paused = false; // is the whole game paused
+
+        // generic Timer Manager
         public static List<Timer> timersToAdd = new List<Timer>();
         public class TimerManager
         {
@@ -48,6 +50,8 @@ namespace ProjectPalladium
 
         public struct GameWorldTime
         {
+            public bool paused = false; // is the game time paused
+
             private int hour;
             public int Hour
             {
@@ -94,7 +98,9 @@ namespace ProjectPalladium
         {
             TimerManager.Update(gameTime);
             timer += (float) gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timer > MILLIS_PER_TEN_GAMEMINUTES)
+
+
+            if (timer > MILLIS_PER_TEN_GAMEMINUTES && !time.paused && !paused)
             {
                 timer = 0;
                 DoTenMinuteTick();

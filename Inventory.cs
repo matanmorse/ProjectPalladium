@@ -19,7 +19,7 @@ namespace ProjectPalladium
             {
                 inventory.Add(Item.none);
             }
-            inventory[3] = Item.GetItemFromRegistry("wand");
+            inventory[0] = Item.GetItemFromRegistry("wand");
             inventory[4] = Item.GetItemFromRegistry("ectoplasmic gem");
             inventory[4].quantity = 20;
             inventory[5] = Item.GetItemFromRegistry("cauldron");

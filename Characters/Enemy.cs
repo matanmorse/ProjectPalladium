@@ -381,7 +381,7 @@ namespace ProjectPalladium.Characters
         private void Jump()
         {
             Vector2 posAtStart = pos;
-            float attackSpeed = 5f;
+            float attackSpeed = 10f;
             Vector2 toPlayerVector = Vector2.Normalize(oldPlayerPos - pos);
             Velocity = toPlayerVector * attackSpeed;
 

@@ -16,8 +16,8 @@ namespace ProjectPalladium.UI
 
     public class ItemSlot : UIElement
     {
-        private readonly Point ITEM_SLOT_OFFSET = new Point(4, 1);
-        private readonly Point OFFSET_PER_INDEX = new Point(17, 17);
+        private readonly Point ITEM_SLOT_OFFSET = new Point(6,6);
+        private readonly Point OFFSET_PER_INDEX = new Point(19, 19);
         public int index;
         private readonly Point TOOLBAR_TOP_LEFT;
         private Item item;
@@ -60,7 +60,7 @@ namespace ProjectPalladium.UI
             
             UpdateGlobalPos();
 
-            AddButton(null, null, onClick, new Point(16, 16));
+            AddButton(null, null, onClick, new Point(18, 18));
 
             // bounds of this item slot
             bounds = ScaleRect(new Rectangle(globalPos.X, globalPos.Y, 16, 16));
@@ -115,6 +115,7 @@ namespace ProjectPalladium.UI
 
         public override void Draw(SpriteBatch b) 
         {
+            Util.DrawRectangle(bounds, b);
             ApplyEffects(b);
 
             // draw item centered

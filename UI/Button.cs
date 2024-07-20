@@ -47,6 +47,11 @@ namespace ProjectPalladium.UI
             this.bounds.Size = size;
         }
 
+        public void SetBounds(Rectangle rect)
+        {
+            this.bounds = rect;
+        }
+
         public Button(OnEnter onEnter, OnClick onClick, OnLeave onLeave, Point pos, Point size, OnRightClick onRightClick = null)
         {
             this.onClick = onClick;

@@ -74,6 +74,7 @@ namespace ProjectPalladium
         public static UIManager UIManager { get { return _uiManager; } }
         public static GameManager gameManager;
         public static ScreenShader shader;
+        public static ScreenShader gameWorldShader; // excludes UI
 
         public static float LAYER_CONSTANT = 0.00001f;
 
@@ -198,6 +199,8 @@ namespace ProjectPalladium
             shader = new ScreenShader();
             shader.onFinishEffect += SceneManager.OnSceneTransitionFinished;
 
+            gameWorldShader = new ScreenShader();
+            Lightmap.AddLightObject(new LightObject(new Vector2(100,100), LightObject.LightTypes.circle, (int)(10 * Game1.scale), 10f, this));
             // init game manager
             gameManager = new GameManager();
 
@@ -240,6 +243,7 @@ namespace ProjectPalladium
 
         protected override void Update(GameTime gameTime)
         {
+
             GameManager.Update(gameTime);
             //Allows for GetKeyDown functionality; if you remove, it will break
             Input.Update();
@@ -257,7 +261,9 @@ namespace ProjectPalladium
                 graphics.ToggleFullScreen(); _canvas.SetDestinationRectangle(); _uiCanvas.SetDestinationRectangle();}
             
             _uiManager.Update();
-            SceneManager.Update(gameTime);
+
+            if (!GameManager.paused) SceneManager.Update(gameTime);
+            else player.doInputCheck(); // only update input to allow player to unpause
 
             CalculateTranslation();
 
@@ -272,16 +278,11 @@ namespace ProjectPalladium
                 Scene test3 = new Scene(new Map("wizardtower.tmx"), player);
                 SceneManager.LoadScene(test3);
             }
-            if (Input.GetKeyDown(Keys.M))
-            {
-                SceneManager.CurScene.Map.Save("map.tmx");
-            }
-            if (Input.GetKeyDown(Keys.N))
-            {
-                SceneManager.LoadScene(new Scene(new Map("map.tmx"), player));
-            }
+           
 
             shader.Update(gameTime);
+            gameWorldShader.Update(gameTime);
+            Lightmap.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -294,14 +295,22 @@ namespace ProjectPalladium
             // Clear the back buffer with the background color
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+
             // Render the game world to the _canvas
             _canvas.Activate();
-            _spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp, null, null, null, translation);
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, translation);
+            Lightmap.Draw(_spriteBatch);
             SceneManager.Draw(_spriteBatch);
+
             Enemy.DrawStatic(_spriteBatch);
             _spriteBatch.End();
 
-            
+
+            // apply game world shading effects
+            _spriteBatch.Begin();
+            gameWorldShader.Draw(_spriteBatch);
+            _spriteBatch.End();
+
             // Render the UI elements to the _uiCanvas
             _uiCanvas.Activate();
             _spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp, null, null, null, null);
@@ -315,7 +324,7 @@ namespace ProjectPalladium
             _canvas.Draw(_spriteBatch);
             _uiCanvas.Draw(_spriteBatch);
 
-            // last, apply shading effects
+            // last, apply universal shading effects
             _spriteBatch.Begin();
             shader.Draw(_spriteBatch);
             _spriteBatch.End();

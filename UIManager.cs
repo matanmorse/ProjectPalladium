@@ -25,7 +25,7 @@ namespace ProjectPalladium
         public static MainDialogBox dialogBox;
         public static TimeDisplay gameInfo;
 
-        public static float inventoryScale = 5f;
+        public static float inventoryScale = 6f;
         public static float toolbarscale = 6f;
 
         public enum UILayers
@@ -48,7 +48,7 @@ namespace ProjectPalladium
             inventoryUI = new InventoryUI("inventory", "inventory", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y / 2, rootElement, originType: center, scale:inventoryScale);
 
             // toolbar
-            toolbar = new Toolbar("toolbar", "toolbar", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y - (int) (10 * toolbarscale) , rootElement, originType: center, scale:toolbarscale);
+            toolbar = new Toolbar("toolbar", "toolbar", Game1.UINativeResolution.X / 2, Game1.UINativeResolution.Y - (int) (15 * toolbarscale) , rootElement, originType: center, scale:toolbarscale);
             toolbar.inv = inventoryUI.Inventory;
 
             // link inventory and toolbar
@@ -56,8 +56,8 @@ namespace ProjectPalladium
             inventoryUI.showing = false;
 
             // mana bar and spellbook
-            Manabar manabar = new Manabar("manabar", "manabar", rootElement);
-            rootElement.AddChild(new UIElement("spellbook", "spellbook", Game1.UINativeResolution.X -150, Game1.UINativeResolution.Y -100, rootElement));
+            Manabar manabar = new Manabar();
+            // rootElement.AddChild(new UIElement("spellbook", "spellbook", Game1.UINativeResolution.X -150, Game1.UINativeResolution.Y -100, rootElement));
 
             // Casting UI
             castingUI = new CastingUI(rootElement);

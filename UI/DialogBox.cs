@@ -39,7 +39,7 @@ namespace ProjectPalladium.UI
                 unpaddedSize = size - padding * new Point((int)defaultScale);
             }
         }
-        public static Point padding = new Point(15,15);
+        public static Point padding = new Point(10,10);
         Point paddingOffset;
         protected Vector2 centerOrigin;
         public Vector2 pos; // position, center origin
@@ -74,7 +74,7 @@ namespace ProjectPalladium.UI
 
             this.originalText = text;
             this.text = text;
-            paddingOffset = ScalePoint(padding) / new Point(2);
+            paddingOffset = new Point(5,4) * new Point((int)scale) ;
             textPos = (pos + itemSlotOffset + paddingOffset).ToVector2();
             this.textRenderer = new TextRenderer(textPos, TextRenderer.Origin.topLeft);
 

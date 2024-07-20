@@ -15,13 +15,13 @@ namespace ProjectPalladium
 {
     public class Player : Character
     {
-        
+
         private UIManager uiManager;
         private Vector2 inputDir = Vector2.Zero;
         public Inventory inventory;
         private Item _activeItem;
         public bool holdingTool;
-
+        private LightObject playerLight;
 
         public bool dead;
         public bool usingItemLocked = false;
@@ -34,6 +34,16 @@ namespace ProjectPalladium
                 dialogueBoxOpen = value;
                 movementLocked = value;
                 if (value) SetToIdle();
+            }
+        }
+
+        public override bool MovementLocked
+        {
+            get { return movementLocked; }
+            set 
+            {
+                if (value) SetToIdle();
+                base.MovementLocked = value;
             }
         }
 
@@ -85,6 +95,12 @@ namespace ProjectPalladium
             invincFrames = 1000f;
         }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            // playerLight = Lightmap.AddLightObject(pos, LightObject.LightTypes.circle, (int)(100 * Game1.scale), 1f, this);
+        }
         protected override void Kill()
         {
             Debug.WriteLine("player is dead");
@@ -213,6 +229,7 @@ namespace ProjectPalladium
             if (dialogueBoxOpen) movementLocked = true;
 
             lerpingCamera = Vector2.Lerp(lerpingCamera, pos , 0.1f);
+            lerpingCamera.Round();
             base.Update(gameTime);
             feet = Util.GetNearestTile(boundingBox.Center);
 
