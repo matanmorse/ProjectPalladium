@@ -9,6 +9,7 @@ using System.Transactions;
 using System;
 using static ProjectPalladium.Utils.Util;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 namespace ProjectPalladium.Utils
 {
     public class Util
@@ -242,10 +243,32 @@ namespace ProjectPalladium.Utils
         /* Calculates the difference (in minutes) between two game times */
         public static int CalculateMinutesDifference(GameManager.GameWorldTime EndTime, GameManager.GameWorldTime StartTime)
         {
-            int endAdjustedHours = EndTime.isAM ? EndTime.Hour : EndTime.Hour + 12; // convert to 24-hour time
-            int startAdjustedHours = StartTime.isAM ? StartTime.Hour : StartTime.Hour + 12;
+            return MinutesSinceDayStart(EndTime) - MinutesSinceDayStart(StartTime);
+        }
 
-            return (((endAdjustedHours * 60) + EndTime.Minute) - ((startAdjustedHours * 60) + StartTime.Minute));
+        public static int MinutesSinceDayStart(GameManager.GameWorldTime time)
+        {
+            int hour = time.Hour;
+            int minute = time.Minute;
+            if (time.isAM)
+            {
+                if (hour == 12) {
+                    hour = 0;
+                }
+                if (hour < GameManager.dayStartTime.Hour)
+                {
+                    hour += 24; // this is the next day, so add 24
+                }
+            }
+            else
+            {
+                if ( hour != 12 )
+                {
+                    hour += 12;
+                }
+            }
+
+            return ((hour - GameManager.dayStartTime.Hour) * 60) + minute;
         }
 
         public static int FindTileIDFromRect(Rectangle sourceRectangle, Texture2D tileMap)
@@ -271,6 +294,27 @@ namespace ProjectPalladium.Utils
         {
             Point size = new Point(range) * new Point((int)Game1.scale);
             return new Rectangle((int)(pos.X - size.X / 2), (int)(pos.Y - size.Y / 2), size.X, size.Y);
+        }
+
+        public static GameManager.GameWorldTime ParseGameTimeString(string str)
+        {
+            str = str.ToLower();
+            bool isAM = str.Contains("am");
+
+            str = str.Replace("am", ""); str = str.Replace("pm", "");
+            string[] l = str.Split(":");
+
+            int hour;
+            int minute;
+
+            bool parsed = Int32.TryParse(l[0], out hour);
+            parsed &= Int32.TryParse(l[1], out minute);
+
+            if (!parsed) return new GameManager.GameWorldTime();
+
+            if (hour < 1 || hour > 12 || minute < 0 || minute > 60) { return new GameManager.GameWorldTime(); }
+
+            return new GameManager.GameWorldTime(hour, minute, isAM);
         }
     }
 }

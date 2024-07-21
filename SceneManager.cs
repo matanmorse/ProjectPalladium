@@ -26,9 +26,8 @@ namespace ProjectPalladium
             curScene.Player.pos = curScene.Map.spawnLocation * Game1.scale;
             curScene.Map.player.lerpingCamera = curScene.Player.pos; // avoid camera movement when changing scenes, less motion sick
 
-            // curScene.Map.OnLoad();
+            curScene.Map.OnLoad();
 
-            Debug.WriteLine("setting bounds");
             curScene.Map.player.setBounds(curScene.Map.tileMapSize, 16);
             Enemy.RemoveAllDangers();
         }

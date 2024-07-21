@@ -343,11 +343,22 @@ namespace ProjectPalladium
             }
         }
 
+        public void LoadNPCs()
+        {
+            AddNPC("mage");
+        }
+
+        public void AddNPC(string name)
+        {
+            Debug.WriteLine("adding NPC");
+            SceneManager.CurScene.Characters.Add(new Villager(name));
+        }
+
         /* Called when the map is loaded via the scenemanager */
-        //public void OnLoad()
-        //{
-        //    UpdateOnGameTime(); // sync with game world
-        //}
+        public void OnLoad()
+        {
+            LoadNPCs();
+        }
         public void Update(GameTime gameTime)
         {
             Enemy.UpdateStaticItems();

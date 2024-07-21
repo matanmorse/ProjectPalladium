@@ -210,7 +210,6 @@ namespace ProjectPalladium
             shader.onFinishEffect += SceneManager.OnSceneTransitionFinished;
 
             gameWorldShader = new ScreenShader();
-            Lightmap.AddLightObject(new LightObject(new Vector2(100,100), LightObject.LightTypes.circle, (int)(10 * Game1.scale), 10f, this));
             // init game manager
             gameManager = new GameManager();
 

@@ -12,7 +12,7 @@ namespace ProjectPalladium.Characters
     public class NPC : Character
     {
         int t = 0;
-        private enum Direction
+        protected enum Direction
         {
             up,
             down,
@@ -96,12 +96,28 @@ namespace ProjectPalladium.Characters
                 }
             }
         }
+        protected virtual void SetFacingDir(Direction dir)
+        {
+            switch (dir)
+            {
+                case Direction.left: 
+                    sprite.changeAnimation("idle-side"); flipped = true; break;
+                case Direction.right:
+                    sprite.changeAnimation("idle-side"); flipped = false; break;
+                case Direction.up:
+                    sprite.changeAnimation("idle"); break;
+                case Direction.down:
+                    sprite.changeAnimation("idle-back"); break;
+                default:
+                    return;
 
+            }
+        }
         protected virtual void FindLocomotionAnimation()
         {
             if (movementLocked) return;
 
-            
+            if (Velocity == Vector2.Zero) { SetToIdle(); return; }
 
             if (Math.Abs(Velocity.X) >= Math.Abs(Velocity.Y)) 
             {
@@ -115,10 +131,7 @@ namespace ProjectPalladium.Characters
             {
                 sprite.changeAnimation("walk-back");
             }
-            else // sprite isn't moving, need to do some kind of idle animation
-            {
-                SetToIdle();
-            }
+            
         }
     }
 }

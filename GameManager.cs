@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using ProjectPalladium.Plants;
+using ProjectPalladium.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,7 +14,7 @@ namespace ProjectPalladium
 {
     public class GameManager
     {
-
+        public static GameWorldTime dayStartTime = new GameWorldTime(6, 30, isAM: true);
         public static bool paused = false; // is the whole game paused
 
         // generic Timer Manager
@@ -84,6 +85,18 @@ namespace ProjectPalladium
             {
                 return hour + ":" + (minute == 0 ? "00" : minute) + (isAM ? "AM" : "PM");   
             }
+
+
+            // "less than" meaning "before" 
+            public static bool operator < (GameWorldTime first, GameWorldTime second)
+            {
+                return (Util.MinutesSinceDayStart(first) < Util.MinutesSinceDayStart(second));
+            }
+
+            public static bool operator > (GameWorldTime first, GameWorldTime second)
+            {
+                return (!(first < second));
+            }
         }
 
         public static GameWorldTime time;
@@ -92,7 +105,7 @@ namespace ProjectPalladium
         private const int MINUTES_IN_HOUR = 60;
         public GameManager()
         {
-            time = new GameWorldTime(hour: 6, minute: 0, isAM: true); // start at 6:00am
+            time = dayStartTime;
         }
         public static void Update(GameTime gameTime)
         {

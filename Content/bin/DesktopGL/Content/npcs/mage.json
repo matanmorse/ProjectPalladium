@@ -1,0 +1,9 @@
+{
+  "name": "mage",
+  "schedule": {
+    "1:00AM": {
+      "map": "hollow",
+      "position": [ 100, 100 ]
+    }
+  }
+}
