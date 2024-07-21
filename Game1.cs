@@ -239,6 +239,7 @@ namespace ProjectPalladium
 
             inventory = UIManager.inventoryUI.Inventory;
 
+            GameManager.Initialize();
         }
 
         protected override void LoadContent()

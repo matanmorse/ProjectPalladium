@@ -11,12 +11,13 @@ using System.Diagnostics;
 using System.Text.Json.Serialization;
 using ProjectPalladium.Utils;
 using GameWorldTime = ProjectPalladium.GameManager.GameWorldTime;
+using static ProjectPalladium.Characters.Villager;
+using ProjectPalladium.Items;
 
 namespace ProjectPalladium.Characters
 {
     public class Villager : NPC
     {
-        LinkedList<ScheduleItem> schedule = new LinkedList<ScheduleItem>();
         public class Schedule
         {
             [JsonPropertyName("name")]
@@ -36,6 +37,7 @@ namespace ProjectPalladium.Characters
 
         public struct ScheduleItem
         {
+            public static ScheduleItem none = new ScheduleItem();
             public Vector2 location;
             public string mapName;
             public GameWorldTime time;
@@ -52,13 +54,17 @@ namespace ProjectPalladium.Characters
             }
         }
 
-        Schedule scheduleLoader;
+        
+        private LinkedList<ScheduleItem> schedule = new LinkedList<ScheduleItem>();
+        private Schedule scheduleLoader;
+        public string mapName;
+        public ScheduleItem currentStop;
+        public ScheduleItem nextStop;
         public Villager(string name) 
             : base(new AnimatedSprite(16, 32, "player/" + name + "anims", name),
                 Vector2.Zero, name, SceneManager.CurScene.Map,
                 new Vector2(-8, 0) * Game1.scale, new Vector2(16, 16) * Game1.scale)
         {
-            this.pos = new Vector2(100,100) * Game1.scale;
             this.Velocity = Vector2.Zero;
 
             LoadSchedule();
@@ -73,32 +79,66 @@ namespace ProjectPalladium.Characters
             {
                 schedule.AddLast(new ScheduleItem(scheduleLoader.schedule[key], Util.ParseGameTimeString(key)));
             }
+            GoToScheduleLocation(FindFirstLocation());
 
-            foreach(ScheduleItem item in  schedule)
-            {
-                // Debug.WriteLine(item);
-            }
-
-            FindFirstLocation();
+            
         }
 
+        // find first schedule Item of appropriate time
         private ScheduleItem FindFirstLocation()
         {
+            ScheduleItem prevItem = ScheduleItem.none;
             foreach (ScheduleItem item in schedule)
             {
-                // if (item.time < GameManager.time) ;
+                if (item.time > GameManager.time) break; // the previous item is the last one before the current time
+                prevItem = item;
             }
 
-            GameWorldTime startTime = new GameWorldTime(6, 30, true);
-            GameWorldTime endTime = new GameWorldTime(2, 30, true);
+            if (prevItem.Equals(ScheduleItem.none))
+            {
+                prevItem = schedule.First();
+            }
+            
 
-            Debug.WriteLine(startTime < endTime);
-            return new ScheduleItem();
+            if (schedule.Find(prevItem).Next == null) nextStop = ScheduleItem.none;
+            else nextStop = schedule.Find(prevItem).Next.Value;
+
+            Debug.Write(nextStop);
+            return prevItem;          
         }
+
+        private void GoToScheduleLocation(ScheduleItem item)
+        {
+            if (nextStop.Equals(ScheduleItem.none)) return;
+
+            this.pos = item.location * Game1.scale;
+            this.mapName = item.mapName;
+            this.currentStop = item;
+
+            if (this.mapName != SceneManager.CurScene.Map.name) SceneManager.CurScene.Map.RemoveCharacter(this);
+
+            if (schedule.Find(item) == null) return;
+            if (schedule.Find(item).Next != null)
+            {
+                this.nextStop = schedule.Find(item).Next.Value;
+            }
+            else this.nextStop = ScheduleItem.none;
+
+            SetFacingDir(Direction.up);
+        }
+
+        public virtual void UpdateOnGameTime()
+        {
+            if(nextStop.time >= GameManager.time)
+            {
+                Debug.WriteLine("moving to next schedule location");
+                GoToScheduleLocation(nextStop);
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            SetFacingDir(Direction.left);
         }
     }
 }

@@ -111,8 +111,6 @@ namespace ProjectPalladium
 
         }
 
-
-
         public virtual void Update(GameTime gameTime) {
 
         }

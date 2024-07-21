@@ -26,6 +26,7 @@ namespace ProjectPalladium
     public class Map
     {
         public string filename;
+        public string name;
 
         public static int scaledTileSize;
         public List<Tilemap> tilemaps = new List<Tilemap>();
@@ -54,6 +55,7 @@ namespace ProjectPalladium
 
         public Map(string filename)
         {
+            this.name = filename.ToLower().Replace(".tmx", "").Replace("default", "");
             this.spawnLocation = new Vector2(50,100);
             this.filename = filename;
             DeserializeMap();
@@ -265,6 +267,17 @@ namespace ProjectPalladium
                     st.UpdateOnGameTime();
                 }
             }
+
+            // for all villiagers not in the scene, check if they've moved 
+            foreach(Villager v in GameManager.allVillagers.Except(SceneManager.CurScene.Characters))
+            {
+                Debug.WriteLine(v.name + " not in scene");
+                if (v.mapName == name)
+                {
+                    Debug.WriteLine("adding npc");
+                    AddNPC(v);
+                }
+            }
         }
         
         /* Loads triggers from tmx file */
@@ -343,15 +356,18 @@ namespace ProjectPalladium
             }
         }
 
+        // load all npcs that are currently on this map
         public void LoadNPCs()
         {
-            AddNPC("mage");
+            foreach(Villager v in GameManager.allVillagers)
+            {
+                if (v.mapName == this.name) AddNPC(v);
+            }
         }
 
-        public void AddNPC(string name)
+        public void AddNPC(Villager v)
         {
-            Debug.WriteLine("adding NPC");
-            SceneManager.CurScene.Characters.Add(new Villager(name));
+            SceneManager.CurScene.Characters.Add(v);
         }
 
         /* Called when the map is loaded via the scenemanager */

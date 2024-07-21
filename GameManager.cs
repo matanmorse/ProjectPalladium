@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
+using ProjectPalladium.Characters;
 using ProjectPalladium.Plants;
 using ProjectPalladium.Utils;
 using System;
@@ -97,15 +98,48 @@ namespace ProjectPalladium
             {
                 return (!(first < second));
             }
+
+            public static bool operator == (GameWorldTime first, GameWorldTime second)
+            {
+                return (first.isAM == second.isAM && first.hour == second.hour && first.minute == second.minute);
+            }
+            public static bool operator != (GameWorldTime first, GameWorldTime second)
+            {
+                return !(first == second);
+            }
+
+            public static bool operator >= (GameWorldTime first, GameWorldTime second)
+            {
+                return (first == second) || (first < second);
+            }
+
+            public static bool operator <= (GameWorldTime first, GameWorldTime second)
+            {
+                return (first == second) || (first > second);
+            }
         }
 
         public static GameWorldTime time;
         private const float MILLIS_PER_TEN_GAMEMINUTES = 5000f; // ten seconds per in-game ten minutes
         private static float timer = 0f;
         private const int MINUTES_IN_HOUR = 60;
+
+        // cache of all villiagers
+        public static List<Villager> allVillagers = new List<Villager>();
+
         public GameManager()
         {
             time = dayStartTime;
+        }
+
+        public static void Initialize()
+        {
+            LoadVillagers();
+        }
+        public static void LoadVillagers()
+        {
+            allVillagers.Add(new Villager("mage"));
+            SceneManager.CurScene.Map.LoadNPCs();
         }
         public static void Update(GameTime gameTime)
         {
@@ -123,7 +157,9 @@ namespace ProjectPalladium
         public static void DoTenMinuteTick()
         {
             time.Minute += 10;
-            
+
+            foreach (Villager v in allVillagers) v.UpdateOnGameTime();
+
             SceneManager.CurScene.Map.UpdateOnGameTime();
 
             // make sure hollow is getting updated too  
@@ -131,6 +167,7 @@ namespace ProjectPalladium
             {
                 SceneManager.hollow.UpdateOnGameTime();
             }
+
         }
 
         public static void FixTime()
