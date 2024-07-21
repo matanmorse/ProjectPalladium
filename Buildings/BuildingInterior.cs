@@ -1,11 +1,5 @@
 ﻿using ProjectPalladium.Triggers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ProjectPalladium.Utils;
-using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using ProjectPalladium.UI;
 using System.Diagnostics;

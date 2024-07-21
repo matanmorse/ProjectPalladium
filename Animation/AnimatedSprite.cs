@@ -1,21 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-
 using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
-using ProjectPalladium.UI;
-using System.Runtime.CompilerServices;
-using ProjectPalladium.Spells;
-using static ProjectPalladium.Spells.Spell;
-using static ProjectPalladium.Utils.Timer.Callback;
-using System.Reflection;
-using System.Data.SqlTypes;
 using ProjectPalladium.Tools;
-using System.Threading;
-using ProjectPalladium.Utils;
 using Timer = ProjectPalladium.Utils.Timer;
 
 namespace ProjectPalladium.Animation

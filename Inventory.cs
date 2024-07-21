@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
-using System.Threading;
 using ProjectPalladium.Items;
 using ProjectPalladium.UI;
 namespace ProjectPalladium

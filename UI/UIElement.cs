@@ -3,11 +3,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ProjectPalladium.Utils;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 namespace ProjectPalladium.UI
 {
     public class UIElement
@@ -86,16 +84,16 @@ namespace ProjectPalladium.UI
             
         }
 
-        public virtual void Update()
+        public virtual void Update(GameTime gameTime)
         {
             if (!showing) return;
-            if (button != null && active) { button.Update(); }
+            if (button != null && active) { button.Update(gameTime); }
             if (needsUpdating)
             {
                 UpdateGlobalPos();
                 needsUpdating = false;
             }
-            foreach (UIElement child in children) { child.Update(); }
+            foreach (UIElement child in children) { child.Update(gameTime); }
         }
 
         public Vector2 ScaleVector(Vector2 vtr)

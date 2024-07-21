@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Text.Json;
 using System.Diagnostics;
 using ProjectPalladium.Utils;
 using ProjectPalladium.UI;
-using ProjectPalladium.Animation;
 
 namespace ProjectPalladium.Buildings
 {
@@ -60,7 +53,7 @@ namespace ProjectPalladium.Buildings
         }
         public override void Update(GameTime gameTime)
         {
-            door.Update();
+            door.Update(gameTime);
             if (playerBehind) opacity = MathHelper.Clamp(opacity -= (float)(opacityDecayFactor * gameTime.ElapsedGameTime.TotalSeconds), 0.5f, 1f);
             else opacity = MathHelper.Clamp(opacity += (float)(opacityDecayFactor * gameTime.ElapsedGameTime.TotalSeconds), 0.5f, 1f);
         }

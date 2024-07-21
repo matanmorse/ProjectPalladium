@@ -1,9 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ProjectPalladium.Items;
 using ProjectPalladium.UI;
 using System.Diagnostics;
@@ -50,7 +45,7 @@ namespace ProjectPalladium.Buildings
         public override void Update(GameTime gameTime)
         {
             TrackLeftClicks(gameTime);
-            button.Update();
+            button.Update(gameTime);
         }
 
        

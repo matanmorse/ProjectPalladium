@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ProjectPalladium.Utils;
 using System.Diagnostics;
 
@@ -12,7 +7,7 @@ namespace ProjectPalladium.UI
 {
     /* Meant to go inside the dialog box, present a yes/no choice */
 
-    public class ChoiceMenu
+    public class ChoiceMenu : DialogBoxItem
     {
         private Point textPadding = new Point(6,6) * new Point((int)(UIManager.defaultUIScale));
         private string prompt;
@@ -40,7 +35,7 @@ namespace ProjectPalladium.UI
         {
             this.dialogBox = UIManager.dialogBox;
             this.pos = dialogBox.textPos.ToPoint(); // the menu starts at the text position
-            this.prompt = prompt;
+            this.prompt = dialogBox.FormatText(prompt);
             this.choice1 = dialogBox.FormatText(choice1);
             this.choice2 = dialogBox.FormatText(choice2);
             this.onChoice1 = onChoice1;
@@ -48,7 +43,7 @@ namespace ProjectPalladium.UI
 
 
             promptText = new TextRenderer(pos.ToVector2(), TextRenderer.Origin.topLeft);
-            promptSize = promptText.font.MeasureString(prompt);
+            promptSize = promptText.font.MeasureString(this.prompt);
 
             choice1Text = new TextRenderer(new Vector2(pos.X, WithPadding(promptText.pos + promptSize).Y), TextRenderer.Origin.topLeft);
             choice1Size = choice1Text.font.MeasureString(choice1);
@@ -71,10 +66,10 @@ namespace ProjectPalladium.UI
         {
             return (size - textPadding.ToVector2() / 2);
         }
-        public void Update()
+        public override void Update(GameTime gameTime)
         {
-            choice1Button.Update();
-            choice2Button.Update();
+            choice1Button.Update(gameTime);
+            choice2Button.Update(gameTime);
         }
         private void OnChoice1Clicked()
         {
@@ -91,7 +86,7 @@ namespace ProjectPalladium.UI
         }
 
 
-        public void Draw(SpriteBatch b)
+        public override void Draw(SpriteBatch b)
         {
             if (choice1Button.mouseOver)
             {
@@ -106,5 +101,7 @@ namespace ProjectPalladium.UI
             choice1Text.Draw(b, choice1, layer:0.99f);
             choice2Text.Draw(b, choice2, layer: 0.99f);
         }
+
+       
     }
 }

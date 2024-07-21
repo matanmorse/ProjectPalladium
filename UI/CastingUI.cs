@@ -1,17 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using ProjectPalladium.Spells;
 using ProjectPalladium.Tools;
 using ProjectPalladium.Utils;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using ProjectPalladium;
 
 namespace ProjectPalladium.UI
@@ -74,14 +69,14 @@ namespace ProjectPalladium.UI
             _storedSpellDisplay.Draw(b, wand.storedSpell.name);
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             aimElement.showing = Game1.player.castingAttackSpell;
             if (aimElement.showing) { aimElement.LocalPos = Input.nativeMousePos; }
 
             if (UIManager.inventoryUI.showing) { return; }
 
-            base.Update();
+            base.Update(gameTime);
             if (ui.Player == null) { return; }
             if (!(ui.Player.ActiveItem is Wand)) { return; }
           

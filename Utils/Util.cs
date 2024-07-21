@@ -2,14 +2,7 @@
 using Microsoft.Xna.Framework;
 using ProjectPalladium.Buildings;
 using System.Diagnostics;
-using static System.Formats.Asn1.AsnWriter;
-using System.Reflection.Metadata.Ecma335;
-using ProjectPalladium;
-using System.Transactions;
 using System;
-using static ProjectPalladium.Utils.Util;
-using System.Runtime.CompilerServices;
-using System.Collections.Generic;
 namespace ProjectPalladium.Utils
 {
     public class Util

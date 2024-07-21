@@ -3,12 +3,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using ProjectPalladium.Utils;
 using System.Diagnostics;
-using System.ComponentModel;
 
 namespace ProjectPalladium.UI
 {
@@ -40,7 +36,7 @@ namespace ProjectPalladium.UI
             }
         }
         public static Point padding = new Point(10,10);
-        Point paddingOffset;
+        public Point paddingOffset;
         protected Vector2 centerOrigin;
         public Vector2 pos; // position, center origin
         private string text;
@@ -95,6 +91,7 @@ namespace ProjectPalladium.UI
         // manually set a size for this dialog box (default is dynamic sizing)
         public void SetSize(Point size)
         {
+            
             this.Size = size + ScalePoint(padding);
             this.bounds.Size = this.Size;
             this.maxSize = this.Size;
@@ -107,7 +104,7 @@ namespace ProjectPalladium.UI
 
         public string FormatText(string text)
         {
-            return FormatText(text, (size - ScalePoint(padding * new Point(2))).ToVector2());
+            return FormatText(text, (size - ScalePoint((padding * new Point(2)) + new Point(16))).ToVector2());
         }
         public string FormatText(string text, Vector2 maxSize)
         {
@@ -115,6 +112,7 @@ namespace ProjectPalladium.UI
             string resultString = "";
             float lineSize = padding.X * defaultScale;
             string line = "";
+            float spaceSize = textRenderer.font.MeasureString(" ").X;
 
             if (textRenderer.font.MeasureString(text).X < maxSize.X)
             {
@@ -124,9 +122,8 @@ namespace ProjectPalladium.UI
             {
                 foreach (string word in words)
                 {
-
                     float wordSize = textRenderer.font.MeasureString(word).X;
-                    lineSize += wordSize;
+                    lineSize += wordSize + spaceSize;
 
                     if (lineSize > maxSize.X)
                     {
@@ -134,7 +131,7 @@ namespace ProjectPalladium.UI
                         resultString += line + "\n";
 
                         // start new line with this word
-                        lineSize = wordSize + (padding.X * defaultScale);
+                        lineSize = wordSize + (padding.X * scale);
                         line = word + " ";
                     }
                     else

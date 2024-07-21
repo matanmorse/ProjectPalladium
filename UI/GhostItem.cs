@@ -1,14 +1,8 @@
 ﻿using ProjectPalladium.Items;
 using ProjectPalladium.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using System.Text;
-using System.Threading.Tasks;
 using ProjectPalladium;
 using Microsoft.Xna.Framework.Graphics;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ProjectPalladium.UI
 {
@@ -32,7 +26,7 @@ namespace ProjectPalladium.UI
 
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             pos = this.pos = Util.PointToVector2(Input.nativeMousePos);
             itemCount.pos = new Vector2(pos.X + sprite.Texture.Width * scale / 2, pos.Y + sprite.Texture.Height * scale / 2);

@@ -1,5 +1,4 @@
 ﻿
-using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Animation;
@@ -7,7 +6,6 @@ using ProjectPalladium.Characters;
 using ProjectPalladium.Utils;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
 
 namespace ProjectPalladium
 {
@@ -155,7 +153,7 @@ namespace ProjectPalladium
         public void movePos()
         {
             if (movementLocked) return;
-            pos += velocity * speed;
+            pos += Vector2.Round(velocity * speed);
             boundingBox.Location = (pos + bBoxOffset).ToPoint();
 
             if (pos.X - sprite.scaledWidth / 2 < 0) pos.X = sprite.scaledWidth / 2;

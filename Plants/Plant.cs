@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ProjectPalladium.Utils;
 using Microsoft.Xna.Framework;
 using ProjectPalladium.Animation;
 using ProjectPalladium.Buildings;
 using System.Text.Json;
-using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Items;
 using ProjectPalladium;

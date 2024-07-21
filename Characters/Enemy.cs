@@ -1,19 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using ProjectPalladium.Animation;
 using ProjectPalladium.Buildings;
-using ProjectPalladium.UI;
 using ProjectPalladium.Utils;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Animation = ProjectPalladium.Animation.Animation;
 using Circle = ProjectPalladium.Utils.Util.Circle;
 

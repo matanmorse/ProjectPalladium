@@ -1,10 +1,8 @@
-﻿using Microsoft.Win32.SafeHandles;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Buildings;
 using ProjectPalladium.Characters;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 

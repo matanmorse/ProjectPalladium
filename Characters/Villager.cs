@@ -3,16 +3,13 @@ using ProjectPalladium.Animation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 using System.Text.Json;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using ProjectPalladium.Utils;
 using GameWorldTime = ProjectPalladium.GameManager.GameWorldTime;
-using static ProjectPalladium.Characters.Villager;
-using ProjectPalladium.Items;
+using ProjectPalladium.UI;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectPalladium.Characters
 {
@@ -54,12 +51,13 @@ namespace ProjectPalladium.Characters
             }
         }
 
-        
+        private Button interactButton;
         private LinkedList<ScheduleItem> schedule = new LinkedList<ScheduleItem>();
         private Schedule scheduleLoader;
         public string mapName;
         public ScheduleItem currentStop;
         public ScheduleItem nextStop;
+        private const int interactDistacne = (int)(2 * Game1.scale);
         public Villager(string name) 
             : base(new AnimatedSprite(16, 32, "player/" + name + "anims", name),
                 Vector2.Zero, name, SceneManager.CurScene.Map,
@@ -67,9 +65,19 @@ namespace ProjectPalladium.Characters
         {
             this.Velocity = Vector2.Zero;
 
+            interactButton = new Button(null, null, null, boundingBox.Location, boundingBox.Size, onRightClick:Interact);
+
             LoadSchedule();
         }
 
+        private void Interact()
+        {
+            if (Game1.player.DialogueBoxOpen) return;
+            int distx = (int) Math.Abs(pos.X - Game1.player.pos.X);
+            int disty = (int)Math.Abs(pos.Y - Game1.player.pos.Y);
+            if (distx > Map.scaledTileSize + interactDistacne || disty > Map.scaledTileSize + interactDistacne) return;
+            UIManager.dialogBox.ShowDialog("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\r\n\r\n");
+        }
         private void LoadSchedule()
         {
             string jsonString = System.IO.File.ReadAllText("Content/npcs/" + name + ".json");
@@ -138,6 +146,13 @@ namespace ProjectPalladium.Characters
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            interactButton.SetBounds(boundingBox);
+            interactButton.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch b)
+        {
+            base.Draw(b);
         }
     }
 }

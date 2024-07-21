@@ -270,7 +270,7 @@ namespace ProjectPalladium
             if (Input.GetKeyDown(Keys.F6)) { 
                 graphics.ToggleFullScreen(); _canvas.SetDestinationRectangle(); _uiCanvas.SetDestinationRectangle();}
             
-            _uiManager.Update();
+            _uiManager.Update(gameTime);
 
             if (!GameManager.paused) SceneManager.Update(gameTime);
             else player.doInputCheck(); // only update input to allow player to unpause

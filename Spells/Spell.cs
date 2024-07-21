@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using ProjectPalladium.Utils;
 using ProjectPalladium.Plants;
-using ProjectPalladium.Tools;
 using TimerManager = ProjectPalladium.GameManager.TimerManager;
 using ProjectPalladium.Stations;
 namespace ProjectPalladium.Spells

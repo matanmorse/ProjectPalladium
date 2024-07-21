@@ -193,6 +193,18 @@
 /processorParam:TextureFormat=Color
 /build:player/mageanims.png
 
+#begin portraits/placeholderportrait.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:portraits/placeholderportrait.png
+
 #begin text.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

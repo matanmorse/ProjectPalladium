@@ -1,11 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Utils;
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectPalladium.UI
 {

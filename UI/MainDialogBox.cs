@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Items;
+using ProjectPalladium.Utils;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ProjectPalladium.UI
 {
@@ -15,13 +13,13 @@ namespace ProjectPalladium.UI
     {
         // Nightmare code to center the dialog box on the toolbar
         private static Point dialogueBoxSize = new Point((int)(Game1.UINativeResolution.X * 0.5f), (int)(100 * defaultScale));
-        private static Point dialogBoxPos = new Point(UIManager.toolbar.globalPos.X - ((dialogueBoxSize.X + (int)((DialogBox.padding.X - 1) * defaultScale)) / 2), (int)(340 * defaultScale) - dialogueBoxSize.Y);
+        private static Point dialogBoxPos = new Point(UIManager.toolbar.globalPos.X - ((dialogueBoxSize.X + (int)((DialogBox.padding.X - 1) * defaultScale)) / 2), (int)(325 * defaultScale) - dialogueBoxSize.Y);
 
         private float animationTime = 0f;
         private static float animationLength = 0.5f; // number of seconds the transition animation lasts
         private static float animationSpeed = 1 / (animationLength * 60);
         // things that can potentially go in the dialog box
-        ChoiceMenu choiceMenu;
+        DialogBoxItem currentMenu;
         public MainDialogBox(string name, string text) : base(name, dialogBoxPos, text, UIManager.rootElement, OriginType.def, useCenterOrigin:true)
         {
             animationTime = 0f;
@@ -32,7 +30,7 @@ namespace ProjectPalladium.UI
 
             
             pos = (bounds.Location + (bounds.Size / new Point(2))).ToVector2();
-
+            AddButton(null, null, null, (dialogueBoxSize + padding * new Point((int)scale)) / new Point((int)scale));
         }
 
         public void OpenDialogBox()
@@ -42,6 +40,8 @@ namespace ProjectPalladium.UI
             Game1.player.DialogueBoxOpen = true;
             UIManager.toolbar.active = false;
             this.showing = true;
+
+            this.button.onClick = currentMenu.onClickIn;
         }
 
         public void CloseDialogBox()
@@ -49,30 +49,48 @@ namespace ProjectPalladium.UI
             Game1.player.DialogueBoxOpen = false;
             UIManager.toolbar.active = true;
             this.showing = false;
-            this.choiceMenu = null;
+            this.currentMenu = null;
         }
 
         public void AskChoice(string prompt, string choice1, string choice2, Button.OnClick onChoice1=null, Button.OnClick onChoice2=null)
         {
-            this.choiceMenu = new ChoiceMenu(prompt, choice1, choice2, onChoice1, onChoice2);
+            this.currentMenu = new ChoiceMenu(prompt, choice1, choice2, onChoice1, onChoice2);
             OpenDialogBox();
         }
+
+        public void ShowDialog(string text)
+        {
+            this.currentMenu = new SpeechBox(text, "mage");
+            OpenDialogBox();
+        }
+
         public override void Initialize()
         {
             base.Initialize();
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
-            base.Update();
+            // Debug.WriteLine(gameTime.TotalGameTime.Ticks);
+            base.Update(gameTime);
             if (!showing) return;
 
-            animationTime = Math.Clamp(animationTime + animationSpeed, 0f, 1f);                
-            SetSize(new Point((int)(finalSize.X * animationTime), (int)(finalSize.Y * animationTime)));
-
-            if (choiceMenu != null && animationTime == 1f)
+            if (!(animationTime + animationSpeed > 1.1f))
             {
-                choiceMenu.Update();
+                animationTime = Math.Clamp(animationTime + animationSpeed, 0f, 1f);
+                SetSize(new Point((int)(finalSize.X * animationTime), (int)(finalSize.Y * animationTime)));
+            }
+
+
+            if (currentMenu != null && animationTime == 1f)
+            {
+                currentMenu.Update(gameTime);
+            }
+
+            // close if we click out of dialog box when open
+            if (showing && !button.mouseOver && Input.GetLeftMouseClicked())
+            {
+                if (currentMenu.onClickOut != null) currentMenu.onClickOut.Invoke();
             }
         }
         public override void Draw(SpriteBatch b)
@@ -80,9 +98,9 @@ namespace ProjectPalladium.UI
             
             base.Draw(b);
             if (!showing) return;
-            if (choiceMenu != null && animationTime == 1f)
+            if (currentMenu != null && animationTime == 1f)
             {
-                choiceMenu.Draw(b);
+                currentMenu.Draw(b);
             }
         }
     }

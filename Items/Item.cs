@@ -3,16 +3,10 @@ using ProjectPalladium.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting;
-using System.Text;
-using System.Threading.Tasks;
 using ProjectPalladium.Tools;
 using ProjectPalladium.Stations;
 using Microsoft.Xna.Framework;
 using PotionEffects = ProjectPalladium.Items.Ingredient.PotionEffects;
-using ProjectPalladium.UI;
 namespace ProjectPalladium.Items
 {
     public class Item

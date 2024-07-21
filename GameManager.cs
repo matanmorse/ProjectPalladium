@@ -1,15 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
 using ProjectPalladium.Characters;
-using ProjectPalladium.Plants;
 using ProjectPalladium.Utils;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Timer = ProjectPalladium.Utils.Timer;
 namespace ProjectPalladium
 {

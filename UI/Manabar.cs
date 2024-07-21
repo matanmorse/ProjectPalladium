@@ -1,12 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
 using ProjectPalladium.Utils;
 
 namespace ProjectPalladium.UI
@@ -50,10 +45,10 @@ namespace ProjectPalladium.UI
             manaRectangle = new Rectangle(globalPos + topLeft + new Point(0, (int) Math.Abs(maxSize.Y * interpolatedMana - maxSize.Y)), new Point(maxSize.X, (int)(maxSize.Y * interpolatedMana)));
             
         } 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             UpdateManaRectangle();
-            base.Update();
+            base.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch b)

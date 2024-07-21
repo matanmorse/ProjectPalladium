@@ -1,15 +1,10 @@
 ﻿using ProjectPalladium.Utils;
-using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using System.Text;
-using System.Threading.Tasks;
 using ProjectPalladium;
 using ProjectPalladium.UI;
-using Microsoft.Xna.Framework.Input;
 using ProjectPalladium.Spells;
 
 namespace ProjectPalladium.Tools

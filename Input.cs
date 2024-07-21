@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using ProjectPalladium.Utils;
 using System.Diagnostics;
 

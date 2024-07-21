@@ -2,12 +2,8 @@
 using Microsoft.Xna.Framework;
 using ProjectPalladium.UI;
 using static ProjectPalladium.UI.UIElement.OriginType;
-using ProjectPalladium;
 using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography.X509Certificates;
 using ProjectPalladium.Utils;
-using System.Security.Cryptography;
 namespace ProjectPalladium
 {
     public class UIManager
@@ -78,9 +74,9 @@ namespace ProjectPalladium
 
         }
         public void SetPlayer(Player player) { this.player = player; }
-        public void Update()
+        public void Update(GameTime gameTime)
         {
-            rootElement.Update();
+            rootElement.Update(gameTime);
         }
 
         public void Draw(SpriteBatch b)

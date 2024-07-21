@@ -1,17 +1,10 @@
 ﻿using ProjectPalladium.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Buildings;
 using System.Text.Json;
-using ProjectPalladium.UI;
 using System.Diagnostics;
 using ProjectPalladium.Stations;
-using ProjectPalladium.Animation;
 using ProjectPalladium.Plants;
 namespace ProjectPalladium
 {

@@ -9,8 +9,6 @@ using ProjectPalladium.Utils;
 using ProjectPalladium.Plants;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Tools;
-using ProjectPalladium.UI;
-using System.Runtime.CompilerServices;
 namespace ProjectPalladium
 {
     public class Player : Character

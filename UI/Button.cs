@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Xml.Serialization;
+﻿using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium;
 using ProjectPalladium.Utils;
 namespace ProjectPalladium.UI
@@ -63,12 +58,13 @@ namespace ProjectPalladium.UI
         }
 
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
+            // if (owner is MainDialogBox) { Debug.WriteLine("hello"); }
             // list of conditions when we want the button to be inactive
             CheckEnter();
             CheckLeave();
-            if (CheckLeftClick()) if (onClick != null) onClick();
+            if (CheckLeftClick()) if (onClick != null) { onClick(); }
             if (CheckRightClick() ) if (onRightClick != null) onRightClick();
             CheckHover();
         }

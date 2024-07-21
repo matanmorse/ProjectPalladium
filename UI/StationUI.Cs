@@ -1,18 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Items;
 using ProjectPalladium.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using ProjectPalladium.Stations;
-using System.ComponentModel;
-using System.Security.Cryptography.X509Certificates;
-using ProjectPalladium.Animation;
-using System.Xml.XPath;
 
 namespace ProjectPalladium.UI
 {

@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Utils;
 using ProjectPalladium.Items;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
 namespace ProjectPalladium.UI
 {
 

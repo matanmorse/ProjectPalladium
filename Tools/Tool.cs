@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Items;
-using ProjectPalladium.Utils;
 
 namespace ProjectPalladium.Tools
 {

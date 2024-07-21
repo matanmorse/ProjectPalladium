@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
+﻿using System.Collections.Generic;
 using ProjectPalladium.Utils;
 using Microsoft.Xna.Framework;
 using ProjectPalladium.Items;
 using ProjectPalladium;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
 namespace ProjectPalladium.UI
@@ -142,16 +136,17 @@ namespace ProjectPalladium.UI
                 if (child.GetType() != typeof(ItemSlot)) continue;
                 child.button.mouseOver = false;
                 child.button.clickState = false;
-                child.button.Update();
+                child.button.Update(new GameTime());
             }
 
             GameManager.paused = showing;
+            if (showing && Game1.player.DialogueBoxOpen) UIManager.dialogBox.CloseDialogBox();
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
-            base.Update();
-            if (ghostItem != null) { ghostItem.Update(); }
+            base.Update(gameTime);
+            if (ghostItem != null) { ghostItem.Update(gameTime); }
             if (updateItems) children = tmpItems; updateItems = false;
         }
        

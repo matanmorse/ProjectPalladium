@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Diagnostics;
 
 /* Render items are first drawn here before being the canvas is drawn to the screen */
 namespace ProjectPalladium

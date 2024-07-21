@@ -1,11 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using ProjectPalladium.Animation;
 using ProjectPalladium.Buildings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectPalladium.Stations
 {

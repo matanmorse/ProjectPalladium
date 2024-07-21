@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
 using ProjectPalladium.Utils;
 using static ProjectPalladium.Map;
-using System.IO;
-using System.Xml.Serialization;
 using System.Diagnostics;
 
 /* Trigger that changes scene when walked on */
