@@ -19,13 +19,70 @@
     <None Remove="UI\NewFolder\**" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\net6.0\Content\animations\cauldron.json" />
+    <Content Include="bin\Debug\net6.0\Content\animations\mage.json" />
+    <Content Include="bin\Debug\net6.0\Content\animations\slime.json" />
+    <Content Include="bin\Debug\net6.0\Content\buildings\wizardtower.json" />
+    <Content Include="bin\Debug\net6.0\Content\items\items.json" />
+    <Content Include="bin\Debug\net6.0\Content\items\seeds.json" />
+    <Content Include="bin\Debug\net6.0\Content\npcs\mage.json" />
+    <Content Include="bin\Debug\net6.0\Content\placeablegameobjects\cauldron.json" />
+    <Content Include="bin\Debug\net6.0\Content\placeablegameobjects\scryingorb.json" />
+    <Content Include="bin\Debug\net6.0\Content\plants\manamelonplant.json" />
+    <Content Include="bin\Debug\net6.0\Content\stations\cauldron.json" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\Debug\net6.0\Content\" />
+    <Folder Include="bin\Debug\net6.0\Content\ObjectTemplates\" />
+    <Folder Include="bin\Debug\net6.0\Content\placeables\" />
+    <Folder Include="bin\Debug\net6.0\Content\projectiles\" />
     <Folder Include="Content\bin\DesktopGL\Content\npcs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\net6.0\Content\buildings\wizardtower.xnb" />
+    <None Include="bin\Debug\net6.0\Content\enemies\slimeanims.xnb" />
+    <None Include="bin\Debug\net6.0\Content\gameobjects\cauldronplaced.xnb" />
+    <None Include="bin\Debug\net6.0\Content\gameobjects\scryingorbplaced.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\cauldron.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\ectoplasmicgem.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\extoplasmicgem.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\giantstoe.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\magmarock.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\manamelonseed.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\potionbottle.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\potioncontents.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\scryingorb.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\test.xnb" />
+    <None Include="bin\Debug\net6.0\Content\items\wand.xnb" />
+    <None Include="bin\Debug\net6.0\Content\maps\hollow2.tmx" />
+    <None Include="bin\Debug\net6.0\Content\maps\hollowdefault.tmx" />
+    <None Include="bin\Debug\net6.0\Content\maps\Simple.tsx" />
+    <None Include="bin\Debug\net6.0\Content\maps\test.tmx" />
+    <None Include="bin\Debug\net6.0\Content\maps\test1.tmx" />
+    <None Include="bin\Debug\net6.0\Content\maps\test2.tmx" />
+    <None Include="bin\Debug\net6.0\Content\maps\testMap1.tmx" />
+    <None Include="bin\Debug\net6.0\Content\maps\town.tmx" />
+    <None Include="bin\Debug\net6.0\Content\maps\wizardtower.tmx" />
+    <None Include="bin\Debug\net6.0\Content\plants\manamelonplant.xnb" />
+    <None Include="bin\Debug\net6.0\Content\player\mageanims.xnb" />
+    <None Include="bin\Debug\net6.0\Content\tilemaps\grassanddirt.xnb" />
+    <None Include="bin\Debug\net6.0\Content\tilemaps\tilemap.xnb" />
+    <None Include="bin\Debug\net6.0\Content\tilemaps\TilledDirt.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\aim.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\dialogbox.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\inventory.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\manabar.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\manabarbottle.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\manabarcontents.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\spellbook.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\spellmarker.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\stationitemslot.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\TimeDisplay.xnb" />
+    <None Include="bin\Debug\net6.0\Content\ui\toolbar.xnb" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

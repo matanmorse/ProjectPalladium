@@ -44,6 +44,8 @@ namespace ProjectPalladium
 
 
         public Rectangle boundingBox;
+        public Rectangle prevBoundingBox;
+
         public float layer = Game1.layers.player;
         public AnimatedSprite sprite;
         public Vector2 pos;
@@ -117,6 +119,7 @@ namespace ProjectPalladium
             }
 
             prevpos = pos;
+            prevBoundingBox = boundingBox;
             sprite.Update(gameTime);
         }
 

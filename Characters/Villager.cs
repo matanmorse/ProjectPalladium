@@ -103,17 +103,16 @@ namespace ProjectPalladium.Characters
             if (schedule.Find(prevItem).Next == null) nextStop = ScheduleItem.none;
             else nextStop = schedule.Find(prevItem).Next.Value;
 
-            Debug.Write(nextStop);
             return prevItem;          
         }
 
         private void GoToScheduleLocation(ScheduleItem item)
         {
-            if (nextStop.Equals(ScheduleItem.none)) return;
-
             this.pos = item.location * Game1.scale;
             this.mapName = item.mapName;
             this.currentStop = item;
+
+            if (nextStop.Equals(ScheduleItem.none)) return;
 
             if (this.mapName != SceneManager.CurScene.Map.name) SceneManager.CurScene.Map.RemoveCharacter(this);
 
@@ -129,9 +128,9 @@ namespace ProjectPalladium.Characters
 
         public virtual void UpdateOnGameTime()
         {
+            if (nextStop.Equals(ScheduleItem.none)) return;
             if(nextStop.time >= GameManager.time)
             {
-                Debug.WriteLine("moving to next schedule location");
                 GoToScheduleLocation(nextStop);
             }
         }

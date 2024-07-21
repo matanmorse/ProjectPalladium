@@ -271,15 +271,30 @@ namespace ProjectPalladium
             // for all villiagers not in the scene, check if they've moved 
             foreach(Villager v in GameManager.allVillagers.Except(SceneManager.CurScene.Characters))
             {
-                Debug.WriteLine(v.name + " not in scene");
+                Debug.WriteLine(name );
                 if (v.mapName == name)
                 {
-                    Debug.WriteLine("adding npc");
                     AddNPC(v);
                 }
             }
         }
-        
+         public void PermaLoadedUpdate()
+        {
+            foreach (GameObject g in gameObjects)
+            {
+                if (g is Plant)
+                {
+                    Plant p = g as Plant;
+                    p.UpdateOnGameTime();
+                }
+                if (g is Station)
+                {
+                    Station st = g as Station;
+                    st.UpdateOnGameTime();
+                }
+            }
+        }
+
         /* Loads triggers from tmx file */
         public void GetTriggers()
         {

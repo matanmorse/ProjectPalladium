@@ -165,7 +165,7 @@ namespace ProjectPalladium
             // make sure hollow is getting updated too  
             if (SceneManager.CurScene.Map != SceneManager.hollow) 
             {
-                SceneManager.hollow.UpdateOnGameTime();
+                SceneManager.hollow.PermaLoadedUpdate();
             }
 
         }

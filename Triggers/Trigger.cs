@@ -26,7 +26,7 @@ namespace ProjectPalladium.Utils
 
         public void CheckEnter()
         {
-            if (bounds.Contains(SceneManager.CurScene.Player.pos) && !(bounds.Contains(SceneManager.CurScene.Player.prevpos)))
+            if (bounds.Contains(SceneManager.CurScene.Player.boundingBox.Center) && !(bounds.Contains(SceneManager.CurScene.Player.prevBoundingBox.Center)))
             {
 
                 onEnter.DynamicInvoke();

@@ -2,16 +2,8 @@
   "name": "mage",
   "schedule": {
     "6:30AM": {
-      "map": "town",
-      "position": [ 100, 100 ]
-    },
-    "7:00AM": {
       "map": "hollow",
-      "position": [ 200, 100 ]
-    },
-    "7:20AM": {
-      "map": "town",
-      "position": [ 300, 100 ]
+      "position": [ 100, 100 ]
     }
   }
 
