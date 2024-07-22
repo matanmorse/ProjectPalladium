@@ -210,10 +210,11 @@ namespace ProjectPalladium
             _uiCanvas.SetDestinationRectangle();
             _lightmap.SetDestinationRectangle();
 
-            shader = new ScreenShader();
+            shader = new ScreenShader(Color.White);
+            //shader.SetAlpha(0.3f);
             shader.onFinishEffect += SceneManager.OnSceneTransitionFinished;
 
-            gameWorldShader = new ScreenShader();
+            gameWorldShader = new ScreenShader(Color.Black);
             // init game manager
             gameManager = new GameManager();
 
@@ -320,7 +321,7 @@ namespace ProjectPalladium
 
             // apply game world shading effects
             _spriteBatch.Begin(blendState:BlendState.NonPremultiplied);
-            // gameWorldShader.Draw(_spriteBatch);
+             gameWorldShader.Draw(_spriteBatch);
             _spriteBatch.End();
 
             // Render the UI elements to the _uiCanvas

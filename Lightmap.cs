@@ -54,9 +54,7 @@ namespace ProjectPalladium
 
                     if (distance <= maxDistance)
                     {
-                        float intensity = MathHelper.Clamp(1 - distance / maxDistance, 0, 1);
-                        float interpolatedIntensity = intensity / 1;
-                        intensity = interpolatedIntensity * maxIntensity;
+                        float intensity = MathHelper.Clamp((float)Math.Pow(1 - distance / maxDistance, 2), 0, 1);
                         colorData[y * diameter + x] = new Color(defaultColor.R, defaultColor.G, defaultColor.B, intensity);
                     }
                     else

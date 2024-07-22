@@ -15,6 +15,10 @@ namespace ProjectPalladium.Animation
         private ShaderEffect currentEffect;
         public event Action onFinishEffect;
 
+        public void SetAlpha(float value)
+        {
+            this.alphaValue = value;
+        }
         private struct ShaderEffect
         {
             public float totalMillis;
@@ -36,9 +40,9 @@ namespace ProjectPalladium.Animation
         private Color color;
 
         public ScreenShader(Color color) {
+            this.color = color;
             currentEffect = effects["none"];
             overlayTexture.SetData(new[] { Color.White });
-            this.alphaValue = 0.3f;
         }
         
         public void DoOpenInventoryShading()
@@ -46,7 +50,7 @@ namespace ProjectPalladium.Animation
             if (currentEffect.name != "none") return; // this effect should not override other effects
             if (UIManager.inventoryUI.showing)
             {
-                alphaValue = 0.5f;
+                alphaValue = 0.3f;
             }
             else
             {
@@ -116,8 +120,8 @@ namespace ProjectPalladium.Animation
 
         private void UpdateAlphaValue()
         {
-            alphaValue = 0.05f;
-            overlayColor = new Color(255, 255, 255, alphaValue);
+            // alphaValue = 0.05f;
+            overlayColor = new Color(color.R, color.G, color.B, alphaValue);
         }
 
         public void Draw(SpriteBatch b)
