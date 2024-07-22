@@ -384,6 +384,7 @@ namespace ProjectPalladium
         /* Called when the map is loaded via the scenemanager */
         public void OnLoad()
         {
+            if (this is BuildingInterior) Lightmap.SetBrightnessWithoutTransition(0f); // max brightness in buildings
             LoadNPCs();
         }
         public void Update(GameTime gameTime)

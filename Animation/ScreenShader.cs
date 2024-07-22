@@ -12,12 +12,26 @@ namespace ProjectPalladium.Animation
         private Color overlayColor = new Color(0, 0, 0, 0.0f); // Black with 50% opacity
         private float t = 0f;
         private float alphaValue;
+        public float Brightness { get { return alphaValue; } }
+
         private ShaderEffect currentEffect;
         public event Action onFinishEffect;
 
+        private float startAlpha;
+        private float endAlpha;
+        private float transitionSpeed;
+        public bool transitioning;
         public void SetAlpha(float value)
         {
             this.alphaValue = value;
+        }
+
+        public void SetAlphaWithTransition(float targetAlpha, float transitionSpeed)
+        {
+            this.transitioning = true;
+            this.transitionSpeed = transitionSpeed;
+            this.endAlpha = targetAlpha;
+            this.startAlpha = alphaValue;
         }
         private struct ShaderEffect
         {
@@ -59,11 +73,25 @@ namespace ProjectPalladium.Animation
         }
         public void Update(GameTime gameTime)
         {
-            // if (currentEffect.name == "none") return;
             switch(currentEffect.name)
             {
                 case "scenetransition": DoSceneTransition(gameTime); break;
                 case "enteringscene": DoEnterScene(gameTime); break;
+            }
+            // if (currentEffect.name != "none") return;
+
+            // do alpha values with transitions
+            if (transitioning)
+            {
+                if (startAlpha > endAlpha)
+                {
+                    alphaValue = Math.Clamp(alphaValue - (transitionSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds), endAlpha, startAlpha);
+                }
+                else
+                {
+                    alphaValue = Math.Clamp(alphaValue + (transitionSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds), startAlpha, endAlpha);
+                }
+                if (alphaValue == endAlpha) transitioning = false;
             }
 
 

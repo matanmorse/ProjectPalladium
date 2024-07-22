@@ -9,6 +9,7 @@ namespace ProjectPalladium.Utils
         public static bool showCharacterColliders = false;
         public static bool showFootTile = false;
         public static float elapsedMillis;
+        public static bool doSunsetShading = false;
     }
 
 }

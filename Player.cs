@@ -185,11 +185,17 @@ namespace ProjectPalladium
             // debug code for adding and removing items
             if (Input.GetKeyDown(Keys.O))
             {
-                SceneManager.CurScene.Map.AddEnemy("slime", pos);
+                SceneManager.CurScene.Map.AddEnemy("slime", pos + new Vector2(1000, 0));
             }
             if (Input.GetKeyDown(Keys.M))
             {
-                Debug.WriteLine(activeItemIndex);
+                mana = MAX_MANA;
+                
+            }
+            if (Input.GetKeyDown(Keys.N))
+            {
+                GameManager.SetWorldBrightness(0f);
+                
             }
 
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using ProjectPalladium.Characters;
 using ProjectPalladium.Utils;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Timer = ProjectPalladium.Utils.Timer;
@@ -89,7 +90,7 @@ namespace ProjectPalladium
 
             public static bool operator > (GameWorldTime first, GameWorldTime second)
             {
-                return (!(first < second));
+                return (Util.MinutesSinceDayStart(first) > Util.MinutesSinceDayStart(second));
             }
 
             public static bool operator == (GameWorldTime first, GameWorldTime second)
@@ -113,6 +114,13 @@ namespace ProjectPalladium
         }
 
         public static GameWorldTime time;
+
+        private static GameWorldTime sunset = new GameWorldTime(5,0, false); // sunset
+        private static GameWorldTime maxDarkness = new GameWorldTime(9, 0, false); // max darkness at 9pm
+        private static int totalMinutesBetweenSunsetAndTotalDarkness = Util.MinutesSinceDayStart(maxDarkness) - Util.MinutesSinceDayStart(sunset);
+
+        private static float maxDarknessValue = 0.4f; 
+
         private const float MILLIS_PER_TEN_GAMEMINUTES = 5000f; // ten seconds per in-game ten minutes
         private static float timer = 0f;
         private const int MINUTES_IN_HOUR = 60;
@@ -161,6 +169,25 @@ namespace ProjectPalladium
                 SceneManager.hollow.PermaLoadedUpdate();
             }
 
+            
+            // apply world darkness effects if needed
+            if (time == sunset) Debug.WriteLine(time > sunset);
+            if (time > sunset && DebugParams.doSunsetShading)
+            {
+                int minutesAfterSunset = Util.MinutesSinceDayStart(time) - Util.MinutesSinceDayStart(sunset);
+                float interpolatedMinutes = (float) minutesAfterSunset / totalMinutesBetweenSunsetAndTotalDarkness;
+                float darkness = interpolatedMinutes * maxDarknessValue;
+                Debug.WriteLine("darkness " + darkness);
+                GameManager.SetWorldBrightness(1 - darkness);
+            }
+
+        }
+
+        public static void SetWorldBrightness(float brightness)
+        {
+            brightness = Math.Clamp(brightness, 0, 1f);
+            brightness = 1f - brightness; // higher values actually darker, invert
+            Lightmap.SetWorldBrightness(brightness);
         }
 
         public static void FixTime()

@@ -109,7 +109,6 @@ namespace ProjectPalladium
         {
             // there are instances where the player is movementlocked but is still changing position (such as during scene transitions)
             // make sure we sync the bounding box position during this
-
             if (movementLocked) boundingBox.Location = (pos + bBoxOffset).ToPoint();
 
             layer = 0.1f + (Game1.LAYER_CONSTANT * (pos.Y + sprite.scaledHeight));

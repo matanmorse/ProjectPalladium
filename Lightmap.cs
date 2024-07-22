@@ -82,8 +82,9 @@ namespace ProjectPalladium
     public class Lightmap
     {
         private static List<LightObject> lightObjects = new List<LightObject>();
-        public static ScreenShader shader;
+        public static ScreenShader shadow;
 
+       
         public static void AddLightObject(LightObject lightObject)
         {
             lightObjects.Add(lightObject);
@@ -99,13 +100,22 @@ namespace ProjectPalladium
 
         public static void Initialize()
         {
-            shader = new ScreenShader(Color.White);
-            shader.SetAlpha(0.3f);
+            shadow = new ScreenShader(Color.White);
         }
 
+        public static void SetBrightnessWithoutTransition(float brightness)
+        {
+            shadow.transitioning = false; // if already in a transition, don't complete it
+            brightness = Math.Clamp(brightness, 0f, 1f);
+            shadow.SetAlpha(brightness);
+        }
+        public static void SetWorldBrightness(float brightness)
+        {
+            shadow.SetAlphaWithTransition(brightness, 0.025f);            
+        }
         public static void Update(GameTime gameTime)
         {
-            shader.Update(gameTime);
+            shadow.Update(gameTime);
             foreach (LightObject lightObject in lightObjects)
             {
                 lightObject.Update(gameTime);
@@ -114,8 +124,10 @@ namespace ProjectPalladium
 
         public static void Draw(SpriteBatch b)
         {
+            if (shadow.Brightness == 0f) return; // don't render lighting effects when at max brightness
+
             b.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            shader.Draw(b);
+            shadow.Draw(b);
             b.End();
 
             b.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, transformMatrix: Game1.translation);
