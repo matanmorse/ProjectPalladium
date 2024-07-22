@@ -41,7 +41,7 @@ namespace ProjectPalladium
             int diameter = radius * 2;
              texture = new Texture2D(Game1.graphicsDevice, diameter, diameter);
             Color[] colorData = new Color[diameter * diameter];
-            Color defaultColor = Color.White;
+            Color defaultColor = Color.Black;
             Vector2 center = new Vector2(radius, radius);
             float maxDistance = radius;
             float maxIntensity = 1f;   
@@ -54,7 +54,7 @@ namespace ProjectPalladium
 
                     if (distance <= maxDistance)
                     {
-                        float intensity = MathHelper.Clamp((float)Math.Pow(1 - distance / maxDistance, 2), 0, 1);
+                        float intensity = MathHelper.Clamp(1 - distance / maxDistance, 0, 1);
                         float interpolatedIntensity = intensity / 1;
                         intensity = interpolatedIntensity * maxIntensity;
                         colorData[y * diameter + x] = new Color(defaultColor.R, defaultColor.G, defaultColor.B, intensity);

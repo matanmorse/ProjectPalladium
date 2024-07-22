@@ -315,13 +315,12 @@ namespace ProjectPalladium
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, translation);
             SceneManager.Draw(_spriteBatch);
-            Lightmap.Draw(_spriteBatch);
             Enemy.DrawStatic(_spriteBatch);
             _spriteBatch.End();
 
             // apply game world shading effects
             _spriteBatch.Begin(blendState:BlendState.NonPremultiplied);
-            gameWorldShader.Draw(_spriteBatch);
+            // gameWorldShader.Draw(_spriteBatch);
             _spriteBatch.End();
 
             // Render the UI elements to the _uiCanvas
@@ -331,9 +330,13 @@ namespace ProjectPalladium
             _spriteBatch.End();
 
             _lightmap.Activate();
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             shader.Draw(_spriteBatch);
             _spriteBatch.End();
+
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, transformMatrix: translation);
+            Lightmap.Draw(_spriteBatch);
+        _spriteBatch.End();
 
 
             // Switch back to the default render target (the back buffer)
@@ -341,8 +344,8 @@ namespace ProjectPalladium
 
             // Draw the UI canvas to the back buffer
             _canvas.Draw(_spriteBatch);
-            _uiCanvas.Draw(_spriteBatch);
             _lightmap.Draw(_spriteBatch);
+            _uiCanvas.Draw(_spriteBatch);
 
         }
     }

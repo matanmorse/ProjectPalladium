@@ -33,7 +33,9 @@ namespace ProjectPalladium.Animation
             {"enteringscene", new ShaderEffect("enteringscene", 500f) }
         };
 
-        public ScreenShader() {
+        private Color color;
+
+        public ScreenShader(Color color) {
             currentEffect = effects["none"];
             overlayTexture.SetData(new[] { Color.White });
             this.alphaValue = 0.3f;
@@ -114,8 +116,8 @@ namespace ProjectPalladium.Animation
 
         private void UpdateAlphaValue()
         {
-            alphaValue = 0.1f;
-            overlayColor = new Color(0, 0, 0, alphaValue);
+            alphaValue = 0.05f;
+            overlayColor = new Color(255, 255, 255, alphaValue);
         }
 
         public void Draw(SpriteBatch b)

@@ -66,7 +66,15 @@ namespace ProjectPalladium
             BlendState testBlend = BlendState.NonPremultiplied;
             if (name == "lightmap")
             {
-
+                testBlend = new BlendState()
+                {
+                    ColorSourceBlend = Blend.One,
+                    AlphaSourceBlend = Blend.One,
+                    ColorDestinationBlend = Blend.One,
+                    AlphaDestinationBlend = Blend.One,
+                    ColorBlendFunction = BlendFunction.ReverseSubtract,
+                    AlphaBlendFunction = BlendFunction.ReverseSubtract
+                };
              
             }
             b.Begin(SpriteSortMode.Deferred, testBlend, SamplerState.PointClamp, null, null, null, null);

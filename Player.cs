@@ -97,7 +97,7 @@ namespace ProjectPalladium
         {
             base.Initialize();
 
-            playerLight = Lightmap.AddLightObject(pos, LightObject.LightTypes.circle, (int)(100 * Game1.scale), 1f, this);
+            playerLight = Lightmap.AddLightObject(pos, LightObject.LightTypes.circle, (int)(300 * Game1.scale), 1f, this);
         }
         protected override void Kill()
         {
