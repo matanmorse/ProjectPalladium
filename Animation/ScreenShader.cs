@@ -36,7 +36,7 @@ namespace ProjectPalladium.Animation
         public ScreenShader() {
             currentEffect = effects["none"];
             overlayTexture.SetData(new[] { Color.White });
-            // this.alphaValue = 0.3f;
+            this.alphaValue = 0.3f;
         }
         
         public void DoOpenInventoryShading()

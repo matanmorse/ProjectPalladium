@@ -37,6 +37,7 @@ namespace ProjectPalladium
         public static GraphicsDevice graphicsDevice;
         private Canvas _canvas;
         private Canvas _uiCanvas;
+        private Canvas _lightmap;
 
         public static Inventory inventory;
 
@@ -248,7 +249,7 @@ namespace ProjectPalladium
             graphicsDevice = GraphicsDevice;
             _canvas = new Canvas(GraphicsDevice, screenWidth, screenHeight, "gameworld");
             _uiCanvas = new Canvas(graphicsDevice, UINativeResolution.X, UINativeResolution.Y,"ui");
-
+            _lightmap = new Canvas(GraphicsDevice, screenWidth, screenHeight, "lightmap");
         }
 
         protected override void Update(GameTime gameTime)
@@ -326,17 +327,19 @@ namespace ProjectPalladium
             _uiManager.Draw(_spriteBatch);
             _spriteBatch.End();
 
+            _lightmap.Activate();
+            _spriteBatch.Begin();
+            shader.Draw(_spriteBatch);
+            _spriteBatch.End();
+
+
             // Switch back to the default render target (the back buffer)
             GraphicsDevice.SetRenderTarget(null);
 
             // Draw the UI canvas to the back buffer
             _canvas.Draw(_spriteBatch);
             _uiCanvas.Draw(_spriteBatch);
-
-            // last, apply universal shading effects
-            _spriteBatch.Begin();
-            shader.Draw(_spriteBatch);
-            _spriteBatch.End();
+            _lightmap.Draw(_spriteBatch);
 
         }
     }
