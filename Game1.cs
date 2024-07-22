@@ -179,7 +179,7 @@ namespace ProjectPalladium
                 -(player.edgex) + screenWidth,
                 0);
 
-            var dy = ((screenHeight / 2) - player.lerpingCamera.Y - (player.sprite.spriteHeight * scale) / 2);
+            var dy = ((screenHeight / 2) - player.lerpingCamera.Y - (player.sprite.spriteHeight * scale) / 4);
 
             
 
@@ -211,7 +211,7 @@ namespace ProjectPalladium
             _lightmap.SetDestinationRectangle();
 
             shader = new ScreenShader(Color.White);
-            //shader.SetAlpha(0.3f);
+            shader.SetAlpha(0.3f);
             shader.onFinishEffect += SceneManager.OnSceneTransitionFinished;
 
             gameWorldShader = new ScreenShader(Color.Black);
@@ -321,7 +321,7 @@ namespace ProjectPalladium
 
             // apply game world shading effects
             _spriteBatch.Begin(blendState:BlendState.NonPremultiplied);
-             gameWorldShader.Draw(_spriteBatch);
+            gameWorldShader.Draw(_spriteBatch);
             _spriteBatch.End();
 
             // Render the UI elements to the _uiCanvas
@@ -337,7 +337,7 @@ namespace ProjectPalladium
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, transformMatrix: translation);
             Lightmap.Draw(_spriteBatch);
-        _spriteBatch.End();
+            _spriteBatch.End();
 
 
             // Switch back to the default render target (the back buffer)

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPalladium.Utils;
 using System;
+using System.Diagnostics;
 
 /* Render items are first drawn here before being the canvas is drawn to the screen */
 namespace ProjectPalladium
@@ -39,8 +41,10 @@ namespace ProjectPalladium
             {
                 Game1.UITargetScale = scale;
             }
-            if (name == "gameworld")
+            if (name == "gameworld" || name == "lightmap")
             {
+                // temporary, until find a more permanent solution
+                scale = 0.25f;
                 Game1.gameWorldTargetScale = scale;
             }
 
@@ -78,8 +82,8 @@ namespace ProjectPalladium
              
             }
             b.Begin(SpriteSortMode.Deferred, testBlend, SamplerState.PointClamp, null, null, null, null);
-                b.Draw(_renderTarget, _destinationRectangle, Color.White);
-                b.End();
+            b.Draw(_renderTarget, _destinationRectangle, Color.White);
+            b.End();
             
         }
 

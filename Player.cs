@@ -239,7 +239,6 @@ namespace ProjectPalladium
             {                
                 _activeItem.Update();
             }
-            // Debug.WriteLine(pos);
         }
 
         public override void Draw(SpriteBatch b)
