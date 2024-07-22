@@ -268,7 +268,6 @@ namespace ProjectPalladium
             // for all villiagers not in the scene, check if they've moved 
             foreach(Villager v in GameManager.allVillagers.Except(SceneManager.CurScene.Characters))
             {
-                Debug.WriteLine(name );
                 if (v.mapName == name)
                 {
                     AddNPC(v);

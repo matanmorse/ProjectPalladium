@@ -6,6 +6,8 @@ using System.Diagnostics;
 using ProjectPalladium.Stations;
 using static ProjectPalladium.Map;
 using static System.Formats.Asn1.AsnWriter;
+using System.Transactions;
+using ProjectPalladium.Animation;
 
 namespace ProjectPalladium
 {
@@ -80,6 +82,7 @@ namespace ProjectPalladium
     public class Lightmap
     {
         private static List<LightObject> lightObjects = new List<LightObject>();
+        public static ScreenShader shader;
 
         public static void AddLightObject(LightObject lightObject)
         {
@@ -93,9 +96,17 @@ namespace ProjectPalladium
             lightObjects.Add(obj);
             return obj;
         }
+
+        public static void Initialize()
+        {
+            shader = new ScreenShader(Color.White);
+            shader.SetAlpha(0.3f);
+        }
+
         public static void Update(GameTime gameTime)
         {
-            foreach(LightObject lightObject in lightObjects)
+            shader.Update(gameTime);
+            foreach (LightObject lightObject in lightObjects)
             {
                 lightObject.Update(gameTime);
             }
@@ -103,7 +114,13 @@ namespace ProjectPalladium
 
         public static void Draw(SpriteBatch b)
         {
+            b.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            shader.Draw(b);
+            b.End();
+
+            b.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, transformMatrix: Game1.translation);
             foreach (LightObject lightObject in lightObjects) lightObject.Draw(b);
+            b.End();
         }
     }
 }

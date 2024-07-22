@@ -86,7 +86,6 @@ namespace ProjectPalladium.Animation
 
         public void DoSceneTransition(GameTime gameTime)
         {
-           
             t += (float) gameTime.ElapsedGameTime.TotalMilliseconds;
             alphaValue = t / currentEffect.totalMillis; // get the normalized alpha value
             if (t > currentEffect.totalMillis)
@@ -99,7 +98,6 @@ namespace ProjectPalladium.Animation
 
         public void DoEnterScene(GameTime gameTime)
         {
-
             t += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             float normalized = t / currentEffect.totalMillis; // get the normalized  value
             alphaValue = 1f - normalized;
@@ -120,12 +118,12 @@ namespace ProjectPalladium.Animation
 
         private void UpdateAlphaValue()
         {
-            // alphaValue = 0.05f;
             overlayColor = new Color(color.R, color.G, color.B, alphaValue);
         }
 
         public void Draw(SpriteBatch b)
         {
+
             b.Draw(overlayTexture, new Rectangle(0, 0, Game1.graphicsDevice.Viewport.Width, Game1.graphicsDevice.Viewport.Height), overlayColor);
         }
     }

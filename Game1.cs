@@ -67,15 +67,15 @@ namespace ProjectPalladium
 
         public static ContentManager contentManager;
 
-
         public static Matrix translation;
         private Matrix prevTranslation; 
         
         private static UIManager _uiManager;
         public static UIManager UIManager { get { return _uiManager; } }
         public static GameManager gameManager;
-        public static ScreenShader shader;
+
         public static ScreenShader gameWorldShader; // excludes UI
+        public static ScreenShader shader;
 
         public static float LAYER_CONSTANT = 0.00001f;
 
@@ -210,11 +210,14 @@ namespace ProjectPalladium
             _uiCanvas.SetDestinationRectangle();
             _lightmap.SetDestinationRectangle();
 
-            shader = new ScreenShader(Color.White);
-            shader.SetAlpha(0.3f);
-            shader.onFinishEffect += SceneManager.OnSceneTransitionFinished;
 
             gameWorldShader = new ScreenShader(Color.Black);
+
+            shader = new ScreenShader(Color.Black);
+            shader.onFinishEffect += SceneManager.OnSceneTransitionFinished;
+
+            Lightmap.Initialize();
+
             // init game manager
             gameManager = new GameManager();
 
@@ -295,8 +298,8 @@ namespace ProjectPalladium
             }
            
 
-            shader.Update(gameTime);
             gameWorldShader.Update(gameTime);
+            shader.Update(gameTime);
             Lightmap.Update(gameTime);
 
             base.Update(gameTime);
@@ -331,13 +334,8 @@ namespace ProjectPalladium
             _spriteBatch.End();
 
             _lightmap.Activate();
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            shader.Draw(_spriteBatch);
-            _spriteBatch.End();
 
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, transformMatrix: translation);
             Lightmap.Draw(_spriteBatch);
-            _spriteBatch.End();
 
 
             // Switch back to the default render target (the back buffer)
@@ -347,6 +345,11 @@ namespace ProjectPalladium
             _canvas.Draw(_spriteBatch);
             _lightmap.Draw(_spriteBatch);
             _uiCanvas.Draw(_spriteBatch);
+
+            // last, apply universal shading effects
+            _spriteBatch.Begin(blendState: BlendState.NonPremultiplied);
+            shader.Draw(_spriteBatch);
+            _spriteBatch.End();
 
         }
     }
