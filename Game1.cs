@@ -134,6 +134,8 @@ namespace ProjectPalladium
         {
             _canvas.SetDestinationRectangle();
             _uiCanvas.SetDestinationRectangle();
+            _lightmap.SetDestinationRectangle();
+            
         }
 
         private void DoFrameRateCalculation(GameTime gameTime)
@@ -206,6 +208,7 @@ namespace ProjectPalladium
             _graphics.ApplyChanges();
             _canvas.SetDestinationRectangle();
             _uiCanvas.SetDestinationRectangle();
+            _lightmap.SetDestinationRectangle();
 
             shader = new ScreenShader();
             shader.onFinishEffect += SceneManager.OnSceneTransitionFinished;

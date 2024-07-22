@@ -114,6 +114,7 @@ namespace ProjectPalladium.Animation
 
         private void UpdateAlphaValue()
         {
+            alphaValue = 0.1f;
             overlayColor = new Color(0, 0, 0, alphaValue);
         }
 

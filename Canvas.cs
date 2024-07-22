@@ -63,10 +63,16 @@ namespace ProjectPalladium
         // draw whole canvas to precalculated rectangle
         public void Draw(SpriteBatch b)
         {
-            if (name == "ui") { scaleMatrix = Matrix.CreateScale(2f); }
-            b.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
-            b.Draw(_renderTarget, _destinationRectangle, Color.White);
-            b.End();
+            BlendState testBlend = BlendState.NonPremultiplied;
+            if (name == "lightmap")
+            {
+
+             
+            }
+            b.Begin(SpriteSortMode.Deferred, testBlend, SamplerState.PointClamp, null, null, null, null);
+                b.Draw(_renderTarget, _destinationRectangle, Color.White);
+                b.End();
+            
         }
 
         public void DrawInMiddleOfSpriteBatch(SpriteBatch b)
