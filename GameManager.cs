@@ -171,14 +171,12 @@ namespace ProjectPalladium
 
             
             // apply world darkness effects if needed
-            if (time == sunset) Debug.WriteLine(time > sunset);
             if (time > sunset && DebugParams.doSunsetShading)
             {
                 int minutesAfterSunset = Util.MinutesSinceDayStart(time) - Util.MinutesSinceDayStart(sunset);
                 float interpolatedMinutes = (float) minutesAfterSunset / totalMinutesBetweenSunsetAndTotalDarkness;
                 float darkness = interpolatedMinutes * maxDarknessValue;
-                Debug.WriteLine("darkness " + darkness);
-                GameManager.SetWorldBrightness(1 - darkness);
+                SetWorldBrightness(1 - darkness);
             }
 
         }

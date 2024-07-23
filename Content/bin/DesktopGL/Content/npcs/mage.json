@@ -2,9 +2,26 @@
   "name": "mage",
   "schedule": {
     "6:30AM": {
+      "name": "hollowFirst",
       "map": "hollow",
-      "position": [ 100, 100 ]
+      "position": [ 400, 200 ]
+    }
+  },
+  "dialogue": {
+    "stroll": {
+      "requirements": {
+        "stopName": "hollowFirst",
+        "before": "10:00PM"
+      },
+      "text": [
+        "Sure is a lovely day for a stroll, isn't it?",
+        "I always loved me a good stroll.",
+        "Let me know if you have any questions."
+      ],
+      "onlysayonce":  false,
+      "alwaysoffers": true,
+      "priority": 1
     }
   }
-
 }
+

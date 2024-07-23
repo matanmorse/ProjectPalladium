@@ -10,18 +10,45 @@ using ProjectPalladium.Utils;
 using GameWorldTime = ProjectPalladium.GameManager.GameWorldTime;
 using ProjectPalladium.UI;
 using Microsoft.Xna.Framework.Graphics;
+using System.ComponentModel;
 
 namespace ProjectPalladium.Characters
 {
     public class Villager : NPC
     {
-        public class Schedule
+        public class Info
         {
             [JsonPropertyName("name")]
             public string name { get; set; }
 
             [JsonPropertyName("schedule")]
             public Dictionary<string, ScheduleLocation> schedule { get; set; }
+
+            [JsonPropertyName("dialogue")]
+            public Dictionary<string, DialogueOption> dialogue { get; set; }
+
+        }
+
+        public class DialogueOption
+        {
+            [JsonPropertyName("requirements")]
+            public Dictionary<string,string> requirements { get; set; }
+
+            [JsonPropertyName("text")]
+            public string[] text { get; set; }
+
+            [JsonPropertyName("alwaysoffers")]
+            public bool alwaysOffers { get; set; }
+
+            [JsonPropertyName("priority")]
+            public int priority { get; set; }
+
+            [JsonPropertyName("onlysayonce")]
+            public bool onlySayOnce { get; set; }
+
+            [JsonPropertyName("active")]
+            public bool active { get; set; }
+            
         }
         public class ScheduleLocation
         {
@@ -30,6 +57,10 @@ namespace ProjectPalladium.Characters
 
             [JsonPropertyName("map")]
             public string map { get; set;}
+
+            [JsonPropertyName("name")]
+            public string name { get; set; }
+
         }
 
         public struct ScheduleItem
@@ -38,11 +69,13 @@ namespace ProjectPalladium.Characters
             public Vector2 location;
             public string mapName;
             public GameWorldTime time;
+            public string name;
             public ScheduleItem(ScheduleLocation location, GameWorldTime time)
             {
                 this.time = time;
                 this.location = new Vector2(location.location[0], location.location[1]);
                 this.mapName = location.map;
+                this.name = location.name;
             }
 
             public override string ToString()
@@ -51,9 +84,10 @@ namespace ProjectPalladium.Characters
             }
         }
 
+        private Random rand = new Random();
         private Button interactButton;
         private LinkedList<ScheduleItem> schedule = new LinkedList<ScheduleItem>();
-        private Schedule scheduleLoader;
+        private Info info;
         public string mapName;
         public ScheduleItem currentStop;
         public ScheduleItem nextStop;
@@ -67,7 +101,13 @@ namespace ProjectPalladium.Characters
 
             interactButton = new Button(null, null, null, boundingBox.Location, boundingBox.Size, onRightClick:Interact);
 
+            // load deserializer
+            string jsonString = System.IO.File.ReadAllText("Content/npcs/" + name + ".json");
+            info = JsonSerializer.Deserialize<Info>(jsonString);
+
             LoadSchedule();
+            LoadDialogue();
+            
         }
 
         private void Interact()
@@ -76,21 +116,85 @@ namespace ProjectPalladium.Characters
             int distx = (int) Math.Abs(pos.X - Game1.player.pos.X);
             int disty = (int)Math.Abs(pos.Y - Game1.player.pos.Y);
             if (distx > Map.scaledTileSize + interactDistacne || disty > Map.scaledTileSize + interactDistacne) return;
-            UIManager.dialogBox.ShowDialog("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\r\n\r\n");
+
+
+            UIManager.dialogBox.ShowDialog(FindSuitableDialogueOption());
         }
         private void LoadSchedule()
         {
-            string jsonString = System.IO.File.ReadAllText("Content/npcs/" + name + ".json");
-            scheduleLoader = JsonSerializer.Deserialize<Schedule>(jsonString);
 
-            foreach (string key in scheduleLoader.schedule.Keys)
+            foreach (string key in info.schedule.Keys)
             {
-                schedule.AddLast(new ScheduleItem(scheduleLoader.schedule[key], Util.ParseGameTimeString(key)));
+                schedule.AddLast(new ScheduleItem(info.schedule[key], Util.ParseGameTimeString(key)));
             }
             GoToScheduleLocation(FindFirstLocation());
-
-            
         }
+
+        private void LoadDialogue()
+        {
+            foreach (DialogueOption opt in info.dialogue.Values)
+            {
+                opt.active = true;
+            }
+        }
+
+        private string[] FindSuitableDialogueOption()
+        {
+            List<DialogueOption> suitableOptions = new List<DialogueOption>(); // list of all options that satisfy the requirements
+            Dictionary<string, DialogueOption> dialogueOptions = info.dialogue;
+            
+            foreach(string key in dialogueOptions.Keys)
+            {
+                DialogueOption option = dialogueOptions[key];
+
+                if (!option.active) continue;
+                if (option.requirements == null) { suitableOptions.Add(option); continue; }
+
+                if (option.requirements.ContainsKey("stopName"))
+                {
+                    if (this.currentStop.name != option.requirements["stopName"]) continue;
+                }
+
+                if (option.requirements.ContainsKey("before"))
+                {
+                    if (GameManager.time > Util.ParseGameTimeString(option.requirements["before"])) continue;
+                }
+
+                if (option.requirements.ContainsKey("after"))
+                {
+                    if (GameManager.time < Util.ParseGameTimeString(option.requirements["after"])) continue;
+                }
+
+                if (option.requirements.ContainsKey("mapName"))
+                {
+                    if (this.currentStop.mapName != option.requirements["mapName"]) continue;
+                }
+
+                suitableOptions.Add(option);
+            }
+
+            if (suitableOptions.Count == 0) { return new string[0]; } // no suitable options
+
+            DialogueOption chosenOption;
+            // if there are suitable options that are always returned when eligible, return the one with the highest priority
+            if (suitableOptions.Any(x => x.alwaysOffers))
+            {
+                List<DialogueOption> alwaysOffersOptions = suitableOptions.FindAll(x => x.alwaysOffers);
+                int maxPrioValue = alwaysOffersOptions.Max(x => x.priority);
+                chosenOption = alwaysOffersOptions.Find(x => x.priority == maxPrioValue);
+            }
+            else
+            {
+                // otherwise, just pick a random one
+                chosenOption = suitableOptions[(rand.Next(0, suitableOptions.Count()))];
+            }
+
+            if (chosenOption.onlySayOnce) { chosenOption.active = false; }
+
+            return chosenOption.text;
+        }
+
+       
 
         // find first schedule Item of appropriate time
         private ScheduleItem FindFirstLocation()

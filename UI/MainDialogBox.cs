@@ -58,7 +58,7 @@ namespace ProjectPalladium.UI
             OpenDialogBox();
         }
 
-        public void ShowDialog(string text)
+        public void ShowDialog(string[] text)
         {
             this.currentMenu = new SpeechBox(text, "mage");
             OpenDialogBox();
