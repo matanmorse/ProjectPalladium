@@ -5,14 +5,13 @@ using ProjectPalladium.Utils;
 using System;
 using System.Diagnostics;
 using System.Linq;
-
-
+using DialogueOption = ProjectPalladium.Characters.Villager.DialogueOption;
 namespace ProjectPalladium.UI
 {
     public class MainDialogBox : DialogBox
     {
         // Nightmare code to center the dialog box on the toolbar
-        private static Point dialogueBoxSize = new Point((int)(Game1.UINativeResolution.X * 0.5f), (int)(100 * defaultScale));
+        public static Point dialogueBoxSize = new Point((int)(Game1.UINativeResolution.X * 0.5f), (int)(100 * defaultScale));
         private static Point dialogBoxPos = new Point(UIManager.toolbar.globalPos.X - ((dialogueBoxSize.X + (int)((DialogBox.padding.X - 1) * defaultScale)) / 2), (int)(325 * defaultScale) - dialogueBoxSize.Y);
 
         private float animationTime = 0f;
@@ -58,9 +57,11 @@ namespace ProjectPalladium.UI
             OpenDialogBox();
         }
 
-        public void ShowDialog(string[] text)
+        public void ShowDialog(DialogueOption dialogue, string name)
         {
-            this.currentMenu = new SpeechBox(text, "mage");
+            if (dialogue == null) return;
+
+            this.currentMenu = new SpeechBox(dialogue, name);
             OpenDialogBox();
         }
 
@@ -75,7 +76,7 @@ namespace ProjectPalladium.UI
             base.Update(gameTime);
             if (!showing) return;
 
-            if (!(animationTime + animationSpeed > 1.1f))
+            if (!(animationTime == 1f))
             {
                 animationTime = Math.Clamp(animationTime + animationSpeed, 0f, 1f);
                 SetSize(new Point((int)(finalSize.X * animationTime), (int)(finalSize.Y * animationTime)));

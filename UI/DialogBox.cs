@@ -30,9 +30,9 @@ namespace ProjectPalladium.UI
         {
             get { return size; }
             set 
-            { 
+            {
                 size = value;
-                unpaddedSize = size - padding * new Point((int)defaultScale);
+                unpaddedSize = size - padding * new Point((int)scale);
             }
         }
         public static Point padding = new Point(10,10);

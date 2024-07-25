@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Utils;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
+using DialogueOption = ProjectPalladium.Characters.Villager.DialogueOption;
 
 namespace ProjectPalladium.UI
 {
@@ -35,14 +37,19 @@ namespace ProjectPalladium.UI
         private TextRenderer textRenderer;
         private TextRenderer nameRenderer;
 
+        private DialogueOption dialogue;
+
         int textSlideIndex = 0;
-        public SpeechBox(string[] text, string name)
+        public SpeechBox(DialogueOption dialogue, string name)
         {
+            this.dialogue = dialogue;
+            string[] text = dialogue.text;
+
             // get text sizes based on dialog box
             MainDialogBox dialogBox = UIManager.dialogBox;
             textSize = new Vector2(UIManager.dialogBox.unpaddedSize.X * 0.75f, 1000);
 
-            // asign behavior for click out and click in
+            // asign behavior for click out and click inp
             onClickIn = OnClick;
             onClickOut = OnClick;
 
@@ -55,13 +62,13 @@ namespace ProjectPalladium.UI
 
             this.pos = UIManager.dialogBox.textPos.ToPoint();
             textRenderer = new TextRenderer(pos.ToVector2(), TextRenderer.Origin.topLeft);
-
+                
 
             // init portrait
             this.portrait = new Renderable("portraits/placeholderportrait");
             portraitPos = new Point(pos.X + dialogBox.unpaddedSize.X - (int)(portraitSize.X * portraitScale), 
                 (pos.Y));
-
+            
             // make sure name is capitalized
             this.name = name[0].ToString().ToUpper() + name.Substring(1);
             
@@ -82,7 +89,15 @@ namespace ProjectPalladium.UI
             { 
                 if (textSlideIndex == originalText.Length - 1)
                 {
-                    UIManager.dialogBox.CloseDialogBox();
+                    if (dialogue.choice != null)
+                    {
+                        UIManager.dialogBox.AskChoice(dialogue.choice.prompt, dialogue.choice.choice1, dialogue.choice.choice2,
+                            QuestEvents.GetButtonDelegateMethod(dialogue.choice.choice1callback), QuestEvents.GetButtonDelegateMethod(dialogue.choice.choice2callback));
+                    }
+                    else
+                    {
+                        UIManager.dialogBox.CloseDialogBox();
+                    }
                 }
                 else
                 {

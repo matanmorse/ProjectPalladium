@@ -14,7 +14,7 @@ namespace ProjectPalladium.UI
 
             
             // workaround since functions not compile-time constants, but default click-out behavior is to close the dialog box.
-            this.onClickOut ??= UIManager.dialogBox.CloseDialogBox;
+            // this.onClickOut ??= UIManager.dialogBox.CloseDialogBox;
         }
 
         public delegate void Delegate();

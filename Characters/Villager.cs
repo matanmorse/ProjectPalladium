@@ -48,6 +48,9 @@ namespace ProjectPalladium.Characters
 
             [JsonPropertyName("active")]
             public bool active { get; set; }
+
+            [JsonPropertyName("choice")]
+            public DialogueChoice choice { get; set; }
             
         }
         public class ScheduleLocation
@@ -61,6 +64,30 @@ namespace ProjectPalladium.Characters
             [JsonPropertyName("name")]
             public string name { get; set; }
 
+        }
+
+        public class DialogueChoice
+        {
+            [JsonPropertyName("prompt")]
+            public string prompt { get; set; }
+
+            [JsonPropertyName("choice1")]
+            public string choice1 { get; set; }
+
+            [JsonPropertyName("choice2")]
+            public string choice2 { get; set; }
+
+            [JsonPropertyName("choice1callback")]
+            public string choice1callback { get; set; }
+
+
+            [JsonPropertyName("choice2callback")]
+            public string choice2callback { get; set; }
+
+            public override string ToString()
+            {
+                return prompt + " " + choice1  + " " + choice2;
+            }
         }
 
         public struct ScheduleItem
@@ -117,10 +144,10 @@ namespace ProjectPalladium.Characters
             int disty = (int)Math.Abs(pos.Y - Game1.player.pos.Y);
             if (distx > Map.scaledTileSize + interactDistacne || disty > Map.scaledTileSize + interactDistacne) return;
 
-            string[] dialogue = FindSuitableDialogueOption();
-            if (dialogue.Length == 0) return;
+            DialogueOption dialogue = FindSuitableDialogueOption();
+            if (dialogue == null) return;
 
-            UIManager.dialogBox.ShowDialog(dialogue);
+            UIManager.dialogBox.ShowDialog(dialogue, name);
         }
         private void LoadSchedule()
         {
@@ -140,7 +167,7 @@ namespace ProjectPalladium.Characters
             }
         }
 
-        private string[] FindSuitableDialogueOption()
+        private DialogueOption FindSuitableDialogueOption()
         {
             List<DialogueOption> suitableOptions = new List<DialogueOption>(); // list of all options that satisfy the requirements
             Dictionary<string, DialogueOption> dialogueOptions = info.dialogue;
@@ -172,10 +199,16 @@ namespace ProjectPalladium.Characters
                     if (this.currentStop.mapName != option.requirements["mapName"]) continue;
                 }
 
+                if (option.requirements.ContainsKey("said"))
+                {
+                    string needsToHaveSaid = option.requirements["said"];
+                    if (dialogueOptions.ContainsKey(needsToHaveSaid)) { if (dialogueOptions[needsToHaveSaid].active) continue; }
+                }
+
                 suitableOptions.Add(option);
             }
 
-            if (suitableOptions.Count == 0) { return new string[0]; } // no suitable options
+            if (suitableOptions.Count == 0) { return null; } // no suitable options
 
             DialogueOption chosenOption;
             // if there are suitable options that are always returned when eligible, return the one with the highest priority
@@ -193,7 +226,7 @@ namespace ProjectPalladium.Characters
 
             if (chosenOption.onlySayOnce) { chosenOption.active = false; }
 
-            return chosenOption.text;
+            return chosenOption;
         }
 
        

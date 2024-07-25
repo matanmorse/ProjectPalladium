@@ -18,10 +18,26 @@
         "I always loved me a good stroll.",
         "Let me know if you have any questions."
       ],
-      "onlysayonce":  true,
+      "onlysayonce": true,
       "alwaysoffers": true,
       "priority": 1
-    }
+    },
+    "GO_TO_ARENA": {
+      "requirements": {
+        "said": "stroll" 
+      },
+      "text": [
+        "Go to arena?"
+      ],
+      "choice": {
+        "prompt": "Travel to arena?",
+        "choice1": "Yes!",
+        "choice2": "No",
+        "choice1callback": "GoToArena"
+      },
+        "alwaysoffers": true,
+        "priority": 2
+      }
   }
 }
 
