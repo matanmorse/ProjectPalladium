@@ -117,8 +117,10 @@ namespace ProjectPalladium.Characters
             int disty = (int)Math.Abs(pos.Y - Game1.player.pos.Y);
             if (distx > Map.scaledTileSize + interactDistacne || disty > Map.scaledTileSize + interactDistacne) return;
 
+            string[] dialogue = FindSuitableDialogueOption();
+            if (dialogue.Length == 0) return;
 
-            UIManager.dialogBox.ShowDialog(FindSuitableDialogueOption());
+            UIManager.dialogBox.ShowDialog(dialogue);
         }
         private void LoadSchedule()
         {
