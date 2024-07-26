@@ -49,6 +49,18 @@
 /processorParam:TextureFormat=Color
 /build:gameobjects/cauldronplaced.png
 
+#begin gameobjects/lectern.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gameobjects/lectern.png;gameobjects/lecternplaced.png
+
 #begin gameobjects/scryingorbplaced.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Animation;
 using ProjectPalladium.Buildings;
+using ProjectPalladium.Utils;
+using System.Diagnostics;
 
 namespace ProjectPalladium.Stations
 {
@@ -8,6 +11,7 @@ namespace ProjectPalladium.Stations
     {
         new public AnimatedSprite animatedSprite;
 
+        public Renderable sprite;
         private bool completed = false;
         public bool Completed
         {
@@ -18,16 +22,26 @@ namespace ProjectPalladium.Stations
             }
         }
 
-        public Station(string name, Vector2 pos, string registryName, string textureName = "") : base(name, pos, textureName)
+        public Station(string name, Vector2 pos, string registryName, string textureName = "", bool nonAnimated=false) : base(name, pos, textureName)
         {
-            animatedSprite = new AnimatedSprite(32, 32, subfolder + textureName, registryName, Vector2.Zero);
-
+            if (nonAnimated)
+            {
+                sprite = new Renderable(subfolder + textureName);
+            }
         }
 
+        public override void Draw(SpriteBatch b)
+        {
+            if (sprite != null)
+            {
+                sprite.Draw(b, globalPos, layer:layer);
+            }
+        }
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            animatedSprite.Update(gameTime);
+            if (animatedSprite != null) animatedSprite.Update(gameTime);
+
         }
 
         public virtual void UpdateOnGameTime()

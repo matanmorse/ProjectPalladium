@@ -22,6 +22,7 @@ namespace ProjectPalladium.Locations
 
         public override void OnLoad()
         {
+            Lightmap.SetBrightnessWithoutTransition(0.5f);
             Enemy.RemoveAllDangers();
             Enemy.AddTilemapDangers();
             AddEnemy("slime", Game1.player.pos + new Vector2(100, 100));

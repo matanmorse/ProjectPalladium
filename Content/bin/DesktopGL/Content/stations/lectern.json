@@ -1,0 +1,9 @@
+{
+  "name": "lectern",
+  "colliders": {
+    "move": {
+      "size": [ 16, 6 ],
+      "location": [ 0, 26 ]
+    }
+  }
+}

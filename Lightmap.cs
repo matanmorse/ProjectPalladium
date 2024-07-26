@@ -43,7 +43,7 @@ namespace ProjectPalladium
             int diameter = radius * 2;
              texture = new Texture2D(Game1.graphicsDevice, diameter, diameter);
             Color[] colorData = new Color[diameter * diameter];
-            Color defaultColor = Color.Black;
+            Color defaultColor = Color.White;
             Vector2 center = new Vector2(radius, radius);
             float maxDistance = radius;
             float maxIntensity = 1f;   
@@ -76,7 +76,7 @@ namespace ProjectPalladium
         }
         public void Draw(SpriteBatch b)
         {
-            b.Draw(texture, pos, texture.Bounds, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth:1f);
+            b.Draw(texture, pos, texture.Bounds, new Color(0, 30, 87), 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth:1f);
         }
     }
     public class Lightmap

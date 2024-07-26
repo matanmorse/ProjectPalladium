@@ -190,11 +190,12 @@ namespace ProjectPalladium
             if (Input.GetKeyDown(Keys.M))
             {
                 mana = MAX_MANA;
+                Debug.WriteLine(layer);
                 
             }
             if (Input.GetKeyDown(Keys.N))
             {
-                GameManager.SetWorldBrightness(0f);
+                Lightmap.SetBrightnessWithoutTransition(0.1f);
                 
             }
 

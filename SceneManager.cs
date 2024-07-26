@@ -82,6 +82,7 @@ namespace ProjectPalladium
             Game1.shader.DoSceneTransition();
         }
 
+        
         public static void EnterDungeon (string dungeonName)
         {
             Dungeon dungeon = new Dungeon(dungeonName);

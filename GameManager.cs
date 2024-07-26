@@ -171,21 +171,26 @@ namespace ProjectPalladium
 
             
             // apply world darkness effects if needed
-            if (time > sunset && DebugParams.doSunsetShading)
+            if (time > sunset)
             {
-                int minutesAfterSunset = Util.MinutesSinceDayStart(time) - Util.MinutesSinceDayStart(sunset);
-                float interpolatedMinutes = (float) minutesAfterSunset / totalMinutesBetweenSunsetAndTotalDarkness;
-                float darkness = interpolatedMinutes * maxDarknessValue;
-                SetWorldBrightness(1 - darkness);
+                SetWorldBrightness(Math.Min(FindAppropriateBrightness(), maxDarknessValue));
             }
 
         }
 
+        public static float FindAppropriateBrightness()
+        {
+            int minutesAfterSunset = Util.MinutesSinceDayStart(time) - Util.MinutesSinceDayStart(sunset);
+            float interpolatedMinutes = (float)minutesAfterSunset / totalMinutesBetweenSunsetAndTotalDarkness;
+            float darkness = interpolatedMinutes * maxDarknessValue;
+            return darkness;
+        }
         public static void SetWorldBrightness(float brightness)
         {
+            Debug.WriteLine("setting brightness " + brightness);
             brightness = Math.Clamp(brightness, 0, 1f);
-            brightness = 1f - brightness; // higher values actually darker, invert
-            Lightmap.SetWorldBrightness(brightness);
+            brightness = brightness; // higher values actually darker, invert
+            Lightmap.SetBrightnessWithoutTransition(brightness);
         }
 
         public static void FixTime()

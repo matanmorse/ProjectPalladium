@@ -15,6 +15,7 @@ using ProjectPalladium.Characters;
 using Circle = ProjectPalladium.Utils.Util.Circle;
 using Trigger = ProjectPalladium.Utils.Trigger;
 using ProjectPalladium.Stations;
+using ProjectPalladium.Locations;
 
 
 namespace ProjectPalladium
@@ -240,11 +241,23 @@ namespace ProjectPalladium
 
             foreach (TiledObject obj in objects)
             {
+                Property nameProp = obj.properties.properties.FirstOrDefault(x => x.name == "name");
+                if (nameProp == null) continue;
+                string name = nameProp.value;
+
                 // this object is a plant
-                if(obj.GetType().Name == "PlantSerialized") 
+                if (obj.GetType().Name == "PlantSerialized") 
                 {
                     PlantSerialized plantSerialized = obj as PlantSerialized;
                     gameObjects.Add(new Plant(plantSerialized));
+                    continue;
+                }
+                if (name == "returnlectern")
+                {
+                    // the position from tiled is in non-scaled global coordinates, so divide by tilesize to get to tile position, the format expected by the gameobject
+                    ReturnLectern returnLectern = new ReturnLectern(new Vector2(obj.x, obj.y) / tilesize); 
+                    gameObjects.Add(returnLectern);
+                    continue;
                 }
             }
             
@@ -387,6 +400,10 @@ namespace ProjectPalladium
         public virtual void OnLoad()
         {
             if (this is BuildingInterior) Lightmap.SetBrightnessWithoutTransition(0f); // max brightness in buildings
+            if (!(this is BuildingInterior) && !(this is Dungeon))
+            {
+                Lightmap.SetBrightnessWithoutTransition(GameManager.FindAppropriateBrightness());
+            }
             LoadNPCs();
         }
         public void Update(GameTime gameTime)

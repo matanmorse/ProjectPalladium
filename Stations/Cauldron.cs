@@ -7,6 +7,7 @@ using ProjectPalladium.Items;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Utils;
 using GameWorldTime = ProjectPalladium.GameManager.GameWorldTime;
+using ProjectPalladium.Animation;
 namespace ProjectPalladium.Stations
 {
     public class Cauldron : Station
@@ -45,6 +46,7 @@ namespace ProjectPalladium.Stations
             {
                 heldItems[i] = Item.none;
             }
+            animatedSprite = new AnimatedSprite(32, 32, subfolder + "cauldronplaced", "cauldron", Vector2.Zero);
 
 
             Brewing = false;
