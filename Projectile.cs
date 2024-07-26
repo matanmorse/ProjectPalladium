@@ -53,8 +53,6 @@ namespace ProjectPalladium
             Object hit = SceneManager.CurScene.Map.checkCollisions(this);
             if (hit != null)
             {
-                Debug.WriteLine(hit);
-                Debug.WriteLine(Game1.player.boundingBox);
                 if (hit is Enemy)
                 {
                     (hit as Enemy).GetHit(this);

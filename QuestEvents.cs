@@ -14,7 +14,7 @@ namespace ProjectPalladium
         public static void GoToArena()
         {
             Debug.WriteLine("Go to arena!");
-            SceneManager.EnterBuilding("wizardtower.tmx", SceneManager.CurScene.Map.buildings.First());
+            SceneManager.EnterDungeon("dungeon.tmx");
         }
 
         public static Button.OnClick GetButtonDelegateMethod(string name)

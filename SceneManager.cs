@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPalladium.Buildings;
 using ProjectPalladium.Characters;
+using ProjectPalladium.Locations;
 using System;
 using System.Diagnostics;
 
@@ -25,10 +26,14 @@ namespace ProjectPalladium
             curScene.Player.pos = curScene.Map.spawnLocation * Game1.scale;
             curScene.Map.player.lerpingCamera = curScene.Player.pos; // avoid camera movement when changing scenes, less motion sick
 
-            curScene.Map.OnLoad();
 
-            curScene.Map.player.setBounds(curScene.Map.tileMapSize, 16);
+            if (! (curScene.Map is Dungeon))
+            {
+                curScene.Map.player.setBounds(curScene.Map.tileMapSize, 16);
+            }
             Enemy.RemoveAllDangers();
+
+            curScene.Map.OnLoad();
         }
 
         // load scene at non-default spawn position
@@ -77,6 +82,17 @@ namespace ProjectPalladium
             Game1.shader.DoSceneTransition();
         }
 
+        public static void EnterDungeon (string dungeonName)
+        {
+            Dungeon dungeon = new Dungeon(dungeonName);
+            Scene newScene = new Scene(dungeon, curScene.Player);
+
+            CurScene.Map.Save(CurScene.Map.filename.Replace("default", ""));
+            storedScene = newScene;
+
+            // this is NOT just a cosmetic effect, at the end of the effect the scene is loaded. Neccesary line.
+            Game1.shader.DoSceneTransition();   
+        }
         public static void OnSceneTransitionFinished()
         {
 

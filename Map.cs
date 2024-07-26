@@ -91,6 +91,8 @@ namespace ProjectPalladium
             scaledTileSize = (int)(tilesize * Game1.scale);
         }
 
+        
+
         // return first object a circle collides with on the map
         public Object checkCollisions(Circle c)
         {
@@ -382,7 +384,7 @@ namespace ProjectPalladium
         }
 
         /* Called when the map is loaded via the scenemanager */
-        public void OnLoad()
+        public virtual void OnLoad()
         {
             if (this is BuildingInterior) Lightmap.SetBrightnessWithoutTransition(0f); // max brightness in buildings
             LoadNPCs();
@@ -412,6 +414,10 @@ namespace ProjectPalladium
             }
         }
 
+        public virtual void OnEnemyKilled()
+        {
+
+        }
     
 
         public bool AddEnemy(string name, Vector2 pos)
@@ -514,6 +520,7 @@ namespace ProjectPalladium
                 foreach(Character x in charactersToRemove)
                 {
                     SceneManager.CurScene.Characters.Remove(x);
+                    if (x is Enemy) OnEnemyKilled();
                 }
                 charactersToRemove.Clear();
             }
@@ -558,6 +565,14 @@ namespace ProjectPalladium
             map.Layers = layers; // update the new layer
         }
 
+        public void RemoveTilemap(string name)
+        {
+            Tilemap toRemove = tilemaps.Find(x => x.name == name);
+            tilemaps.Remove(toRemove);
+            if (toRemove.isCollideLayer) collidingTilemaps.Remove(toRemove);
+            Enemy.RemoveTileMapDangers(toRemove);
+
+        }
         /* Helper function for GameObject xml serialization */
         private void SaveObjects()
         {

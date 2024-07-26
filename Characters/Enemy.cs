@@ -246,6 +246,16 @@ namespace ProjectPalladium.Characters
                 }
             }
         }
+
+        public static void RemoveTileMapDangers(Tilemap tileMap)
+        {
+            foreach (Rectangle r in tileMap.colliders)
+            {
+                Danger danger = dangers.Find(x => x.location == r.Center.ToVector2());
+                if (danger.Equals(new Danger())) continue; // we didn't find an associated danger
+                dangers.Remove(dangers.Find(x => x.location == r.Center.ToVector2()));
+            }
+        } 
         protected void UpdateContextSteering()
         {
             Vector2 centerOfHitbox = this.boundingBox.Center.ToVector2();
